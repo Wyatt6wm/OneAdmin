@@ -1,0 +1,40 @@
+// 存放样式值
+
+// ---------- Sidebar菜单栏用到的常量 ----------
+// 菜单文字默认颜色
+$menuText: #bfcbd9;
+// 菜单激活时文字颜色
+$menuActiveText: #ffffff;
+// 子菜单激活时文字颜色
+$subMenuActiveText: #f4f4f5;
+
+// 菜单背景颜色
+$menuBg: #304156;
+// 鼠标悬浮时菜单背景颜色
+$menuHover: #263445;
+// 子菜单背景颜色
+$subMenuBg: #1f2d3d;
+// 鼠标悬浮时子菜单背景颜色
+$subMenuHover: #001528;
+
+// 菜单栏宽度
+$sideBarWidth: 300px;
+// 菜单栏收起时宽度
+$hideSideBarWidth: 60px;
+// 菜单栏收起动作持续时长
+$sideBarDuration: 0.28s;
+
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+// js与scss共享变量，在scss中通过:export进行导出，在js中可通过esm进行导入
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+  hideSideBarWidth: $hideSideBarWidth;
+  sideBarDuration: $sideBarDuration;
+}

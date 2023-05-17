@@ -114,7 +114,7 @@ vue add element-plus
 
 版本：^2.0.4
 
-```
+```shell
 npm i --save element-plus@2.0.4
 ```
 
@@ -122,7 +122,7 @@ npm i --save element-plus@2.0.4
 
 版本：^2.1.0
 
-```
+```shell
 npm i --save @element-plus/icons-vue
 ```
 
@@ -130,7 +130,23 @@ npm i --save @element-plus/icons-vue
 
 版本：^6.0.9
 
-```
+```shell
 npm i --save-dev svg-sprite-loader@6.0.9
+```
+
+# 安装md5
+
+版本：^2.3.0
+
+```shell
+npm i --save md5
+```
+
+# 安装axios
+
+版本：^1.3.4
+
+```shell
+npm i --save axios
 ```
 

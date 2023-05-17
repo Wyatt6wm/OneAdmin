@@ -1,4 +1,4 @@
-安装vue-cli脚手架
+# 安装vue-cli脚手架
 
 版本：^4.5.13
 
@@ -9,7 +9,7 @@ npm i -g @vue/cli@4.5.13
 vue -V
 ```
 
-创建vue项目
+# 创建vue项目
 
 执行create命令：
 
@@ -68,7 +68,7 @@ arrow keys)
 ? Save this as a preset for future projects? (y/N) n	// 不存此预设配置
 ```
 
-升级vue、vuex和vue-router
+# 升级vue、vuex和vue-router
 
 vue版本：^3.2.8
 
@@ -80,7 +80,7 @@ vuex版本：^4.0.2
 npm i --save vue@3.2.8 vue-router@4.0.11 vuex@4.0.2
 ```
 
-安装element-plus前端UI框架
+# 安装element-plus前端UI框架
 
 版本：^1.0.2-beta.28
 
@@ -110,7 +110,7 @@ vue add element-plus
 (Move up and down to reveal more choices)
 ```
 
-升级element-plus
+# 升级element-plus
 
 版本：^2.0.4
 
@@ -118,7 +118,7 @@ vue add element-plus
 npm i --save element-plus@2.0.4
 ```
 
-安装element-plus-icons-vue
+# 安装element-plus-icons-vue
 
 版本：^2.1.0
 
@@ -126,7 +126,7 @@ npm i --save element-plus@2.0.4
 npm i --save @element-plus/icons-vue
 ```
 
-安装svg-sprite-loader
+# 安装svg-sprite-loader
 
 版本：^6.0.9
 

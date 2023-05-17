@@ -110,3 +110,27 @@ vue add element-plus
 (Move up and down to reveal more choices)
 ```
 
+升级element-plus
+
+版本：^2.0.4
+
+```
+npm i --save element-plus@2.0.4
+```
+
+安装element-plus-icons-vue
+
+版本：^2.1.0
+
+```
+npm i --save @element-plus/icons-vue
+```
+
+安装svg-sprite-loader
+
+版本：^6.0.9
+
+```
+npm i --save-dev svg-sprite-loader@6.0.9
+```
+

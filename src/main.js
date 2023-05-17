@@ -6,10 +6,13 @@ import store from './store'
 import installElementPlus from './plugins/element'
 // 引入图标注册函数
 import installIcons from './plugins/icons'
+// 引入Mock挡板
+import installMock from './plugins/mock'
 // 引入全局样式
 import './styles/index.scss'
 
 const app = createApp(App)
 installElementPlus(app)
 installIcons(app)
+installMock(true)
 app.use(store).use(router).mount('#app')

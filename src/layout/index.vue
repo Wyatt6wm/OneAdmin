@@ -1,9 +1,22 @@
 <template>
   <div class="app-wrapper" :class="[$store.getters.sidebarOpened ? 'openSidebar' : 'hideSidebar']">
+    <sidebar class="sidebar-container" :style="{ backgroundColor: variables.menuBg }"></sidebar>
+    <div class="main-container">
+      <div class="fixed-header">
+        <navbar></navbar>
+        <!-- <view-tag></view-tag> -->
+      </div>
+      <app-main></app-main>
+    </div>
   </div>
 </template>
 
 <script setup>
+import Sidebar from './components/Sidebar'
+import Navbar from './components/Navbar'
+// import ViewTag from '@/components/ViewTag'
+import AppMain from './components/AppMain'
+import variables from '@/styles/common/variables.scss'
 </script>
 
 <style lang="scss" scoped>

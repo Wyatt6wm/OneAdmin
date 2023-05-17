@@ -1,0 +1,24 @@
+// 修改element-plus默认样式的样式
+
+.el-avatar {
+  --el-avatar-background-color: none !important;
+}
+
+// ---------- 以下处理element-plus从^1.0.2-beta.28升级到^2.0.4后出现的样式问题 ----------
+// 处理input框的白/蓝边
+.el-input__inner {
+  box-shadow: none !important;
+  --el-select-input-focus-border-color: none !important;
+}
+
+// 处理input白色背景
+.el-input__wrapper {
+  background: none !important;
+  box-shadow: none !important;
+  --el-select-input-focus-border-color: none !important;
+}
+
+// 处理图片的灰色底
+.el-avatar {
+  --el-avatar-bg-color: none !important;
+}

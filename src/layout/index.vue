@@ -4,7 +4,7 @@
     <div class="main-container">
       <div class="fixed-header">
         <navbar></navbar>
-        <!-- <view-tag></view-tag> -->
+        <view-tag></view-tag>
       </div>
       <app-main></app-main>
     </div>
@@ -14,7 +14,7 @@
 <script setup>
 import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
-// import ViewTag from '@/components/ViewTag'
+import ViewTag from '@/components/ViewTag'
 import AppMain from './components/AppMain'
 import variables from '@/styles/common/variables.scss'
 </script>

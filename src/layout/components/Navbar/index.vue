@@ -3,7 +3,7 @@
     <!-- 菜单栏伸缩按钮 -->
     <hamburger class="hamburger-container"></hamburger>
     <!-- 面包屑 -->
-    <!-- <breadcrumb class="breadcrumb-container"></breadcrumb> -->
+    <breadcrumb class="breadcrumb-container"></breadcrumb>
     <!-- <div class="right-menu"> -->
     <!-- 头像 -->
     <!-- <el-dropdown class="avatar-container" trigger="click">
@@ -37,11 +37,11 @@
 <script setup>
 // import { useStore } from 'vuex'
 import Hamburger from '@/components/Hamburger'
-// import Breadcrumb from '@/components/Breadcrumb'
+import Breadcrumb from '@/components/Breadcrumb'
 
 // const store = useStore()
 // const logout = () => {
-//   store.dispatch('global/logout')
+//   store.dispatch('common/logout')
 // }
 </script>
 

@@ -1,7 +1,11 @@
 // 全局的vuex配置
 
 import { SIDEBAR_OPENED, TOKEN } from '@/constant'
-import { getStorageItem, setStorageItem } from '@/utils/storage'
+import {
+  getStorageItem,
+  setStorageItem,
+  removeAllStorageItem
+} from '@/utils/storage'
 import api from '@/api'
 import md5 from 'md5'
 import { setTokenTimestamp } from '@/utils/token'
@@ -13,7 +17,7 @@ export default {
   // 存储状态的变量
   state: {
     token: getStorageItem(TOKEN) || '', // 先从LocalStorage获取token，没有时再赋默认值空
-    // profile: {},
+    profile: {},
     sidebarOpened:
       getStorageItem(SIDEBAR_OPENED) == null
         ? true
@@ -26,6 +30,10 @@ export default {
     setToken(state, token) {
       state.token = token // 存到vuex中，其他地方使用
       setStorageItem(TOKEN, token) // 存到LocalStorage中用来自动登录
+    },
+    // 存储个人信息
+    setProfile(state, profile) {
+      state.profile = profile
     },
     // 切换菜单栏伸缩状态
     changeSidebarOpened(state) {
@@ -68,6 +76,30 @@ export default {
             reject(err)
           })
       })
+    },
+    /**
+     * 获取用户信息
+     * @param {*} context
+     */
+    async getProfile(context) {
+      const data = await api.common.getProfile()
+      this.commit('common/setProfile', data) // 触发mutations里面的setProfile()函数
+      return data
+    },
+    /**
+     * 退出登录（用户主动退出方案）
+     */
+    logout() {
+      // 清理vuex
+      this.commit('common/setToken', '') // 清理token
+      this.commit('common/setProfile', {}) // 清理用户信息
+      // 清理LocalStorage
+      const username = getStorageItem('username')
+      removeAllStorageItem()
+      setStorageItem('username', username)
+      // TODO 清理权限相关配置
+      // 返回登录页
+      router.push('/login')
     }
   }
 }

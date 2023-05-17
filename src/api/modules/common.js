@@ -17,8 +17,8 @@ export const login = (loginForm) => {
  * 获取用户个人信息
  * @returns 请求的响应
  */
-// export const getProfile = () => {
-//   return request({
-//     url: '/sys/profile'
-//   })
-// }
+export const getProfile = () => {
+  return request({
+    url: '/getProfile'
+  })
+}

@@ -6,7 +6,8 @@ export function login() {
     succ: true,
     mesg: null,
     data: {
-      token: '77ae89be36504adfb5c09ef71409ea0e'
+      token: '77ae89be36504adfb5c09ef71409ea0e',
+      avatar: ''
     }
   }
   return {

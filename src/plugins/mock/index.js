@@ -30,7 +30,6 @@ function fnCreate(module, moduleActive = true) {
         }
       }
       interceptor(response)
-      console.log('' + key)
     }
   }
 }

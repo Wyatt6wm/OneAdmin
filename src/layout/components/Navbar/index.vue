@@ -36,16 +36,16 @@
 </template>
 
 <script setup>
-// import { useStore } from 'vuex'
+import { useStore } from 'vuex'
 import Hamburger from '@/components/Hamburger'
 import Breadcrumb from '@/components/Breadcrumb'
 
 const logoUrl = require('@/assets/logo.png')
 
-// const store = useStore()
-// const logout = () => {
-//   store.dispatch('common/logout')
-// }
+const store = useStore()
+const logout = () => {
+  store.dispatch('common/logout')
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import getters from './getters'
-import common from './module/common'
+import common from './modules/common'
 
 export default createStore({
   // 注册getters方便调用

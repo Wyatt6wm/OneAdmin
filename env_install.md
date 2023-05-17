@@ -150,3 +150,11 @@ npm i --save md5
 npm i --save axios
 ```
 
+# 安装mockjs
+
+版本：^1.1.0
+
+```
+npm i --save-dev mockjs@1.1.0
+```
+

@@ -13,3 +13,19 @@ OneAdmin - 统一管理台，定位为 WyattAppRealm 系列应用中大一统的
 ### 3.1. 前后端接口规范
 
 前后端接口交互包含两个阶段：前端请求后端、后端响应请求。对于第一阶段的前端请求后端动作，API接口除了预先定义好的基础参数外，填入3个重要的参数：请求方法（GET/POST等，默认是GET）、请求URL、数据对象data（非必须）。对于第二阶段的后端响应请求动作，API接口的返回除了基础参数，有3个重要的参数：成功标志succ（true/false）、响应信息mesg、响应数据对象data。
+
+## 4. 开发指南
+
+### 4.1. 图标的使用
+
+通过自定义的图标组件，支持三类图标：ElementPlus图标；外部SVG图标；本地SVG图标。其中本地SVG图标已经存储在`src/assets/icons/svg`目录下，如需新增则添加到该目录。三类图标的使用方法分别如下：
+
+```vue
+<el-icon><avatar /></el-icon>
+<svg-icon icon="https://ip:port/user.svg"></svg-icon>
+<svg-icon icon="user"></svg-icon>
+```
+
+### 4.2. 快捷访问store变量
+
+在store中使用了getters，通过在getters中定义访问各个模块的state变量的快捷方式映射，即可通过`store.getters.XXXXX`快速访问相关state变量。

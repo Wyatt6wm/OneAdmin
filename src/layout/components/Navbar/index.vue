@@ -4,11 +4,12 @@
     <hamburger class="hamburger-container"></hamburger>
     <!-- 面包屑 -->
     <breadcrumb class="breadcrumb-container"></breadcrumb>
-    <!-- <div class="right-menu"> -->
-    <!-- 头像 -->
-    <!-- <el-dropdown class="avatar-container" trigger="click">
+    <div class="right-menu">
+      <!-- 头像 -->
+      <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <el-avatar shape="square" :size="40" :src="$store.getters.profile.avatar"></el-avatar>
+          <!-- <el-avatar shape="square" :size="40" :src="$store.getters.profile.avatar"></el-avatar> -->
+          <el-avatar shape="square" :size="40" :src="logoUrl"></el-avatar>
           <el-icon class="down-triangle" :size="15">
             <CaretBottom />
           </el-icon>
@@ -29,8 +30,8 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
-      </el-dropdown> -->
-    <!-- </div> -->
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
@@ -38,6 +39,8 @@
 // import { useStore } from 'vuex'
 import Hamburger from '@/components/Hamburger'
 import Breadcrumb from '@/components/Breadcrumb'
+
+const logoUrl = require('@/assets/logo.png')
 
 // const store = useStore()
 // const logout = () => {

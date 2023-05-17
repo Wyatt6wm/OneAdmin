@@ -1,7 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Login from '@/views/login'
 import Layout from '@/layout'
 
 const routes = [
+  {
+    path: '/login',
+    component: Login
+  },
   {
     path: '/',
     // redirect: '/profile', // 路径/重定向到/profile

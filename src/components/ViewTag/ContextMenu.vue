@@ -4,13 +4,13 @@
       刷新
     </li>
     <li @click="onCloseAllClick">
-      全部删除
+      全部关闭
     </li>
     <li @click="onCloseRightClick">
-      删除右侧
+      关闭右侧
     </li>
     <li @click="onCloseOtherClick">
-      删除其他
+      关闭其他
     </li>
   </ul>
 </template>

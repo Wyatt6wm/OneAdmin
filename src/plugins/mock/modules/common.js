@@ -24,7 +24,9 @@ export function getProfile() {
   const data = {
     succ: true,
     mesg: null,
-    data: {}
+    data: {
+      name: 'hahaha'
+    }
   }
   return {
     apiActive: getProfileActive,

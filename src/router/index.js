@@ -1,100 +1,54 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '@/views/login'
-import Layout from '@/layout'
+import publicRoutes from './public-routes'
+// import privateRoutes from './private-routes'
+import store from '@/store'
+import { isTokenTimeout } from '@/utils/token'
 
-const routes = [
-  {
-    path: '/login',
-    component: Login
-  },
-  {
-    path: '/',
-    // redirect: '/profile', // 路径/重定向到/profile
-    component: Layout,
-    children: [
-      {
-        path: '/profile',
-        // component: Profile,
-        meta: {
-          isMenu: true,
-          isBreadcrumb: true,
-          title: '个人主页',
-          icon: 'el-icon-user'
-        }
-      },
-      {
-        path: '/404'
-        // component: Err404
-      },
-      {
-        path: '/401'
-        // component: Err401
-      }
-    ]
-  },
-  {
-    path: '/user',
-    // redirect: '/user/manage',
-    component: Layout,
-    meta: {
-      isMenu: true,
-      isBreadcrumb: true,
-      title: '用户',
-      icon: 'personnel'
-    },
-    children: [
-      {
-        path: '/user/manage',
-        // component: UaerManage,
-        meta: {
-          isMenu: true,
-          isBreadcrumb: true,
-          title: '用户管理'
-        },
-        children: [
-          {
-            path: '/user/role',
-            // component: RoleList,
-            meta: {
-              isMenu: true,
-              isBreadcrumb: true,
-              title: '角色列表'
-            }
-          },
-          {
-            path: '/user/permission',
-            // component: PermissionList,
-            meta: {
-              isMenu: true,
-              isBreadcrumb: true,
-              title: '权限列表'
-            }
-          }
-        ]
-      },
-      {
-        path: '/user/info/:id', // 动态ID
-        // component: UserInfo,
-        meta: {
-          isBreadcrumb: true,
-          title: 'userInfo'
-        }
-      },
-      {
-        path: '/user/import',
-        // component: Import,
-        meta: {
-          isBreadcrumb: true,
-          title: 'excelImport'
-        }
-      }
-    ]
-  }
-]
+// ---------- 路由配置 ----------
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes: [...publicRoutes] // // 数组合并
+})
+
+// ---------- 路由权限控制 ----------
+
+// 白名单（用户未登录时也能有权限进入的页面）
+const whiteList = ['/login']
+
+/**
+ * 路由前置守卫
+ * @param {*} to 要到那里去
+ * @param {*} from 从哪里来
+ * @param {*} next 是否要去？
+ */
+router.beforeEach(async (to, from, next) => {
+  console.log('Going to', to.path)
+  if (store.getters.token && !isTokenTimeout()) {
+    console.log('Token exists and is valid')
+    // 1、若用户已登录（有token），不允许进入/login
+    if (to.path === '/login') {
+      next('/')
+    } else {
+      // （登录后或者……）判断用户信息是否已存在，如果不存在，则先获取用户信息
+      if (!store.getters.hasProfile) {
+        console.log('Request profile information')
+        await store.dispatch('common/getProfile')
+      }
+      next()
+    }
+  } else {
+    console.log('Token does not exit or is invalid')
+    if (store.getters.token && isTokenTimeout()) {
+      store.dispatch('common/logout')
+    }
+    // 2、若用户未登录（无token或token超时），只能进入/login或其他白名单里面的页面
+    if (whiteList.indexOf(to.path) > -1) {
+      next()
+    } else {
+      next('/login')
+    }
+  }
 })
 
 export default router

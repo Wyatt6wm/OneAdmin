@@ -1,6 +1,6 @@
 // 全局的vuex配置
 
-import { SIDEBAR_OPENED, TOKEN } from '@/constant'
+import { SIDEBAR_OPENED, TOKEN, VIEW_TAG_LIST } from '@/constant'
 import {
   getStorageItem,
   setStorageItem,
@@ -21,7 +21,8 @@ export default {
     sidebarOpened:
       getStorageItem(SIDEBAR_OPENED) == null
         ? true
-        : getStorageItem(SIDEBAR_OPENED)
+        : getStorageItem(SIDEBAR_OPENED),
+    viewTagList: getStorageItem(VIEW_TAG_LIST) || []
   },
 
   // （翻译：变化）专注于修改state，理论上是修改state的唯一途径，必须同步执行
@@ -39,17 +40,57 @@ export default {
     changeSidebarOpened(state) {
       state.sidebarOpened = !state.sidebarOpened
       setStorageItem(SIDEBAR_OPENED, state.sidebarOpened)
+    },
+    // 添加新的页面标签数据到缓存中的页面标签列表中
+    addViewTagList(state, tag) {
+      const isFind = state.viewTagList.find((item) => {
+        return item.path === tag.path
+      })
+      if (!isFind) {
+        state.viewTagList.push(tag)
+        setStorageItem(VIEW_TAG_LIST, state.viewTagList)
+      }
+    },
+    // 删除一个或多个标签
+    removeViewTags(state, mode, index) {
+      if (mode === 'index') {
+        state.viewTagList.splice(index, 1)
+      } else if (mode === 'all') {
+        let viewTagIndex = -1
+        for (let i = 0; i < state.viewTagList.length; i++) {
+          // 如果主页重定向的页面改了，这里的路径也要改
+          if (state.viewTagList[i].fullPath === '/profile') {
+            viewTagIndex = i
+            break
+          }
+        }
+        if (viewTagIndex === -1) {
+          state.viewTagList = []
+        } else {
+          state.viewTagList.splice(
+            viewTagIndex + 1,
+            state.viewTagList.length - viewTagIndex + 1
+          )
+          state.viewTagList.splice(0, viewTagIndex)
+        }
+      } else if (mode === 'other') {
+        state.viewTagList.splice(
+          index + 1,
+          state.viewTagList.length - index + 1
+        )
+        state.viewTagList.splice(0, index)
+      } else if (mode === 'right') {
+        state.viewTagList.splice(
+          index + 1,
+          state.viewTagList.length - index + 1
+        )
+      }
+      setStorageItem(VIEW_TAG_LIST, state.viewTagList)
     }
   },
 
   // 业务逻辑代码，可以异步，但不能直接操作state，视图dispatch触发action，action再commit触发mutation
   actions: {
-    /**
-     * 切换菜单栏伸缩状态
-     */
-    changeSidebarOpened() {
-      this.commit('common/changeSidebarOpened')
-    },
     /**
      * 登录请求动作
      * @param {*} context
@@ -100,6 +141,28 @@ export default {
       // TODO 清理权限相关配置
       // 返回登录页
       router.push('/login')
+    },
+    /**
+     * 切换菜单栏伸缩状态
+     */
+    changeSidebarOpened() {
+      this.commit('common/changeSidebarOpened')
+    },
+    /**
+     * 添加新的页面标签数据到缓存中的页面标签列表中
+     * @param {*} context
+     * @param {fullPath, meta, name, params, path, query, title} tag
+     */
+    addViewTagList(context, tag) {
+      this.commit('common/addViewTagList', tag)
+    },
+    /**
+     * 删除一个或多个页面标签
+     * @param {*} context
+     * @param {type: 'other'||'right'||'index', index}
+     */
+    removeViewTags(context, mode, index) {
+      this.commit('common/removeViewTags', mode, index)
     }
   }
 }

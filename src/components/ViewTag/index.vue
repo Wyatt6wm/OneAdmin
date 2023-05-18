@@ -30,7 +30,7 @@ const isActive = (tag) => {
 
 // 关闭页面标签
 const onCloseClick = (index) => {
-  store.dispatch('global/removeViewTags', 'index', index)
+  store.dispatch('common/removeViewTags', 'index', index)
 }
 // 右键菜单相关
 const selectIndex = ref(0)

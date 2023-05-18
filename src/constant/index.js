@@ -10,3 +10,5 @@ export const TOKEN_TIMEOUT = 2 * 3600 * 1000 // 2h
 // ---------- 组件有关 ----------
 // 侧边栏展开
 export const SIDEBAR_OPENED = 'sidebarOpened'
+// 页面标签列表
+export const VIEW_TAG_LIST = 'viewTagList'

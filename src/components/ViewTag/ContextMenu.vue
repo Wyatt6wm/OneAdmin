@@ -46,16 +46,16 @@ const onRefreshClick = () => {
 }
 
 const onCloseAllClick = () => {
-  store.dispatch('global/removeViewTags', 'all')
+  store.dispatch('common/removeViewTags', 'all')
   router.push('/')
 }
 
 const onCloseRightClick = () => {
-  store.dispatch('global/removeViewTags', 'right', props.index)
+  store.dispatch('common/removeViewTags', 'right', props.index)
 }
 
 const onCloseOtherClick = () => {
-  store.dispatch('global/removeViewTags', 'other', props.index)
+  store.dispatch('common/removeViewTags', 'other', props.index)
   // 增加功能：如果在未被选中的页面标签右键关闭其他标签，则跳转到该标签的页面
   if (!(props.tagPath === route.path)) {
     router.push(props.tagPath)

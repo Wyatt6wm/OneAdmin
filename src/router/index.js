@@ -3,6 +3,7 @@ import publicRoutes from './public_routes'
 import privateRoutes from './private_routes'
 import store from '@/store'
 import { isTokenTimeout } from '@/utils/token'
+import { ElMessage } from 'element-plus'
 
 // ---------- 路由配置 ----------
 
@@ -37,6 +38,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     if (store.getters.token && isTokenTimeout()) {
       store.dispatch('common/logout')
+      ElMessage.error('登录超时')
     }
     // 2、若用户未登录（无token或token超时），只能进入/login或其他白名单里面的页面
     if (whiteList.indexOf(to.path) > -1) {

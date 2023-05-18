@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import publicRoutes from './public-routes'
-// import privateRoutes from './private-routes'
+import publicRoutes from './public_routes'
+import privateRoutes from './private_routes'
 import store from '@/store'
 import { isTokenTimeout } from '@/utils/token'
 
@@ -8,7 +8,7 @@ import { isTokenTimeout } from '@/utils/token'
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes: [...publicRoutes] // // 数组合并
+  routes: [...publicRoutes, ...privateRoutes] // 数组合并
 })
 
 // ---------- 路由权限控制 ----------

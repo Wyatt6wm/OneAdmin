@@ -52,7 +52,9 @@ export default {
       }
     },
     // 删除一个或多个标签
-    removeViewTags(state, mode, index) {
+    removeViewTags(state, payload) {
+      const mode = payload.mode
+      const index = payload.index
       if (mode === 'index') {
         state.viewTagList.splice(index, 1)
       } else if (mode === 'all') {
@@ -159,10 +161,10 @@ export default {
     /**
      * 删除一个或多个页面标签
      * @param {*} context
-     * @param {type: 'other'||'right'||'index', index}
+     * @param {mode: 'other'||'right'||'index', index} payload 参数对象，包含mode和index（可选）属性
      */
-    removeViewTags(context, mode, index) {
-      this.commit('common/removeViewTags', mode, index)
+    removeViewTags(context, payload) {
+      this.commit('common/removeViewTags', payload)
     }
   }
 }

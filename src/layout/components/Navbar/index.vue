@@ -19,9 +19,6 @@
             <router-link to="/">
               <el-dropdown-item>首页</el-dropdown-item>
             </router-link>
-            <router-link to="/profile">
-              <el-dropdown-item>个人首页</el-dropdown-item>
-            </router-link>
             <a target="__blank" href="">
               <el-dropdown-item>系统文档</el-dropdown-item>
             </a>

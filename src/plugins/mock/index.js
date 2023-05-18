@@ -23,8 +23,8 @@ function fnCreate(module, moduleActive = true) {
             opts.data = opts.body ? JSON.parse(opts.body) : null
             delete opts.body
             console.log('\n')
-            console.log('%cmock拦截: ', 'color:blue', opts)
-            console.log('%cmock响应: ', 'color:blue', res.data)
+            console.log('%cMock拦截: ', 'color:blue', opts)
+            console.log('%cMock响应: ', 'color:blue', res.data)
             return res.data
           })
         }

@@ -1,4 +1,5 @@
 const loginActive = true
+const getProfileActive = true
 
 // 登录接口
 export function login() {
@@ -14,6 +15,21 @@ export function login() {
     apiActive: loginActive,
     url: '/login',
     type: 'post', // 必须要小写
+    data
+  }
+}
+
+// 获取个人信息接口
+export function getProfile() {
+  const data = {
+    succ: true,
+    mesg: null,
+    data: {}
+  }
+  return {
+    apiActive: getProfileActive,
+    url: '/getProfile',
+    type: 'get', // 必须要小写
     data
   }
 }

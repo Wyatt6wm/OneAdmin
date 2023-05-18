@@ -29,7 +29,7 @@ service.interceptors.request.use(
       // 用户被动退出的主动处理方案：token超时，被动退出
       if (isTokenTimeout()) {
         store.dispatch('common/logout')
-        return Promise.reject(new Error('Token超时失效'))
+        return Promise.reject(new Error('登录超时'))
       }
       config.headers.Authorization = `Bearer ${store.getters.token}` // 在报文头中注入token
     }

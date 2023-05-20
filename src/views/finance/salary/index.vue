@@ -7,14 +7,10 @@
     </el-card>
     <el-tabs type="border-card" class="salary-detail-card" stretch>
       <el-tab-pane label="工资条">
-        <div>
-          <el-empty description="暂未开放" />
-        </div>
+        <salary-bill></salary-bill>
       </el-tab-pane>
       <el-tab-pane label="五险（养老+医疗+失业+工伤+生育）">
-        <div>
-          <el-empty description="暂未开放" />
-        </div>
+        <insurance></insurance>
       </el-tab-pane>
       <el-tab-pane label="人寿 & 穗岁康">
         <div>
@@ -27,20 +23,26 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="住房公积金">
-        <div>
-          <el-empty description="暂未开放" />
-        </div>
+        <housing-fund></housing-fund>
       </el-tab-pane>
       <el-tab-pane label="企业年金">
         <div>
           <el-empty description="暂未开放" />
         </div>
       </el-tab-pane>
+      <el-tab-pane label="工会福利">
+        <welfare></welfare>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import SalaryBill from './components/SalaryBill.vue'
+import Insurance from './components/Insurance.vue'
+import HousingFund from './components/HousingFund.vue'
+import Welfare from './components/Welfare.vue'
+</script>
 
 <style lang="scss" scoped>
 .salary-statistic-card {

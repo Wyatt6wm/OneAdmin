@@ -8,8 +8,8 @@
       <!-- 头像 -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <el-avatar shape="square" :size="40" :src="$store.getters.profile.avatar"></el-avatar> -->
-          <el-avatar shape="square" :size="40" :src="logoUrl"></el-avatar>
+          <!-- <el-avatar shape="circle" :size="40" :src="$store.getters.profile.avatar"></el-avatar> -->
+          <el-avatar shape="circle" :size="40" :src="logoUrl"></el-avatar>
           <el-icon class="down-triangle" :size="15">
             <CaretBottom />
           </el-icon>

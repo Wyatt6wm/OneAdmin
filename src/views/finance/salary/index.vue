@@ -12,12 +12,7 @@
       <el-tab-pane label="五险（养老+医疗+失业+工伤+生育）">
         <insurance></insurance>
       </el-tab-pane>
-      <el-tab-pane label="人寿 & 穗岁康">
-        <div>
-          <el-empty description="暂未开放" />
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="泰康">
+      <el-tab-pane label="人寿 & 泰康 & 穗岁康">
         <div>
           <el-empty description="暂未开放" />
         </div>

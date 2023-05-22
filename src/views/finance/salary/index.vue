@@ -1,10 +1,5 @@
 <template>
   <div>
-    <el-card class="salary-statistic-card">
-      <div>
-        <el-empty description="统计数据（暂未开放）" />
-      </div>
-    </el-card>
     <el-tabs type="border-card" class="salary-detail-card" stretch>
       <el-tab-pane label="工资条">
         <salary-bill></salary-bill>
@@ -39,8 +34,4 @@ import HousingFund from './components/HousingFund.vue'
 import Welfare from './components/Welfare.vue'
 </script>
 
-<style lang="scss" scoped>
-.salary-statistic-card {
-  margin-bottom: 6px;
-}
-</style>
+<style lang="scss" scoped></style>

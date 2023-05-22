@@ -40,6 +40,10 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class='pagination-box'>
+      <el-pagination background layout="total, sizes, prev, pager, next,jumper" :total="1000"
+        :page-sizes="[100, 200, 300, 400]" />
+    </div>
   </div>
 </template>
 
@@ -253,6 +257,11 @@ const salaryBillData = [
   .button-area {
     text-align: right;
     padding-bottom: 10px;
+  }
+
+  .pagination-box {
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
 }
 </style>

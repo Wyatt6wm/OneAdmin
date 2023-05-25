@@ -12,13 +12,25 @@ OneAdmin - 统一管理台，定位为 WyattAppRealm 系列应用中大一统的
 
 ### 3.1. 前后端接口规范
 
-前后端接口交互包含两个阶段：前端请求后端、后端响应请求。对于第一阶段的前端请求后端动作，API 接口除了预先定义好的基础参数外，填入 3 个重要的参数：请求方法`method`（GET/POST 等，默认是 GET）、请求`url`、数据对象`data`（非必须）。对于第二阶段的后端响应请求动作，API 接口的返回除了基础参数，有 3 个重要的参数：成功标志`succ`（true/false）、响应信息`mesg`、响应数据对象`data`。如果后端向前端返回状态码，赋值在`data.code`参数。
+前后端接口交互包含两个阶段：前端请求后端、后端响应请求。对于第一阶段的前端请求后端动作，API 接口除了预先定义好的基础参数外，填入 3 个重要的参数：
+
+- 请求方法`method`（GET/POST 等，默认是 GET）;
+
+- 请求`url`;
+
+- 数据对象`data`（非必须）。
+
+对于第二阶段的后端响应请求动作，API 接口的返回除了基础参数，有 3 个重要的参数：
+
+- 成功标志`succ`（true/false）;
+- 响应信息`mesg`;
+- 响应数据对象`data`。如果后端向前端返回状态码，赋值在`data.code`参数。
 
 ## 4. 开发指南
 
 ### 4.1. 图标的使用
 
-通过自定义的图标组件，支持三类图标：[ElementPlus 图标](https://element-plus.gitee.io/zh-CN/component/icon.html#%E5%9B%BE%E6%A0%87%E9%9B%86%E5%90%88)；外部 SVG 图标；本地 SVG 图标。其中本地 SVG 图标已经存储在`src/assets/icons/svg`目录下，如需新增则添加到该目录。三类图标的使用方法分别如下：
+OneAdmin 支持三类图标的使用：[ElementPlus 图标](https://element-plus.gitee.io/zh-CN/component/icon.html#%E5%9B%BE%E6%A0%87%E9%9B%86%E5%90%88)；外部 SVG 图标；本地 SVG 图标。其中外部 SVG 图标和本地 SVG 图标都通过自定义组件`SvgIcon`进行支持，本地 SVG 图标已经存储在`src/assets/icons/svg`目录下，如需新增则需要将图标文件添加到该目录。三类图标的使用方法分别如下：
 
 ```vue
 <el-icon><avatar /></el-icon>

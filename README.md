@@ -93,7 +93,7 @@ docker pull nginx:1.21.6
 - 时区设置成东 8 区（Asia/Shanghai）。
 
 ```shell
-docker run --name nginx -d -v /root/nginx/ssl_cert:/etc/nginx/ssl_cert:rw -v /root/nginx/nginx.conf:/etc/nginx/nginx.conf:rw -v /root/nginx/html:/usr/share/nginx/html:rw -v /root/nginx/log:/var/log/nginx:rw -p 80:80/tcp -p 443:443/tcp --restart=unless-stopped -e TZ="Asia/Shanghai" nginx:1.21.6
+docker run --name nginx -d -v /root/nginx/ssl_cert:/etc/nginx/ssl_cert:rw -v /root/nginx/nginx.conf:/etc/nginx/nginx.conf:rw -v /root/nginx/html:/usr/share/nginx/html:rw -v /root/nginx/log:/var/log/nginx:rw -p 80:80/tcp -p 443:443/tcp --net oneplatform-net --restart=unless-stopped -e TZ="Asia/Shanghai" nginx:1.21.6
 ```
 
 将上一节中生成的`dist`目录拷贝到本地的`/root/nginx/html/one-admin`目录下。为 Nginx 生成配置文件`nginx.conf`并填入以下配置内容，上传到服务器``/etc/nginx/`目录下。
@@ -173,10 +173,10 @@ docker restart nginx
 - `localhost.crt`证书文件
 - `localhost.key`私钥文件
 
-将这两个文件复制到用来挂在到 docker 的目录下，我这里是`F:\AppData\docker_mount\nginx\ssl_cert`。执行命令运行 Nginx 容器：
+将这两个文件复制到用来挂载到 docker 的目录下，我这里是`D:\WyattAppRealmMount\nginx\ssl_cert`，如果用自己的目录只需要调换目录名即可。执行命令运行 Nginx 容器：
 
 ```shell
-docker run --name nginx -d -v D:\WyattAppRealmMount\nginx\ssl_cert:/etc/nginx/ssl_cert:rw -v D:\WyattAppRealmMount\nginx\nginx.conf:/etc/nginx/nginx.conf:rw -v D:\WyattAppRealmMount\nginx\html:/usr/share/nginx/html:rw -v D:\WyattAppRealmMount\nginx\log:/var/log/nginx:rw -p 80:80/tcp -p 443:443/tcp --restart=unless-stopped -e TZ="Asia/Shanghai" nginx:1.21.6
+docker run --name nginx -d -v D:\WyattAppRealmMount\nginx\ssl_cert:/etc/nginx/ssl_cert:rw -v D:\WyattAppRealmMount\nginx\nginx.conf:/etc/nginx/nginx.conf:rw -v D:\WyattAppRealmMount\nginx\html:/usr/share/nginx/html:rw -v D:\WyattAppRealmMount\nginx\log:/var/log/nginx:rw -p 80:80/tcp -p 443:443/tcp --net oneplatform-net --restart=unless-stopped -e TZ="Asia/Shanghai" nginx:1.21.6
 ```
 
 打开 Windows 防火墙的 443 端口：控制面板 → 系统和安全 →Windows Defender 防火墙 → 高级设置 → 入站规则 → 新建规则 → 端口 → 下一页 →TCP，特地本地端口：443→ 下一页 → 允许连接 → 下一页 → 域、专用、公用全选 → 下一页 → 名称“HTTPS 端口”→ 完成。

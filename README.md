@@ -161,3 +161,24 @@ http {
 ```shell
 docker restart nginx
 ```
+
+## 附录 A Windows 开发运行 Nginx 容器
+
+从[https://github.com/FiloSottile/mkcert](https://github.com/FiloSottile/mkcert)下载`mkcert`工具，下载下来的 exe 文件`mkcert-v1.4.4-windows-amd64.exe`重命名为`mkcert.exe`。用它生成证书文件，参考上一节在云服务商获取的 SSL 证书，只需要用到 crt 文件和 key 文件，所以这里只需要为 Windows 本地开发环境生成这两个文件：
+
+```powershell
+.\mkcert.exe -key-file localhost.key -cert-file localhost.crt localhost
+```
+
+- `localhost.crt`证书文件
+- `localhost.key`私钥文件
+
+将这两个文件复制到用来挂在到 docker 的目录下，我这里是`F:\AppData\docker_mount\nginx\ssl_cert`。执行命令运行 Nginx 容器：
+
+```shell
+docker run --name nginx -d -v D:\WyattAppRealmMount\nginx\ssl_cert:/etc/nginx/ssl_cert:rw -v D:\WyattAppRealmMount\nginx\nginx.conf:/etc/nginx/nginx.conf:rw -v D:\WyattAppRealmMount\nginx\html:/usr/share/nginx/html:rw -v D:\WyattAppRealmMount\nginx\log:/var/log/nginx:rw -p 80:80/tcp -p 443:443/tcp --restart=unless-stopped -e TZ="Asia/Shanghai" nginx:1.21.6
+```
+
+打开 Windows 防火墙的 443 端口：控制面板 → 系统和安全 →Windows Defender 防火墙 → 高级设置 → 入站规则 → 新建规则 → 端口 → 下一页 →TCP，特地本地端口：443→ 下一页 → 允许连接 → 下一页 → 域、专用、公用全选 → 下一页 → 名称“HTTPS 端口”→ 完成。
+
+配置文件也参考前面章节的`nginx.conf`把服务器域名改成`localhost`即可。

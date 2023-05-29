@@ -1,7 +1,6 @@
 // 自定义封装axios后的请求服务
 
 import axios from 'axios'
-import { baseUrl } from '@/utils/common'
 import store from '@/store'
 import { ElMessage } from 'element-plus'
 import { isTokenTimeout } from '@/utils/token'
@@ -11,7 +10,7 @@ const service = axios.create({
   // 默认请求方法
   method: 'GET',
   // 基础url前缀
-  baseURL: baseUrl + '/api',
+  baseURL: '/api',
   // 请求头信息
   headers: {
     'Content-Type': 'application/json;charset=UTF-8'
@@ -45,14 +44,15 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   // 请求成功时的处理函数
   (response) => {
-    const { succ, mesg, data } = response.data
+    const { succ, code, mesg, data } = response.data
     // 要根据succ的（业务层面上的）成功与否决定接下来的操作
     if (succ) {
       return data // 成功时返回解析后的业务数据
     } else {
       // 业务失败时（请求成功，但业务失败）
-      ElMessage.error(mesg)
-      return Promise.reject(new Error(mesg))
+      // TODO 失败处理情形
+      ElMessage.error('' + code + mesg)
+      return Promise.reject(new Error('' + code + mesg))
     }
   },
   // 请求失败时（如404）的处理函数

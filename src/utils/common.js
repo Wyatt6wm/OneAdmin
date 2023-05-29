@@ -1,6 +1,3 @@
-// 服务器地址
-export const baseUrl = 'http://localhost:8888'
-
 /**
  * 判断数据是否为空值（null/undefined/{}/[]）
  * @param {*} data

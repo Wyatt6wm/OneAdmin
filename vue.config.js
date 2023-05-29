@@ -6,6 +6,17 @@ function resolve(dir) {
 
 // https://cli.vuejs.org/zh/guide/webpack.html#简单的配置方式
 module.exports = {
+  // webpack提供了devServer代理功能，可以把所有请求到当前服务中的请求，转发到另外的服务器上。详见：https://www.webpackjs.com/configuration/dev-server/
+  devServer: {
+    proxy: {
+      // 当地址中有/api的时候会触发代理机制，转发到目标服务器。这时候对/api/login的请求会转发成：目标主机/api/login
+      '/api': {
+        target: 'http://localhost:8000/', // 本地测试环境
+        // target: 'http://basic-gateway:8000/', // 运行环境
+        changeOrigin: true // 允许跨域
+      }
+    }
+  },
   chainWebpack(config) {
     // 设置svg-sprite-loader（解决项目自定义图标不显示的问题）
     // config为webpack配置对象

@@ -7,9 +7,10 @@ import request from '../request'
  */
 export const login = (loginForm) => {
   return request({
-    method: 'POST',
-    url: '/login',
-    data: loginForm
+    // method: 'POST',
+    method: 'GET',
+    url: '/login'
+    // data: loginForm
   })
 }
 

@@ -7,7 +7,6 @@ import {
   removeAllStorageItem
 } from '@/utils/storage'
 import api from '@/api'
-import md5 from 'md5'
 import { setTokenTimestamp } from '@/utils/token'
 import router from '@/router'
 
@@ -105,7 +104,7 @@ export default {
         api.common
           .login({
             username,
-            password: md5(password)
+            password
           })
           .then((data) => {
             this.commit('common/setToken', data.token) // 触发mutations里面的setToken()函数

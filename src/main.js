@@ -13,9 +13,10 @@ import router from './router'
 import store from './store'
 // 引入Mock挡板
 import installMock from './plugins/mock'
+import { MOCK_ACTIVE } from './constant'
 
 const app = createApp(App)
 installElementPlus(app)
 installIcons(app)
-installMock(true)
+installMock(MOCK_ACTIVE)
 app.use(store).use(router).mount('#app')

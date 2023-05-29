@@ -1,5 +1,10 @@
 // 常量
 
+// ---------- 应用运行有关常量 ----------
+const env = 'dev'
+export const SERVER =
+  env === 'dev' ? 'http://localhost:8000/' : 'http://basic-gateway:8000/'
+export const MOCK_ACTIVE = env === 'dev'
 // ---------- token有关常量 ----------
 // token
 export const TOKEN = 'token'

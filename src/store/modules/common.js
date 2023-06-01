@@ -1,14 +1,21 @@
 // 全局的vuex配置
 
-import { SIDEBAR_OPENED, TOKEN, VIEW_TAG_LIST } from '@/constant'
+import {
+  TOKEN,
+  TOKEN_EXPIRED_TIME,
+  PERMISSION,
+  SIDEBAR_OPENED,
+  VIEW_TAG_LIST
+} from '@/constant'
 import {
   getStorageItem,
   setStorageItem,
+  // removeStorageItem,
   removeAllStorageItem
 } from '@/utils/storage'
 import api from '@/api'
-import { setTokenTimestamp } from '@/utils/token'
 import router from '@/router'
+import { ElMessage } from 'element-plus'
 
 export default {
   namespaced: true,
@@ -16,6 +23,7 @@ export default {
   // 存储状态的变量
   state: {
     token: getStorageItem(TOKEN) || '', // 先从LocalStorage获取token，没有时再赋默认值空
+    permission: getStorageItem(PERMISSION) || {},
     profile: {},
     sidebarOpened:
       getStorageItem(SIDEBAR_OPENED) == null
@@ -24,22 +32,43 @@ export default {
     viewTagList: getStorageItem(VIEW_TAG_LIST) || []
   },
 
-  // （翻译：变化）专注于修改state，理论上是修改state的唯一途径，必须同步执行
+  // ----------
+  // mutation翻译：变化
+  // 专注于修改state，理论上是修改state的唯一途径，必须同步执行
   mutations: {
-    // 存储token
-    setToken(state, token) {
-      state.token = token // 存到vuex中，其他地方使用
-      setStorageItem(TOKEN, token) // 存到LocalStorage中用来自动登录
+    // 存储token及其过期时间
+    setToken(state, payload) {
+      state.token = payload.token
+      setStorageItem(TOKEN, payload.token) // 用来下次自动登录
+      setStorageItem(TOKEN_EXPIRED_TIME, payload.tokenExpiredTime)
     },
+
+    // 存储用户权限
+    setPermission(state, permission) {
+      state.permission = permission
+      setStorageItem(PERMISSION, permission)
+    },
+
     // 存储个人信息
     setProfile(state, profile) {
       state.profile = profile
     },
+
+    // 退出登录时清除state保存的量
+    clearStateOnLogout(state) {
+      state.token = ''
+      state.permision = {}
+      state.profile = {}
+      state.sidebarOpened = true
+      state.viewTagList = []
+    },
+
     // 切换菜单栏伸缩状态
     changeSidebarOpened(state) {
       state.sidebarOpened = !state.sidebarOpened
-      setStorageItem(SIDEBAR_OPENED, state.sidebarOpened)
+      setStorageItem(SIDEBAR_OPENED, state.sidebarOpened) // 记住菜单展开/收起状态
     },
+
     // 添加新的页面标签数据到缓存中的页面标签列表中
     addViewTagList(state, tag) {
       const isFind = state.viewTagList.find((item) => {
@@ -50,6 +79,7 @@ export default {
         setStorageItem(VIEW_TAG_LIST, state.viewTagList)
       }
     },
+
     // 删除一个或多个标签
     removeViewTags(state, payload) {
       const mode = payload.mode
@@ -90,10 +120,12 @@ export default {
     }
   },
 
-  // 业务逻辑代码，可以异步，但不能直接操作state，视图dispatch触发action，action再commit触发mutation
+  // ----------
+  // 业务逻辑代码，可以异步，但不能直接操作state
+  // 视图dispatch触发action，action再commit触发mutation
   actions: {
     /**
-     * 登录请求动作
+     * 登录
      * @param {*} context
      * @param {*} loginForm 包含用户名和密码
      * @returns Promise对象
@@ -106,19 +138,33 @@ export default {
             username,
             password
           })
-          .then((data) => {
-            this.commit('common/setToken', data.token) // 触发mutations里面的setToken()函数
-            // TODO 这里要不要用commit？
-            setTokenTimestamp()
-            setStorageItem('username', username) // 记住账号
-            router.push('/')
-            resolve()
+          .then((res) => {
+            // ----- 认证成功 -----
+            if (res.succ) {
+              const payload = {
+                token: res.data.token,
+                tokenExpiredTime: res.data.tokenExpiredTime
+              }
+              this.commit('common/setToken', payload)
+              setStorageItem('username', username) // 登录页面记住账号
+
+              const permission = res.data.permision
+              this.commit('common/setPermission', permission)
+
+              router.push('/')
+              resolve()
+            } else {
+              // ----- 认证失败 -----
+              ElMessage.error(res.mesg)
+              reject(new Error(res.mesg))
+            }
           })
-          .catch((err) => {
-            reject(err)
+          .catch((error) => {
+            reject(error)
           })
       })
     },
+
     /**
      * 获取用户信息
      * @param {*} context
@@ -128,27 +174,29 @@ export default {
       this.commit('common/setProfile', data) // 触发mutations里面的setProfile()函数
       return data
     },
+
     /**
      * 退出登录（用户主动退出方案）
      */
     logout() {
       // 清理vuex
-      this.commit('common/setToken', '') // 清理token
-      this.commit('common/setProfile', {}) // 清理用户信息
+      this.commit('common/clearStateOnLogout')
       // 清理LocalStorage
       const username = getStorageItem('username')
       removeAllStorageItem()
       setStorageItem('username', username)
-      // TODO 清理权限相关配置
+
       // 返回登录页
       router.push('/login')
     },
+
     /**
      * 切换菜单栏伸缩状态
      */
     changeSidebarOpened() {
       this.commit('common/changeSidebarOpened')
     },
+
     /**
      * 添加新的页面标签数据到缓存中的页面标签列表中
      * @param {*} context
@@ -157,6 +205,7 @@ export default {
     addViewTagList(context, tag) {
       this.commit('common/addViewTagList', tag)
     },
+
     /**
      * 删除一个或多个页面标签
      * @param {*} context

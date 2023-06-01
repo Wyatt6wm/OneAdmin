@@ -9,6 +9,9 @@ export const MOCK_ACTIVE = env === 'dev'
 export const TOKEN = 'token'
 export const TOKEN_EXPIRED_TIME = 'tokenExpiredTime'
 
+// ---------- 权限有关 ----------
+export const PERMISSION = 'permission'
+
 // ---------- 组件有关 ----------
 export const SIDEBAR_OPENED = 'sidebarOpened'
 export const VIEW_TAG_LIST = 'viewTagList'

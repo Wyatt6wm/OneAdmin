@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import publicRoutes from './public_routes'
 import privateRoutes from './private_routes'
 import store from '@/store'
-import { isTokenTimeout } from '@/utils/token'
+import { isTokenExpired } from '@/utils/token'
 import { ElMessage } from 'element-plus'
 
 // ---------- 路由配置 ----------
@@ -24,7 +24,7 @@ const whiteList = ['/login']
  * @param {*} next 是否要去？
  */
 router.beforeEach(async (to, from, next) => {
-  if (store.getters.token && !isTokenTimeout()) {
+  if (store.getters.token && !isTokenExpired()) {
     // 1、若用户已登录（有token），不允许进入/login
     if (to.path === '/login') {
       next('/')
@@ -36,7 +36,7 @@ router.beforeEach(async (to, from, next) => {
       next()
     }
   } else {
-    if (store.getters.token && isTokenTimeout()) {
+    if (store.getters.token && isTokenExpired()) {
       store.dispatch('common/logout')
       ElMessage.error('登录超时')
     }

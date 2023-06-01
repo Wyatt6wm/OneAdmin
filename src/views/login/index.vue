@@ -92,7 +92,7 @@ const handleLogin = () => {
     // 2、登录动作
     loading.value = true
     store
-      .dispatch('common/login', loginForm.value) // 通过vuex封装的动作（login模块的login action）来访问后端API并获取token
+      .dispatch('common/login', loginForm.value) // 通过vuex封装的动作（login模块的login action）来访问后端API并获取token等
       .then(() => {
         loading.value = false
         router.push('/') // 3、登录后操作：前往主页

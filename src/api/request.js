@@ -3,7 +3,7 @@
 import axios from 'axios'
 import store from '@/store'
 import { ElMessage } from 'element-plus'
-import { isTokenTimeout } from '@/utils/token'
+import { isTokenExpired } from '@/utils/token'
 
 // 自定义请求服务（axios自定义实例），配置项见：https://www.axios-http.cn/docs/req_config
 const service = axios.create({
@@ -26,9 +26,9 @@ service.interceptors.request.use(
   (config) => {
     if (store.getters.token) {
       // 用户被动退出的主动处理方案：token超时，被动退出
-      if (isTokenTimeout()) {
+      if (isTokenExpired()) {
         store.dispatch('common/logout')
-        return Promise.reject(new Error('登录超时'))
+        return Promise.reject(new Error('登录过期'))
       }
       config.headers.Authorization = `Bearer ${store.getters.token}` // 在报文头中注入token
     }
@@ -42,20 +42,20 @@ service.interceptors.request.use(
 
 // axios实例的响应拦截器
 service.interceptors.response.use(
-  // 请求成功时的处理函数
+  // ----- 1.网络请求成功时 -----
   (response) => {
-    const { succ, code, mesg, data } = response.data
-    // 要根据succ的（业务层面上的）成功与否决定接下来的操作
-    if (succ) {
-      return data // 成功时返回解析后的业务数据
-    } else {
-      // 业务失败时（请求成功，但业务失败）
-      // TODO 失败处理情形
-      ElMessage.error('' + code + mesg)
-      return Promise.reject(new Error('' + code + mesg))
-    }
+    return response.data // 由于业务处理有差异，成功/失败都交给每次要用单独处理
+
+    // if (response.data.succ) {
+    // ----- 1.1.业务处理成功 -----
+    // return response.data
+    // } else {
+    // ----- 1.2.业务处理失败（请求成功，但业务失败） -----
+    // ElMessage.error('' + code + ' ' + mesg)
+    // return Promise.reject(new Error('' + code + ' ' + mesg))
+    // }
   },
-  // 请求失败时（如404）的处理函数
+  // ----- 2.网络请求失败时（如404） -----
   (error) => {
     // 用户被动退出的被动处理方案（后端通过状态码通知前端进行处理）
     // 1、其他设备登录，本设备强制下线（这里没实现）
@@ -63,7 +63,7 @@ service.interceptors.response.use(
     if (
       error.response &&
       error.response.data &&
-      error.response.data.code === 401
+      error.response.data.code === 401 // TODO 这里的状态码要改
     ) {
       store.dispatch('common/logout')
     }

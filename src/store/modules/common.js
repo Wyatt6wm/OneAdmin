@@ -3,7 +3,8 @@
 import {
   TOKEN,
   TOKEN_EXPIRED_TIME,
-  PERMISSION,
+  ROLES,
+  PERMISSIONS,
   SIDEBAR_OPENED,
   VIEW_TAG_LIST
 } from '@/constant'
@@ -23,7 +24,8 @@ export default {
   // 存储状态的变量
   state: {
     token: getStorageItem(TOKEN) || '', // 先从LocalStorage获取token，没有时再赋默认值空
-    permission: getStorageItem(PERMISSION) || {},
+    roles: getStorageItem(ROLES) || {},
+    permissions: getStorageItem(PERMISSIONS) || {},
     profile: {},
     sidebarOpened:
       getStorageItem(SIDEBAR_OPENED) == null
@@ -43,10 +45,16 @@ export default {
       setStorageItem(TOKEN_EXPIRED_TIME, payload.tokenExpiredTime)
     },
 
+    // 存储用户角色
+    setRoles(state, roles) {
+      state.roles = roles
+      setStorageItem(ROLES, roles)
+    },
+
     // 存储用户权限
-    setPermission(state, permission) {
-      state.permission = permission
-      setStorageItem(PERMISSION, permission)
+    setPermissions(state, permissions) {
+      state.permissions = permissions
+      setStorageItem(PERMISSIONS, permissions)
     },
 
     // 存储个人信息
@@ -131,12 +139,13 @@ export default {
      * @returns Promise对象
      */
     login(context, loginForm) {
-      const { username, password } = loginForm
+      const { username, password, verifyCode } = loginForm
       return new Promise((resolve, reject) => {
         api.common
           .login({
             username,
-            password
+            password,
+            verifyCode
           })
           .then((res) => {
             // ----- 认证成功 -----
@@ -148,8 +157,10 @@ export default {
               this.commit('common/setToken', payload)
               setStorageItem('username', username) // 登录页面记住账号
 
-              const permission = res.data.permision
-              this.commit('common/setPermission', permission)
+              const roles = res.data.roles
+              const permissions = res.data.permissions
+              this.commit('common/setRoles', roles)
+              this.commit('common/setPermissions', permissions)
 
               router.push('/')
               resolve()

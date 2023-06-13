@@ -44,7 +44,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   // ----- 1.网络请求成功时 -----
   (response) => {
-    return response.data // 由于业务处理有差异，成功/失败都交给每次要用单独处理
+    return response.data // 由于业务处理有差异，成功/失败都交给对应逻辑单独处理
 
     // if (response.data.succ) {
     // ----- 1.1.业务处理成功 -----

@@ -21,6 +21,19 @@
           <svg-icon :icon="passwordType === 'password' ? 'eye' : 'eye-open'"></svg-icon>
         </span>
       </el-form-item>
+      <el-form-item prop="verifyCode">
+        <el-col :span="14"><span class="svg-container">
+            <svg-icon icon="article-create"></svg-icon>
+          </span>
+          <el-input type="text" placeholder="验证码" name="verifyCode" maxlength="16"
+            v-model="loginForm.verifyCode"></el-input>
+        </el-col>
+        <el-col :span="10">
+          <div class="kaptcha-box" @click="refreshKaptcha">
+            <el-image class="kaptcha-img" :src="kaptchaSrc" :fit="none"></el-image>
+          </div>
+        </el-col>
+      </el-form-item>
       <!-- TODO 注册和忘记密码功能 -->
       <el-button type="primary" style="width:100%;margin-top:20px;margin-bottom:30px" :loading="loading"
         @click="handleLogin()">
@@ -35,7 +48,7 @@
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { usernameValidator, passwordValidator } from './validator'
+import { usernameValidator, passwordValidator, verifyCodeValidator } from './validator'
 import { getStorageItem } from '@/utils/storage'
 
 const store = useStore() // 获取vuex实例store
@@ -51,7 +64,8 @@ const tipsContent = `
 // 表单数据
 const loginForm = ref({
   username: getStorageItem('username') || '', // 自动填充记住的用户名
-  password: ''
+  password: '',
+  verifyCode: ''
 })
 
 // 登录表单验证规则
@@ -69,6 +83,13 @@ const loginRules = ref({
       trigger: 'blur',
       validator: passwordValidator()
     }
+  ],
+  verifyCode: [
+    {
+      required: true,
+      trigger: 'blur',
+      validator: verifyCodeValidator()
+    }
   ]
 })
 
@@ -80,6 +101,13 @@ const onChangePwdType = () => {
   } else {
     passwordType.value = 'password'
   }
+}
+
+// 刷新验证码
+const GET_KAPTCHA_API = '/api/getKaptcha'
+const kaptchaSrc = ref(GET_KAPTCHA_API)
+const refreshKaptcha = () => {
+  kaptchaSrc.value = GET_KAPTCHA_API + '?' + Math.random() // 用随机数解决图片缓存导致不切换的问题
 }
 
 // 登录事件
@@ -154,6 +182,16 @@ $cursor: #fff;
         color: $light_gray;
         height: 47px;
         caret-color: $cursor;
+      }
+    }
+
+    .kaptcha-box {
+      height: 47px;
+      // padding-right: 12px;
+
+      .kaptcha-img {
+        width: 100%;
+        height: 100%;
       }
     }
   }

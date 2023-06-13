@@ -23,3 +23,13 @@ export const passwordValidator = () => {
     }
   }
 }
+
+export const verifyCodeValidator = () => {
+  return (rule, value, callback) => {
+    if (!value.length) {
+      callback(new Error('请输入验证码'))
+    } else {
+      callback()
+    }
+  }
+}

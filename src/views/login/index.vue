@@ -50,6 +50,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { usernameValidator, passwordValidator, verifyCodeValidator } from './validator'
 import { getStorageItem } from '@/utils/storage'
+import { generateSimpleUUID } from '@/utils/common'
 
 const store = useStore() // 获取vuex实例store
 const router = useRouter() // 获取router实例
@@ -104,10 +105,10 @@ const onChangePwdType = () => {
 }
 
 // 刷新验证码
-const GET_KAPTCHA_API = '/api/getKaptcha'
+const GET_KAPTCHA_API = '/api/getKaptchaWithKey'
 const kaptchaSrc = ref(GET_KAPTCHA_API)
 const refreshKaptcha = () => {
-  kaptchaSrc.value = GET_KAPTCHA_API + '?' + Math.random() // 用随机数解决图片缓存导致不切换的问题
+  kaptchaSrc.value = GET_KAPTCHA_API + '?key=' + generateSimpleUUID()
 }
 
 // 登录事件

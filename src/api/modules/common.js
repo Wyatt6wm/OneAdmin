@@ -22,3 +22,13 @@ export const getProfile = () => {
     url: '/getProfile'
   })
 }
+
+/**
+ * 退出登录
+ * @returns 请求的响应
+ */
+export const logout = () => {
+  return request({
+    url: '/logout'
+  })
+}

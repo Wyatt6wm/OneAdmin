@@ -30,7 +30,7 @@ service.interceptors.request.use(
         store.dispatch('common/logout')
         return Promise.reject(new Error('登录过期'))
       }
-      config.headers.Authorization = `Bearer ${store.getters.token}` // 在报文头中注入token
+      config.headers.token = `${store.getters.token}` // Sa-Token框架要求在报文头中注入token
     }
     // 必须返回config对象
     return config

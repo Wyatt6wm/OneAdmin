@@ -190,15 +190,32 @@ export default {
      * 退出登录（用户主动退出方案）
      */
     logout() {
-      // 清理vuex
-      this.commit('common/clearStateOnLogout')
-      // 清理LocalStorage
-      const username = getStorageItem('username')
-      removeAllStorageItem()
-      setStorageItem('username', username)
+      return new Promise((resolve, reject) => {
+        api.common
+          .logout()
+          .then((res) => {
+            // ----- 退出登录成功 -----
+            if (res.succ) {
+              // 清理vuex
+              this.commit('common/clearStateOnLogout')
+              // 清理LocalStorage
+              const username = getStorageItem('username')
+              removeAllStorageItem()
+              setStorageItem('username', username)
 
-      // 返回登录页
-      router.push('/login')
+              // 返回登录页
+              router.push('/login')
+              resolve()
+            } else {
+              // ----- 退出登录失败 -----
+              ElMessage.error(res.mesg)
+              reject(new Error(res.mesg))
+            }
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
 
     /**

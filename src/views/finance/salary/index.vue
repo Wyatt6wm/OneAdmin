@@ -4,10 +4,10 @@
       <el-tab-pane label="工资条">
         <salary-bill></salary-bill>
       </el-tab-pane>
-      <el-tab-pane label="五险（养老+医疗+失业+工伤+生育）">
+      <el-tab-pane label="五险">
         <insurance></insurance>
       </el-tab-pane>
-      <el-tab-pane label="人寿 & 泰康 & 穗岁康">
+      <el-tab-pane label="商业险（人寿，泰康，穗岁康）">
         <div>
           <el-empty description="暂未开放" />
         </div>

@@ -1,39 +1,57 @@
 <template>
   <div class="profile-container">
-    <el-row>
+    <el-row :gutter="10">
       <el-col :span="10">
-        <el-card class="user-info-card">
-          <template #header>
-            <div>
-              <span><b>个人信息</b></span>
-            </div>
-          </template>
-          <div class="user-info">
-            <el-col :span="18" :offset="3">
-              <div class="avatar-wrapper">
-                <!-- <el-avatar shape="square" :size="40" :src="$store.getters.profile.avatar"></el-avatar> -->
-                <el-avatar shape="circle" :size="200" :src="logoUrl"></el-avatar>
+        <el-row>
+          <el-card class="user-info-card">
+            <template #header>
+              <div>
+                <span><b>个人信息</b></span>
               </div>
-              <div class="nickname">
-                <h1>昵称</h1>
+            </template>
+            <el-row class="user-info">
+              <el-col :span="8">
+                <div class="avatar-wrapper">
+                  <el-avatar shape="circle" :size="80" :src="logoUrl"></el-avatar>
+                </div>
+                <div class="edit-button">
+                  <el-button plain>修改个人信息</el-button>
+                </div>
+              </el-col>
+              <el-col :span="16">
+                <div class="nickname">
+                  <h1>昵称</h1>
+                </div>
+                <div class="motto">
+                  <span>这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭。</span>
+                </div>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-row>
+        <el-row>
+          <el-card class="quick-access-card">
+            <template #header>
+              <div>
+                <span><b>快捷入口</b></span>
               </div>
-              <div class="motto">
-                <span>这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭。</span>
-              </div>
-            </el-col>
-          </div>
-          <div class="edit-button">
-            <el-button plain>修改个人信息</el-button>
-          </div>
-        </el-card>
+            </template>
+            <el-row>
+              <el-col :span="24">
+                hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-row>
       </el-col>
       <el-col :span="14">
-        <el-card>
+        <el-card class="data-static">
           <template #header>
             <div>
-              <span><b>快捷入口</b></span>
+              <span><b>数据看板</b></span>
             </div>
           </template>
+          vfinvjfdnvnvfnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
         </el-card>
       </el-col>
     </el-row>
@@ -47,15 +65,10 @@ const logoUrl = require('@/assets/logo.png')
 <style lang="scss" scoped>
 .profile-container {
   .user-info-card {
-    margin-right: 10px;
-
     .user-info {
-      text-align: center;
-
       .avatar-wrapper {
         position: relative;
-        padding-top: 35px;
-        padding-bottom: 15px;
+        text-align: center;
 
         .el-avatar {
           --el-avatar-background-color: none;
@@ -63,19 +76,21 @@ const logoUrl = require('@/assets/logo.png')
       }
 
       .nickname {
-        padding-bottom: 15px;
+        padding-bottom: 10px;
       }
 
       .motto {
         color: #606266;
-        padding-bottom: 30px;
       }
     }
 
     .edit-button {
-      text-align: right;
-      padding-bottom: 20px;
+      text-align: center;
     }
+  }
+
+  .quick-access-card {
+    margin-top: 6px;
   }
 }
 </style>

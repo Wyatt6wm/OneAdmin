@@ -22,15 +22,16 @@
         </span>
       </el-form-item>
       <el-form-item prop="verifyCode">
-        <el-col :span="14"><span class="svg-container">
+        <el-col :span="14">
+          <span class="svg-container">
             <svg-icon icon="article-create"></svg-icon>
           </span>
-          <el-input type="text" placeholder="验证码" name="verifyCode" maxlength="16"
+          <el-input type="text" placeholder="验证码" name="verifyCode" maxlength="10"
             v-model="loginForm.verifyCode"></el-input>
         </el-col>
         <el-col :span="10">
-          <div class="kaptcha-box" @click="refreshKaptcha">
-            <el-image class="kaptcha-img" :src="kaptchaSrc" :fit="none"></el-image>
+          <div class="verify-code-box" @click="refreshVerifyCode">
+            <el-image class="verify-code-img" :src="verifyCodeBase64"></el-image>
           </div>
         </el-col>
       </el-form-item>
@@ -50,7 +51,6 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { usernameValidator, passwordValidator, verifyCodeValidator } from './validator'
 import { getStorageItem } from '@/utils/storage'
-import { generateSimpleUUID } from '@/utils/common'
 
 const store = useStore() // 获取vuex实例store
 const router = useRouter() // 获取router实例
@@ -94,7 +94,7 @@ const loginRules = ref({
   ]
 })
 
-// 密码框密文/明文显示
+// ----- 密码框密文/明文显示 -----
 const passwordType = ref('password')
 const onChangePwdType = () => {
   if (passwordType.value === 'password') {
@@ -104,14 +104,16 @@ const onChangePwdType = () => {
   }
 }
 
-// 刷新验证码
-const GET_KAPTCHA_API = '/api/getKaptchaWithKey'
-const kaptchaSrc = ref(GET_KAPTCHA_API)
-const refreshKaptcha = () => {
-  kaptchaSrc.value = GET_KAPTCHA_API + '?key=' + generateSimpleUUID()
+// ----- 验证码：初始化+刷新 -----
+const verifyCodeBase64 = ref('')
+const refreshVerifyCode = () => {
+  store.dispatch('common/getVerifyCode').then((base64Iamge) => {
+    verifyCodeBase64.value = base64Iamge
+  })
 }
+verifyCodeBase64.value = refreshVerifyCode()
 
-// 登录事件
+// ----- 登录 -----
 const loading = ref(false)
 const loginFormRef = ref(null) // 绑定上面声明了ref="loginFormRef"的<el-form>的实例
 const handleLogin = () => {
@@ -129,11 +131,11 @@ const handleLogin = () => {
       .catch((err) => {
         console.log(err)
         loading.value = false
+        refreshVerifyCode()
       })
   })
 }
-
-// 监听登录按钮回车事件
+// 回车登录
 document.onkeydown = (event) => {
   if (event.keyCode === 13) {
     handleLogin()
@@ -186,11 +188,11 @@ $cursor: #fff;
       }
     }
 
-    .kaptcha-box {
+    .verify-code-box {
       height: 47px;
       // padding-right: 12px;
 
-      .kaptcha-img {
+      .verify-code-img {
         width: 100%;
         height: 100%;
       }

@@ -11,7 +11,6 @@ import {
 import {
   getStorageItem,
   setStorageItem,
-  // removeStorageItem,
   removeAllStorageItem
 } from '@/utils/storage'
 import api from '@/api'
@@ -23,7 +22,9 @@ export default {
 
   // 存储状态的变量
   state: {
-    token: getStorageItem(TOKEN) || '', // 先从LocalStorage获取token，没有时再赋默认值空
+    verifyCodeKey: '',
+    token: getStorageItem(TOKEN) || '',
+    tokenExpiredTime: getStorageItem(TOKEN_EXPIRED_TIME) || '',
     roles: getStorageItem(ROLES) || {},
     permissions: getStorageItem(PERMISSIONS) || {},
     profile: {},
@@ -38,23 +39,25 @@ export default {
   // mutation翻译：变化
   // 专注于修改state，理论上是修改state的唯一途径，必须同步执行
   mutations: {
-    // 存储token及其过期时间
-    setToken(state, payload) {
-      state.token = payload.token
-      setStorageItem(TOKEN, payload.token) // 用来下次自动登录
-      setStorageItem(TOKEN_EXPIRED_TIME, payload.tokenExpiredTime)
+    // 存储验证码key
+    setVerifyCodeKey(state, key) {
+      state.verifyCodeKey = key
     },
-
+    // 存储token
+    setToken(state, token) {
+      state.token = token
+    },
+    // 存储token过期时间
+    setTokenExpiredTime(state, time) {
+      state.tokenExpiredTime = time
+    },
     // 存储用户角色
     setRoles(state, roles) {
       state.roles = roles
-      setStorageItem(ROLES, roles)
     },
-
     // 存储用户权限
     setPermissions(state, permissions) {
       state.permissions = permissions
-      setStorageItem(PERMISSIONS, permissions)
     },
 
     // 存储个人信息
@@ -133,6 +136,26 @@ export default {
   // 视图dispatch触发action，action再commit触发mutation
   actions: {
     /**
+     * 获取验证码
+     * @param {*} context
+     * @returns 验证码Base64格式图像
+     */
+    getVerifyCode(context) {
+      return api.common
+        .getKaptcha()
+        .then((res) => {
+          if (res.succ) {
+            const { verifyCodeKey, verifyCodeImage } = res.data
+            this.commit('common/setVerifyCodeKey', verifyCodeKey)
+            return verifyCodeImage
+          }
+        })
+        .catch(() => {
+          ElMessage.error('获取验证码失败')
+        })
+    },
+
+    /**
      * 登录
      * @param {*} context
      * @param {*} loginForm 包含用户名和密码
@@ -145,22 +168,22 @@ export default {
           .login({
             username,
             password,
+            verifyCodeKey: context.state.verifyCodeKey,
             verifyCode
           })
           .then((res) => {
             // ----- 认证成功 -----
             if (res.succ) {
-              const payload = {
-                token: res.data.token,
-                tokenExpiredTime: res.data.tokenExpiredTime
-              }
-              this.commit('common/setToken', payload)
-              setStorageItem('username', username) // 登录页面记住账号
-
-              const roles = res.data.roles
-              const permissions = res.data.permissions
+              const { token, tokenExpiredTime, roles, permissions } = res.data
+              this.commit('common/setToken', token)
+              this.commit('common/setTokenExpiredTime', tokenExpiredTime)
               this.commit('common/setRoles', roles)
               this.commit('common/setPermissions', permissions)
+              setStorageItem(TOKEN, token) // 用来下次自动登录
+              setStorageItem(TOKEN_EXPIRED_TIME, tokenExpiredTime)
+              setStorageItem(ROLES, roles)
+              setStorageItem(PERMISSIONS, permissions)
+              setStorageItem('username', username) // 登录页面记住账号
 
               router.push('/')
               resolve()

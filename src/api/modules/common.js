@@ -1,6 +1,16 @@
 import request from '../request'
 
 /**
+ * 获取验证码
+ * @returns 请求的响应
+ */
+export const getKaptcha = () => {
+  return request({
+    url: '/getKaptcha'
+  })
+}
+
+/**
  * 用户登录
  * @param { username, password, verifyCode } loginForm 登录动作提交的表单
  * @returns 请求的响应

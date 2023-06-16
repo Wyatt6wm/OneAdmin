@@ -35,6 +35,13 @@
           </div>
         </el-col>
       </el-form-item>
+      <div>
+        <el-row :gutter="10">
+          <el-col :span="17"></el-col>
+          <el-col :span="3"><el-link type="primary" @click="comingSoon()">注册用户</el-link></el-col>
+          <el-col :span="4"><el-link type="primary" @click="comingSoon()">忘记密码</el-link></el-col>
+        </el-row>
+      </div>
       <!-- TODO 注册和忘记密码功能 -->
       <el-button type="primary" style="width:100%;margin-top:20px;margin-bottom:30px" :loading="loading"
         @click="handleLogin()">
@@ -51,6 +58,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { usernameValidator, passwordValidator, verifyCodeValidator } from './validator'
 import { getStorageItem } from '@/utils/storage'
+import { comingSoon } from '@/utils/common'
 
 const store = useStore() // 获取vuex实例store
 const router = useRouter() // 获取router实例

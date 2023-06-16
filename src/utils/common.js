@@ -1,3 +1,12 @@
+import { ElMessage } from 'element-plus'
+
+/**
+ * 功能待开发提示
+ */
+export function comingSoon() {
+  ElMessage.info('此功能正在开发中......')
+}
+
 /**
  * 判断数据是否为空值（null/undefined/{}/[]）
  * @param {*} data

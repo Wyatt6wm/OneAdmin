@@ -1,5 +1,5 @@
 const loginActive = false
-const getProfileActive = true
+const getProfileActive = false
 
 // 登录接口
 export function login() {
@@ -25,7 +25,9 @@ export function getProfile() {
     succ: true,
     mesg: null,
     data: {
-      name: 'hahaha'
+      name: 'hahaha',
+      avatar:
+        'https://img.touxiangwu.com/uploads/allimg/2022010122/byxatb4bthd.jpg'
     }
   }
   return {

@@ -20,6 +20,7 @@ import { ElMessage } from 'element-plus'
 export default {
   namespaced: true,
 
+  // ----------
   // 存储状态的变量
   state: {
     verifyCodeKey: '',
@@ -59,27 +60,24 @@ export default {
     setPermissions(state, permissions) {
       state.permissions = permissions
     },
-
     // 存储个人信息
     setProfile(state, profile) {
       state.profile = profile
     },
-
     // 退出登录时清除state保存的量
     clearStateOnLogout(state) {
+      state.verifyCodeKey = ''
       state.token = ''
-      state.permision = {}
+      state.roles = {}
+      state.permisions = {}
       state.profile = {}
       state.sidebarOpened = true
       state.viewTagList = []
     },
-
     // 切换菜单栏伸缩状态
     changeSidebarOpened(state) {
       state.sidebarOpened = !state.sidebarOpened
-      setStorageItem(SIDEBAR_OPENED, state.sidebarOpened) // 记住菜单展开/收起状态
     },
-
     // 添加新的页面标签数据到缓存中的页面标签列表中
     addViewTagList(state, tag) {
       const isFind = state.viewTagList.find((item) => {
@@ -87,10 +85,8 @@ export default {
       })
       if (!isFind) {
         state.viewTagList.push(tag)
-        setStorageItem(VIEW_TAG_LIST, state.viewTagList)
       }
     },
-
     // 删除一个或多个标签
     removeViewTags(state, payload) {
       const mode = payload.mode
@@ -127,7 +123,6 @@ export default {
           state.viewTagList.length - index + 1
         )
       }
-      setStorageItem(VIEW_TAG_LIST, state.viewTagList)
     }
   },
 
@@ -204,9 +199,8 @@ export default {
      * @param {*} context
      */
     async getProfile(context) {
-      const data = await api.common.getProfile()
-      this.commit('common/setProfile', data) // 触发mutations里面的setProfile()函数
-      return data
+      const res = await api.common.getProfile()
+      this.commit('common/setProfile', res.data)
     },
 
     /**
@@ -244,8 +238,9 @@ export default {
     /**
      * 切换菜单栏伸缩状态
      */
-    changeSidebarOpened() {
+    changeSidebarOpened(context) {
       this.commit('common/changeSidebarOpened')
+      setStorageItem(SIDEBAR_OPENED, context.state.sidebarOpened) // 记住菜单展开/收起状态
     },
 
     /**
@@ -255,6 +250,7 @@ export default {
      */
     addViewTagList(context, tag) {
       this.commit('common/addViewTagList', tag)
+      setStorageItem(VIEW_TAG_LIST, context.state.viewTagList)
     },
 
     /**
@@ -264,6 +260,7 @@ export default {
      */
     removeViewTags(context, payload) {
       this.commit('common/removeViewTags', payload)
+      setStorageItem(VIEW_TAG_LIST, context.state.viewTagList)
     }
   }
 }

@@ -8,8 +8,7 @@
       <!-- 头像 -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <!-- <el-avatar shape="circle" :size="40" :src="$store.getters.profile.avatar"></el-avatar> -->
-          <el-avatar shape="circle" :size="40" :src="logoUrl"></el-avatar>
+          <el-avatar shape="circle" :size="40" :src="avatarSrc"></el-avatar>
           <el-icon class="down-triangle" :size="15">
             <CaretBottom />
           </el-icon>
@@ -33,13 +32,32 @@
 </template>
 
 <script setup>
+import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import Hamburger from '@/components/Hamburger'
 import Breadcrumb from '@/components/Breadcrumb'
 
-const logoUrl = require('@/assets/logo.png')
-
 const store = useStore()
+
+// ----- 头像 -----
+const defaultAvatar = require('@/assets/logo.png')
+const avatarSrc = ref(defaultAvatar)
+const showProfileAvatar = () => {
+  if (store.getters.profile.avatar) {
+    avatarSrc.value = store.getters.profile.avatar
+  }
+}
+// 监听头像是否变化
+watch(
+  () => {
+    return store.getters.hasProfile
+  },
+  showProfileAvatar,
+  {
+    immediate: true
+  }
+)
+
 const logout = () => {
   store.dispatch('common/logout')
 }

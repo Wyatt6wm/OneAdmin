@@ -12,7 +12,7 @@
             <el-row class="user-info">
               <el-col :span="8">
                 <div class="avatar-wrapper">
-                  <el-avatar shape="circle" :size="80" :src="logoUrl"></el-avatar>
+                  <el-avatar shape="circle" :size="80" :src="avatarSrc"></el-avatar>
                 </div>
                 <div class="edit-button">
                   <el-button plain>修改个人信息</el-button>
@@ -20,10 +20,10 @@
               </el-col>
               <el-col :span="16">
                 <div class="nickname">
-                  <h1>昵称</h1>
+                  <h1>{{ hasNickname() ? store.getters.profile.nickname : '昵称' }}</h1>
                 </div>
                 <div class="motto">
-                  <span>这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭，这里填座右铭。</span>
+                  <span>{{ hasMotto() ? store.getters.profile.motto : '' }}</span>
                 </div>
               </el-col>
             </el-row>
@@ -38,7 +38,6 @@
             </template>
             <el-row>
               <el-col :span="24">
-                hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
               </el-col>
             </el-row>
           </el-card>
@@ -48,10 +47,9 @@
         <el-card class="data-static">
           <template #header>
             <div>
-              <span><b>数据看板</b></span>
+              <span><b>数据统计</b></span>
             </div>
           </template>
-          vfinvjfdnvnvfnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
         </el-card>
       </el-col>
     </el-row>
@@ -59,12 +57,56 @@
 </template>
 
 <script setup>
-const logoUrl = require('@/assets/logo.png')
+import { ref, watch } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+
+// ----- 头像 -----
+const defaultAvatar = require('@/assets/logo.png')
+const avatarSrc = ref(defaultAvatar)
+const showProfileAvatar = () => {
+  if (store.getters.profile.avatar) {
+    avatarSrc.value = store.getters.profile.avatar
+  }
+}
+// 监听头像是否变化
+watch(
+  () => {
+    return store.getters.hasProfile
+  },
+  showProfileAvatar,
+  {
+    immediate: true
+  }
+)
+
+// ----- 昵称、格言 -----
+const hasNickname = () => {
+  if (store.getters.hasProfile) {
+    const profile = store.getters.profile
+    if (profile.nickname && profile.nickname.length > 0) {
+      return true
+    }
+  }
+  return false
+}
+const hasMotto = () => {
+  if (store.getters.hasProfile) {
+    const profile = store.getters.profile
+    if (profile.motto && profile.motto.length > 0) {
+      return true
+    }
+  }
+  return false
+}
 </script>
 
 <style lang="scss" scoped>
 .profile-container {
   .user-info-card {
+    width: 100%;
+
     .user-info {
       .avatar-wrapper {
         position: relative;
@@ -76,6 +118,7 @@ const logoUrl = require('@/assets/logo.png')
       }
 
       .nickname {
+        padding-top: 8px;
         padding-bottom: 10px;
       }
 
@@ -90,7 +133,12 @@ const logoUrl = require('@/assets/logo.png')
   }
 
   .quick-access-card {
+    width: 100%;
     margin-top: 6px;
+  }
+
+  .data-static {
+    width: 100%
   }
 }
 </style>

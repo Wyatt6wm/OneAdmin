@@ -18,7 +18,7 @@
             <router-link to="/">
               <el-dropdown-item>首页</el-dropdown-item>
             </router-link>
-            <a target="__blank" href="">
+            <a target="__blank" href="https://github.com/Wyatt6wm/WyattAppRealm-Docs">
               <el-dropdown-item>系统文档</el-dropdown-item>
             </a>
             <el-dropdown-item divided @click="logout">

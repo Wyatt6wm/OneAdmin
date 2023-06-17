@@ -24,7 +24,8 @@ export default {
       meta: {
         isMenu: true,
         isBreadcrumb: true,
-        title: '数据看板'
+        title: '数据看板',
+        icon: 'el-icon-circle-check'
       }
     },
     {
@@ -33,7 +34,8 @@ export default {
       meta: {
         isMenu: true,
         isBreadcrumb: true,
-        title: '收支流水'
+        title: '收支流水',
+        icon: 'el-icon-circle-check'
       }
     },
     {
@@ -42,7 +44,8 @@ export default {
       meta: {
         isMenu: true,
         isBreadcrumb: true,
-        title: '工资福利'
+        title: '工资福利',
+        icon: 'el-icon-circle-check'
       }
     },
     {
@@ -51,7 +54,8 @@ export default {
       meta: {
         isMenu: true,
         isBreadcrumb: true,
-        title: '资产管理'
+        title: '资产管理',
+        icon: 'el-icon-circle-check'
       }
     },
     {
@@ -60,7 +64,8 @@ export default {
       meta: {
         isMenu: true,
         isBreadcrumb: true,
-        title: '参数设置'
+        title: '参数设置',
+        icon: 'el-icon-circle-check'
       }
     }
   ]

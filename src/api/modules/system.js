@@ -1,11 +1,13 @@
 import request from '../request'
 
+const API_PREFIX = '/sys'
+
 /**
  * 获取验证码
  */
 export const getKaptcha = () => {
   return request({
-    url: '/getKaptcha'
+    url: API_PREFIX + '/getKaptcha'
   })
 }
 
@@ -16,7 +18,7 @@ export const getKaptcha = () => {
 export const login = (loginForm) => {
   return request({
     method: 'post',
-    url: '/login',
+    url: API_PREFIX + '/login',
     data: loginForm
   })
 }
@@ -26,7 +28,7 @@ export const login = (loginForm) => {
  */
 export const getProfile = () => {
   return request({
-    url: '/getProfile'
+    url: API_PREFIX + '/getProfile'
   })
 }
 
@@ -35,6 +37,6 @@ export const getProfile = () => {
  */
 export const logout = () => {
   return request({
-    url: '/logout'
+    url: API_PREFIX + '/logout'
   })
 }

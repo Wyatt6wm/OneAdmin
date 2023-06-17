@@ -136,7 +136,7 @@ export default {
      * @returns 验证码Base64格式图像
      */
     getVerifyCode(context) {
-      return api.common
+      return api.system
         .getKaptcha()
         .then((res) => {
           if (res.succ) {
@@ -159,7 +159,7 @@ export default {
     login(context, loginForm) {
       const { username, password, verifyCode } = loginForm
       return new Promise((resolve, reject) => {
-        api.common
+        api.system
           .login({
             username,
             password,
@@ -199,7 +199,7 @@ export default {
      * @param {*} context
      */
     async getProfile(context) {
-      const res = await api.common.getProfile()
+      const res = await api.system.getProfile()
       this.commit('common/setProfile', res.data)
     },
 
@@ -208,7 +208,7 @@ export default {
      */
     logout() {
       return new Promise((resolve, reject) => {
-        api.common
+        api.system
           .logout()
           .then((res) => {
             // ----- 退出登录成功 -----

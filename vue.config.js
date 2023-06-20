@@ -11,9 +11,12 @@ module.exports = {
     proxy: {
       // 当地址中有/api的时候会触发代理机制，转发到目标服务器。这时候对/api/login的请求会转发成：目标主机/api/login
       '/api': {
-        target: 'http://localhost:8000/', // 本地测试环境
-        // target: 'http://oneplatform-gateway:8000/', // 运行环境
-        // target: 'http://admin.wyatt.run:8000/',
+        // 本地连接本地后端
+        // target: 'http://localhost:8000/',
+        // 本地连接云服务器后端
+        // target: 'http://admin.wyatt.run:8000',
+        // 本地连接本地后端 / 生产运行
+        target: 'http://oneplatform-gateway:8000/',
         changeOrigin: true // 允许跨域
       }
     }

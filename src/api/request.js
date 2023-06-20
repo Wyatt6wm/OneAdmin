@@ -24,6 +24,7 @@ const service = axios.create({
 // axios实例的请求拦截器
 service.interceptors.request.use(
   (config) => {
+    console.log('requesting API: ' + config.baseURL + config.url)
     if (store.getters.token) {
       // 用户被动退出的主动处理方案：token超时，被动退出
       if (isTokenExpired()) {

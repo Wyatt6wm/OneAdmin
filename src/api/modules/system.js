@@ -5,20 +5,21 @@ const API_PREFIX = '/sys'
 /**
  * 获取验证码
  */
-export const getKaptcha = () => {
+export const getCaptcha = () => {
   return request({
-    url: API_PREFIX + '/getKaptcha'
+    url: API_PREFIX + '/common/getCaptcha'
   })
 }
 
 /**
  * 用户登录
- * @param { username, password, verifyCode } loginForm 登录动作提交的表单
+ * @param { username, password, captchaKey, captchaInput } loginForm 登录动作提交的表单
  */
 export const login = (loginForm) => {
+  console.log(loginForm)
   return request({
     method: 'post',
-    url: API_PREFIX + '/login',
+    url: API_PREFIX + '/user/login',
     data: loginForm
   })
 }
@@ -28,7 +29,7 @@ export const login = (loginForm) => {
  */
 export const getProfile = () => {
   return request({
-    url: API_PREFIX + '/getProfile'
+    url: API_PREFIX + '/user/getProfile'
   })
 }
 
@@ -37,6 +38,6 @@ export const getProfile = () => {
  */
 export const logout = () => {
   return request({
-    url: API_PREFIX + '/logout'
+    url: API_PREFIX + '/user/logout'
   })
 }

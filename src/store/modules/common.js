@@ -4,7 +4,7 @@ import {
   TOKEN,
   TOKEN_EXPIRED_TIME,
   ROLES,
-  PERMISSIONS,
+  AUTHS,
   SIDEBAR_OPENED,
   VIEW_TAG_LIST
 } from '@/constant'
@@ -23,11 +23,11 @@ export default {
   // ----------
   // 存储状态的变量
   state: {
-    verifyCodeKey: '',
+    captchaKey: '',
     token: getStorageItem(TOKEN) || '',
     tokenExpiredTime: getStorageItem(TOKEN_EXPIRED_TIME) || '',
     roles: getStorageItem(ROLES) || {},
-    permissions: getStorageItem(PERMISSIONS) || {},
+    auths: getStorageItem(AUTHS) || {},
     profile: {},
     sidebarOpened:
       getStorageItem(SIDEBAR_OPENED) == null
@@ -41,8 +41,8 @@ export default {
   // 专注于修改state，理论上是修改state的唯一途径，必须同步执行
   mutations: {
     // 存储验证码key
-    setVerifyCodeKey(state, key) {
-      state.verifyCodeKey = key
+    setCaptchaKey(state, key) {
+      state.captchaKey = key
     },
     // 存储token
     setToken(state, token) {
@@ -57,8 +57,8 @@ export default {
       state.roles = roles
     },
     // 存储用户权限
-    setPermissions(state, permissions) {
-      state.permissions = permissions
+    setAuths(state, auths) {
+      state.auths = auths
     },
     // 存储个人信息
     setProfile(state, profile) {
@@ -135,14 +135,14 @@ export default {
      * @param {*} context
      * @returns 验证码Base64格式图像
      */
-    getVerifyCode(context) {
+    getCaptcha(context) {
       return api.system
-        .getKaptcha()
+        .getCaptcha()
         .then((res) => {
           if (res.succ) {
-            const { verifyCodeKey, verifyCodeImage } = res.data
-            this.commit('common/setVerifyCodeKey', verifyCodeKey)
-            return verifyCodeImage
+            const { captchaKey, captchaImage } = res.data
+            this.commit('common/setCaptchaKey', captchaKey)
+            return captchaImage
           }
         })
         .catch(() => {
@@ -157,27 +157,27 @@ export default {
      * @returns Promise对象
      */
     login(context, loginForm) {
-      const { username, password, verifyCode } = loginForm
+      const { username, password, captchaInput } = loginForm
       return new Promise((resolve, reject) => {
         api.system
           .login({
             username,
             password,
-            verifyCodeKey: context.state.verifyCodeKey,
-            verifyCode
+            captchaKey: context.state.captchaKey,
+            captchaInput
           })
           .then((res) => {
             // ----- 认证成功 -----
             if (res.succ) {
-              const { token, tokenExpiredTime, roles, permissions } = res.data
+              const { token, tokenExpiredTime, roles, auths } = res.data
               this.commit('common/setToken', token)
               this.commit('common/setTokenExpiredTime', tokenExpiredTime)
               this.commit('common/setRoles', roles)
-              this.commit('common/setPermissions', permissions)
+              this.commit('common/setAuths', auths)
               setStorageItem(TOKEN, token) // 用来下次自动登录
               setStorageItem(TOKEN_EXPIRED_TIME, tokenExpiredTime)
               setStorageItem(ROLES, roles)
-              setStorageItem(PERMISSIONS, permissions)
+              setStorageItem(AUTHS, auths)
               setStorageItem('username', username) // 登录页面记住账号
 
               router.push('/')

@@ -13,7 +13,7 @@ export const TOKEN_EXPIRED_TIME = 'tokenExpiredTime'
 
 // ---------- 权限有关 ----------
 export const ROLES = 'roles'
-export const PERMISSIONS = 'permissions'
+export const AUTHS = 'auths'
 
 // ---------- 组件有关 ----------
 export const SIDEBAR_OPENED = 'sidebarOpened'

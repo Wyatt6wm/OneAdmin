@@ -4,7 +4,7 @@ import variables from '@/styles/common/variables.scss'
 
 // 用法：store.getters.XXX
 const getters = {
-  verifyCodeKey: (state) => state.common.verifyCodeKey,
+  captchaKey: (state) => state.common.captchaKey,
   token: (state) => state.common.token,
   hasProfile: (state) => {
     return JSON.stringify(state.common.profile) !== '{}' // true表示用户信息已存在；false表示不存在

@@ -21,17 +21,17 @@
           <svg-icon :icon="passwordType === 'password' ? 'eye' : 'eye-open'"></svg-icon>
         </span>
       </el-form-item>
-      <el-form-item prop="verifyCode">
+      <el-form-item prop="captchaInput">
         <el-col :span="14">
           <span class="svg-container">
             <svg-icon icon="article-create"></svg-icon>
           </span>
-          <el-input type="text" placeholder="验证码" name="verifyCode" maxlength="10"
-            v-model="loginForm.verifyCode"></el-input>
+          <el-input type="text" placeholder="验证码" name="captchaInput" maxlength="5"
+            v-model="loginForm.captchaInput"></el-input>
         </el-col>
         <el-col :span="10">
-          <div class="verify-code-box" @click="refreshVerifyCode">
-            <el-image class="verify-code-img" :src="verifyCodeBase64"></el-image>
+          <div class="captcha-box" @click="refreshCaptcha">
+            <el-image class="captcha-img" :src="captchaImage"></el-image>
           </div>
         </el-col>
       </el-form-item>
@@ -56,7 +56,7 @@
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { usernameValidator, passwordValidator, verifyCodeValidator } from './validator'
+import { usernameValidator, passwordValidator, captchaValidator } from './validator'
 import { getStorageItem } from '@/utils/storage'
 import { comingSoon } from '@/utils/common'
 
@@ -67,14 +67,14 @@ const router = useRouter() // 获取router实例
 const tipsContent = `
   温馨提示：<br>
   &nbsp;&nbsp;1. 用户名由大写英文字母、小写英文字母和数字组成，长度不大于16位。<br>
-  &nbsp;&nbsp;2. 密码由大写英文字母、小写英文字母、数字和特殊字符.~!@#$%^&*_?组成，长度8位~16位。
+  &nbsp;&nbsp;2. 密码由大写英文字母、小写英文字母、数字和特殊字符.~!@#$%^&*_?组成，长度6位~16位。
 `
 
 // 表单数据
 const loginForm = ref({
   username: getStorageItem('username') || '', // 自动填充记住的用户名
   password: '',
-  verifyCode: ''
+  captchaInput: ''
 })
 
 // 登录表单验证规则
@@ -93,11 +93,11 @@ const loginRules = ref({
       validator: passwordValidator()
     }
   ],
-  verifyCode: [
+  captchaInput: [
     {
       required: true,
       trigger: 'blur',
-      validator: verifyCodeValidator()
+      validator: captchaValidator()
     }
   ]
 })
@@ -113,13 +113,13 @@ const onChangePwdType = () => {
 }
 
 // ----- 验证码：初始化+刷新 -----
-const verifyCodeBase64 = ref('')
-const refreshVerifyCode = () => {
-  store.dispatch('common/getVerifyCode').then((base64Iamge) => {
-    verifyCodeBase64.value = base64Iamge
+const captchaImage = ref('')
+const refreshCaptcha = () => {
+  store.dispatch('common/getCaptcha').then((captchaImageBase64) => {
+    captchaImage.value = captchaImageBase64
   })
 }
-verifyCodeBase64.value = refreshVerifyCode()
+captchaImage.value = refreshCaptcha()
 
 // ----- 登录 -----
 const loading = ref(false)
@@ -139,7 +139,7 @@ const handleLogin = () => {
       .catch((err) => {
         console.log(err)
         loading.value = false
-        refreshVerifyCode()
+        refreshCaptcha()
       })
   })
 }
@@ -196,11 +196,10 @@ $cursor: #fff;
       }
     }
 
-    .verify-code-box {
+    .captcha-box {
       height: 47px;
-      // padding-right: 12px;
 
-      .verify-code-img {
+      .captcha-img {
         width: 100%;
         height: 100%;
       }

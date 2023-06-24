@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import publicRoutes from './public_routes'
-import privateRoutes from './private_routes'
 import store from '@/store'
 import { isTokenExpired } from '@/utils/token'
 import { ElMessage } from 'element-plus'
@@ -9,7 +8,7 @@ import { ElMessage } from 'element-plus'
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes: [...publicRoutes, ...privateRoutes] // 数组合并
+  routes: publicRoutes
 })
 
 // ---------- 路由权限控制 ----------
@@ -29,15 +28,11 @@ router.beforeEach(async (to, from, next) => {
     if (to.path === '/login') {
       next('/')
     } else {
-      // （登录后或者……）判断用户信息是否已存在，如果不存在，则先获取用户信息
-      if (!store.getters.hasProfile) {
-        await store.dispatch('common/getProfile')
-      }
       next()
     }
   } else {
     if (store.getters.token && isTokenExpired()) {
-      store.dispatch('common/logout')
+      store.dispatch('Common/logout')
       ElMessage.error('登录超时')
     }
     // 2、若用户未登录（无token或token超时），只能进入/login或其他白名单里面的页面

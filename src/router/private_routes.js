@@ -1,5 +1,5 @@
 // 私有路由表（有权限的路由，取决于用户的权限）
+import UserManage from './modules/user_manage'
+import Finance from './modules/finace'
 
-import finance from './modules/finance'
-
-export default [finance]
+export default [UserManage, Finance]

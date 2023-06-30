@@ -24,6 +24,24 @@ export const login = (loginForm) => {
 }
 
 /**
+ * 获取用户角色
+ */
+export const getRoles = () => {
+  return request({
+    url: API_PREFIX + '/role/getRoles'
+  })
+}
+
+/**
+ * 获取用户权限
+ */
+export const getAuths = () => {
+  return request({
+    url: API_PREFIX + '/auth/getAuths'
+  })
+}
+
+/**
  * 获取用户个人信息
  */
 export const getProfile = () => {

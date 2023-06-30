@@ -13,11 +13,11 @@ const getters = {
 
   // ----- 用户登录相关 -----
   token: (state) => state.userLogin.token,
+  hasRoles: (state) => state.userLogin.hasRoles,
   roles: (state) => state.userLogin.roles,
+  hasAuths: (state) => state.userLogin.hasAuths,
   auths: (state) => state.userLogin.auths,
-  hasProfile: (state) => {
-    return JSON.stringify(state.userLogin.profile) !== '{}' // true表示用户信息已存在；false表示不存在
-  },
+  hasProfile: (state) => state.userLogin.hasProfile,
   profile: (state) => state.userLogin.profile,
 
   // ----- 样式 -----

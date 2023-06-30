@@ -4,13 +4,9 @@ import Storage from '@/utils/storage2'
 import api from '@/api'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
-import publicRoutes from '@/router/public_routes'
 
 const TOKEN = 'token'
 const TOKEN_EXPIRED_TIME = 'tokenExpiredTime'
-const ROLES = 'roles'
-const AUTHS = 'auths'
-const PROFILE = 'profile'
 const USERNAME = 'username'
 
 export default {
@@ -19,9 +15,12 @@ export default {
   state: {
     token: Storage.get(TOKEN) || '',
     tokenExpiredTime: Storage.get(TOKEN_EXPIRED_TIME) || '',
-    roles: Storage.get(ROLES) || {},
-    auths: Storage.get(AUTHS) || {},
-    profile: Storage.get(PROFILE) || {}
+    hasRoles: false,
+    roles: {},
+    hasAuths: false,
+    auths: {},
+    hasProfile: false,
+    profile: {}
   },
 
   mutations: {
@@ -35,26 +34,28 @@ export default {
     },
     // 存储用户角色
     setRoles(state, roles) {
+      state.hasRoles = true
       state.roles = roles
     },
     // 存储用户权限
     setAuths(state, auths) {
+      state.hasAuths = true
       state.auths = auths
     },
     // 存储个人信息
     setProfile(state, profile) {
+      state.hasProfile = true
       state.profile = profile
-    },
-    // 存储路由表
-    setRoutes(state, dynamicRoutes) {
-      state.routes = [...publicRoutes, ...dynamicRoutes]
     },
     // 退出登录时清除state
     clearStateOnLogout(state) {
       state.token = ''
       state.tokenExpiredTime = ''
+      state.hasRoles = false
       state.roles = {}
+      state.hasAuths = false
       state.auths = {}
+      state.hasProfile = false
       state.profile = {}
     }
   },
@@ -86,8 +87,6 @@ export default {
               context.commit('setAuths', auths)
               Storage.set(TOKEN, token) // 用来下次自动登录
               Storage.set(TOKEN_EXPIRED_TIME, tokenExpiredTime)
-              Storage.set(ROLES, roles)
-              Storage.set(AUTHS, auths)
               Storage.set(USERNAME, username) // 登录页面记住账号
 
               resolve()
@@ -104,13 +103,77 @@ export default {
     },
 
     /**
+     * 获取用户角色
+     * @param {*} context
+     * @returns
+     */
+    async getRoles(context) {
+      return new Promise((resolve, reject) => {
+        api.system
+          .getRoles()
+          .then((res) => {
+            if (res.succ) {
+              const { roles } = res.data
+              context.commit('setRoles', roles)
+              resolve()
+            } else {
+              ElMessage.error(res.mesg)
+              reject(new Error(res.mesg))
+            }
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+
+    /**
+     * 获取用户权限
+     * @param {*} context
+     * @returns
+     */
+    async getAuths(context) {
+      return new Promise((resolve, reject) => {
+        api.system
+          .getAuths()
+          .then((res) => {
+            if (res.succ) {
+              const { auths } = res.data
+              context.commit('setAuths', auths)
+              resolve()
+            } else {
+              ElMessage.error(res.mesg)
+              reject(new Error(res.mesg))
+            }
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+
+    /**
      * 获取用户信息
      * @param {*} context
      */
     async getProfile(context) {
-      const res = await api.system.getProfile()
-      context.commit('setProfile', res.data.profile)
-      Storage.set(PROFILE, res.data.profile)
+      return new Promise((resolve, reject) => {
+        api.system
+          .getProfile()
+          .then((res) => {
+            if (res.succ) {
+              const { profile } = res.data
+              context.commit('setProfile', profile)
+              resolve()
+            } else {
+              ElMessage.error(res.mesg)
+              reject(new Error(res.mesg))
+            }
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
 
     /**

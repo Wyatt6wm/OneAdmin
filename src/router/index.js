@@ -29,6 +29,16 @@ router.beforeEach(async (to, from, next) => {
     if (to.path === '/login') {
       next('/')
     } else {
+      // 如果还没有用户角色则查询服务器
+      if (!store.getters.hasRoles) {
+        await store.dispatch('userLogin/getRoles')
+      }
+
+      // 如果还没有用户权限则查询服务器
+      if (!store.getters.hasAuths) {
+        await store.dispatch('userLogin/getAuths')
+      }
+
       // 如果路由表未准备好则更新路由表
       if (!store.getters.routesPrepared) {
         const dynamicRoutes = getDynamicRoutes(store.getters.auths)
@@ -36,6 +46,11 @@ router.beforeEach(async (to, from, next) => {
           router.addRoute(route)
         })
         store.dispatch('common/setRoutesPreparedTrue')
+      }
+
+      // 如果还没有用户信息则查询服务器
+      if (!store.getters.hasProfile) {
+        store.dispatch('userLogin/getProfile')
       }
 
       // 检查用户是否有权限访问当前的非公共路由

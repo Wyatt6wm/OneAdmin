@@ -20,6 +20,7 @@ export default [
         path: '/profile',
         component: Profile,
         meta: {
+          public: true,
           isMenu: true,
           isBreadcrumb: true,
           title: '个人主页',
@@ -28,11 +29,17 @@ export default [
       },
       {
         path: '/404',
-        component: Err404
+        component: Err404,
+        meta: {
+          public: true
+        }
       },
       {
         path: '/401',
-        component: Err401
+        component: Err401,
+        meta: {
+          public: true
+        }
       }
     ]
   }

@@ -29,3 +29,23 @@ export const getDynamicRoutes = (auths) => {
 
   return dynamicRoutes
 }
+
+/**
+ * 检查用户是否有权权限访问某个页面路由
+ * @param {*} auths
+ * @param {*} routeName
+ * @returns
+ */
+export const checkRouteAuth = (auths, routeName) => {
+  let result = false
+  auths.forEach((auth) => {
+    // 页面显示权限标识符格式：view:viewName
+    const regexp = /^view:.*$/
+    if (regexp.test(auth)) {
+      if (routeName === auth.substring(5)) {
+        result = true
+      }
+    }
+  })
+  return result
+}

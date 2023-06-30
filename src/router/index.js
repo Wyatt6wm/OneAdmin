@@ -3,7 +3,7 @@ import publicRoutes from './public_routes'
 import store from '@/store'
 import { isTokenExpired } from '@/utils/token'
 import { ElMessage } from 'element-plus'
-import { getDynamicRoutes } from '@/utils/routes'
+import { getDynamicRoutes, checkRouteAuth } from '@/utils/routes'
 
 // ---------- 路由配置 ----------
 
@@ -38,7 +38,16 @@ router.beforeEach(async (to, from, next) => {
         store.dispatch('common/setRoutesPreparedTrue')
       }
 
-      next()
+      // 检查用户是否有权限访问当前的非公共路由
+      if (!to.meta.public) {
+        if (!checkRouteAuth(store.getters.auths, to.name)) {
+          next('/401')
+        } else {
+          next()
+        }
+      } else {
+        next()
+      }
     }
   } else {
     if (store.getters.token && isTokenExpired()) {

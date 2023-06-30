@@ -14,7 +14,7 @@ import { useStore } from 'vuex'
 
 // 切换动作
 const toggle = () => {
-  store.dispatch('common/changeSidebarOpened')
+  store.dispatch('viewSettings/changeSidebarOpened')
 }
 
 const store = useStore()

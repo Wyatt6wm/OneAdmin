@@ -1,0 +1,31 @@
+import privateRoutes from '@/router/private_routes'
+
+/**
+ * 获取动态路由表
+ * @param {*} context
+ */
+export const getDynamicRoutes = (auths) => {
+  const dynamicRoutes = []
+
+  // 根据用户的页面权限添加私有路由
+  auths.forEach((auth) => {
+    // 页面显示权限标识符格式：view:viewName
+    const regexp = /^view:.*$/
+    if (regexp.test(auth)) {
+      // 通过一级私有路由配置的name属性筛选，因此需要保证name的唯一性和一致性
+      dynamicRoutes.push(
+        ...privateRoutes.filter((route) => {
+          return route.name === auth.substring(5)
+        })
+      )
+    }
+  })
+
+  // 最后添加一条：不匹配路由表中的任一路由则跳转到404
+  dynamicRoutes.push({
+    path: '/:catchAll(.*)',
+    redirect: '/404'
+  })
+
+  return dynamicRoutes
+}

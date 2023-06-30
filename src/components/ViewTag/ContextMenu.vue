@@ -46,12 +46,12 @@ const onRefreshClick = () => {
 }
 
 const onCloseAllClick = () => {
-  store.dispatch('common/removeViewTags', { mode: 'all' })
+  store.dispatch('viewSettings/removeViewTags', { mode: 'all' })
   router.push('/')
 }
 
 const onCloseRightClick = () => {
-  store.dispatch('common/removeViewTags', { mode: 'right', index: props.index })
+  store.dispatch('viewSettings/removeViewTags', { mode: 'right', index: props.index })
   // 增加功能：如果在未被选中的页面标签关闭右侧标签，则跳转到该标签的页面
   if (!(props.tagPath === route.path)) {
     router.push(props.tagPath)
@@ -59,7 +59,7 @@ const onCloseRightClick = () => {
 }
 
 const onCloseOtherClick = () => {
-  store.dispatch('common/removeViewTags', { mode: 'other', index: props.index })
+  store.dispatch('viewSettings/removeViewTags', { mode: 'other', index: props.index })
   // 增加功能：如果在未被选中的页面标签关闭其他标签，则跳转到该标签的页面
   if (!(props.tagPath === route.path)) {
     router.push(props.tagPath)

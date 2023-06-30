@@ -10,6 +10,7 @@ import Settings from '@/views/finance/settings'
 export default {
   path: '/finance',
   redirect: '/finance/dashboard',
+  name: 'financeManage',
   component: Layout,
   meta: {
     isMenu: true,
@@ -20,6 +21,7 @@ export default {
   children: [
     {
       path: '/finance/dashboard',
+      name: 'financeDashboard',
       component: Dashboard,
       meta: {
         isMenu: true,
@@ -30,6 +32,7 @@ export default {
     },
     {
       path: '/finance/journal',
+      name: 'financeJournal',
       component: Journal,
       meta: {
         isMenu: true,
@@ -40,6 +43,7 @@ export default {
     },
     {
       path: '/finance/salary',
+      name: 'financeSalary',
       component: Salary,
       meta: {
         isMenu: true,
@@ -50,6 +54,7 @@ export default {
     },
     {
       path: '/finance/assets',
+      name: 'financeAssets',
       component: Assets,
       meta: {
         isMenu: true,
@@ -60,6 +65,7 @@ export default {
     },
     {
       path: '/finance/settings',
+      name: 'financeSettings',
       component: Settings,
       meta: {
         isMenu: true,

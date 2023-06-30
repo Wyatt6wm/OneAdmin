@@ -28,7 +28,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       // 用户被动退出的主动处理方案：token超时，被动退出
       if (isTokenExpired()) {
-        store.dispatch('common/logout')
+        store.dispatch('userLogin/logout')
         return Promise.reject(new Error('登录过期'))
       }
       config.headers.token = `${store.getters.token}` // Sa-Token框架要求在报文头中注入token
@@ -46,15 +46,6 @@ service.interceptors.response.use(
   // ----- 1.网络请求成功时 -----
   (response) => {
     return response.data // 由于业务处理有差异，成功/失败都交给对应逻辑单独处理
-
-    // if (response.data.succ) {
-    // ----- 1.1.业务处理成功 -----
-    // return response.data
-    // } else {
-    // ----- 1.2.业务处理失败（请求成功，但业务失败） -----
-    // ElMessage.error('' + code + ' ' + mesg)
-    // return Promise.reject(new Error('' + code + ' ' + mesg))
-    // }
   },
   // ----- 2.网络请求失败时（如404） -----
   (error) => {
@@ -66,7 +57,7 @@ service.interceptors.response.use(
       error.response.data &&
       error.response.data.code === 401 // TODO 这里的状态码要改
     ) {
-      store.dispatch('common/logout')
+      store.dispatch('userLogin/logout')
     }
     ElMessage.error(error.message)
     return Promise.reject(error)

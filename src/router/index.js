@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     if (store.getters.token && isTokenExpired()) {
-      store.dispatch('Common/logout')
+      store.dispatch('userLogin/logout')
       ElMessage.error('登录超时')
     }
     // 2、若用户未登录（无token或token超时），只能进入/login或其他白名单里面的页面

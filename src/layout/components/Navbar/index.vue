@@ -59,7 +59,7 @@ watch(
 )
 
 const logout = () => {
-  store.dispatch('common/logout')
+  store.dispatch('userLogin/logout')
 }
 </script>
 

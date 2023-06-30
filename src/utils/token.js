@@ -1,5 +1,6 @@
-import { TOKEN_EXPIRED_TIME } from '@/constant'
 import { setStorageItem, getStorageItem } from './storage'
+
+const TOKEN_EXPIRED_TIME = 'tokenExpiredTime'
 
 // 缓存token过期时间
 export function setExpiredTime(expiredTime) {

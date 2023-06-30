@@ -2,20 +2,16 @@
 
 import Storage from '@/utils/storage2'
 import api from '@/api'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import router from '@/router'
 import { ElMessage } from 'element-plus'
 import publicRoutes from '@/router/public_routes'
-import privateRoutes from '@/router/private_routes'
 
 const TOKEN = 'token'
 const TOKEN_EXPIRED_TIME = 'tokenExpiredTime'
 const ROLES = 'roles'
 const AUTHS = 'auths'
+const PROFILE = 'profile'
 const USERNAME = 'username'
-
-const store = useStore()
-const router = useRouter()
 
 export default {
   namespaced: true,
@@ -25,8 +21,7 @@ export default {
     tokenExpiredTime: Storage.get(TOKEN_EXPIRED_TIME) || '',
     roles: Storage.get(ROLES) || {},
     auths: Storage.get(AUTHS) || {},
-    profile: {},
-    routes: publicRoutes
+    profile: Storage.get(PROFILE) || {}
   },
 
   mutations: {
@@ -64,7 +59,7 @@ export default {
     }
   },
 
-  action: {
+  actions: {
     /**
      * 登录
      * @param {*} context
@@ -72,13 +67,13 @@ export default {
      * @returns Promise对象
      */
     login(context, loginForm) {
-      const { username, password, captchaInput } = loginForm
+      const { username, password, captchaKey, captchaInput } = loginForm
       return new Promise((resolve, reject) => {
         api.system
           .login({
             username,
             password,
-            captchaKey: store.getters.captchaKey,
+            captchaKey,
             captchaInput
           })
           .then((res) => {
@@ -95,15 +90,6 @@ export default {
               Storage.set(AUTHS, auths)
               Storage.set(USERNAME, username) // 登录页面记住账号
 
-              // 路由表
-              const dynamicRoutes = context.getDynamicRoutes(auths)
-              dynamicRoutes.forEach((route) => {
-                router.addRoute(route)
-              })
-
-              context.dispatch('getProfile')
-
-              router.push('/')
               resolve()
             } else {
               // ----- 认证失败 -----
@@ -118,44 +104,13 @@ export default {
     },
 
     /**
-     * 获取动态路由
-     * @param {*} context
-     */
-    getDynamicRoutes(context, auths) {
-      const dynamicRoutes = []
-
-      // 根据用户的页面权限添加私有路由
-      auths.forEach((auth) => {
-        // 页面显示权限标识符格式：view:viewName
-        const regexp = /^view:.*$/
-        if (regexp.test(auth)) {
-          // 通过一级私有路由配置的name属性筛选，因此需要保证name的唯一性和一致性
-          dynamicRoutes.push(
-            ...privateRoutes.filter((route) => {
-              return route.name === auth.substing(5)
-            })
-          )
-        }
-      })
-
-      // 最后添加一条：不匹配路由表中的任一路由则跳转到404
-      dynamicRoutes.push({
-        path: '/:catchAll(.*)',
-        redirect: '/404'
-      })
-
-      context.commit('setRoutes', dynamicRoutes)
-
-      return dynamicRoutes
-    },
-
-    /**
      * 获取用户信息
      * @param {*} context
      */
     async getProfile(context) {
       const res = await api.system.getProfile()
       context.commit('setProfile', res.data.profile)
+      Storage.set(PROFILE, res.data.profile)
     },
 
     /**
@@ -169,9 +124,9 @@ export default {
             // ----- 退出登录成功 -----
             if (res.succ) {
               // 清理vuex
-              this.commit('ViewSettings/clearStateOnLogout')
-              this.commit('Common/clearStateOnLogout')
-              this.commit('UserLogin/clearStateOnLogout')
+              this.commit('viewSettings/clearStateOnLogout')
+              this.commit('common/clearStateOnLogout')
+              this.commit('userLogin/clearStateOnLogout')
               // 清理LocalStorage
               const username = Storage.get(USERNAME)
               Storage.removeAll()

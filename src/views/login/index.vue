@@ -57,7 +57,8 @@ import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { usernameValidator, passwordValidator, captchaValidator } from './validator'
-import { getStorageItem } from '@/utils/storage'
+import Storage from '@/utils/storage2'
+import { getDynamicRoutes } from '@/utils/routes'
 import { comingSoon } from '@/utils/common'
 
 const store = useStore() // 获取vuex实例store
@@ -72,7 +73,7 @@ const tipsContent = `
 
 // 表单数据
 const loginForm = ref({
-  username: getStorageItem('username') || '', // 自动填充记住的用户名
+  username: Storage.get('username') || '', // 自动填充记住的用户名
   password: '',
   captchaInput: ''
 })
@@ -130,10 +131,21 @@ const handleLogin = () => {
     if (!valid) return
     // 2、登录动作
     loading.value = true
+    loginForm.value.captchaKey = store.getters.captchaKey
     store
-      .dispatch('common/login', loginForm.value) // 通过vuex封装的动作（login模块的login action）来访问后端API并获取token等
+      .dispatch('userLogin/login', loginForm.value) // 通过vuex封装的动作（login模块的login action）来访问后端API并获取token等
       .then(() => {
         loading.value = false
+        // 获取用户信息
+        store.dispatch('userLogin/getProfile')
+        // 更新路由表
+        const dynamicRoutes = getDynamicRoutes(store.getters.auths)
+        console.log(dynamicRoutes)
+        dynamicRoutes.forEach((route) => {
+          router.addRoute(route)
+        })
+        console.log(router.getRoutes())
+
         router.push('/') // 3、登录后操作：前往主页
       })
       .catch((err) => {

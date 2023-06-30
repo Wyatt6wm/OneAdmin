@@ -16,7 +16,6 @@ export const getCaptcha = () => {
  * @param { username, password, captchaKey, captchaInput } loginForm 登录动作提交的表单
  */
 export const login = (loginForm) => {
-  console.log(loginForm)
   return request({
     method: 'post',
     url: API_PREFIX + '/user/login',

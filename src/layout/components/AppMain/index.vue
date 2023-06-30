@@ -30,7 +30,7 @@ watch(
     if (!isViewTag(to.path)) return
     const { fullPath, meta, name, params, path, query } = to
     const title = to.meta.title
-    store.dispatch('common/addViewTagList', {
+    store.dispatch('viewSettings/addViewTagList', {
       fullPath,
       meta,
       name,

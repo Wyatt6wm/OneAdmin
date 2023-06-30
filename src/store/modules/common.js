@@ -9,7 +9,8 @@ export default {
   // ----------
   // 存储状态的变量
   state: {
-    captchaKey: ''
+    captchaKey: '',
+    routesPrepared: false
   },
 
   // ----------
@@ -19,6 +20,10 @@ export default {
     // 存储验证码KEY
     setCaptchaKey(state, key) {
       state.captchaKey = key
+    },
+    // 设置路由准备标志
+    setRoutesPrepared(state, flag) {
+      state.routesPrepared = flag
     },
     // 退出登录时清除state
     clearStateOnLogout(state) {
@@ -48,6 +53,14 @@ export default {
         .catch(() => {
           ElMessage.error('获取验证码失败')
         })
+    },
+
+    /**
+     * 将routesPrepared设置成true
+     * @param {*} context
+     */
+    setRoutesPreparedTrue(context) {
+      context.commit('setRoutesPrepared', true)
     }
   }
 }

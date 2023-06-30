@@ -3,6 +3,7 @@ import publicRoutes from './public_routes'
 import store from '@/store'
 import { isTokenExpired } from '@/utils/token'
 import { ElMessage } from 'element-plus'
+import { getDynamicRoutes } from '@/utils/routes'
 
 // ---------- 路由配置 ----------
 
@@ -28,6 +29,15 @@ router.beforeEach(async (to, from, next) => {
     if (to.path === '/login') {
       next('/')
     } else {
+      // 如果路由表未准备好则更新路由表
+      if (!store.getters.routesPrepared) {
+        const dynamicRoutes = getDynamicRoutes(store.getters.auths)
+        dynamicRoutes.forEach((route) => {
+          router.addRoute(route)
+        })
+        store.dispatch('common/setRoutesPreparedTrue')
+      }
+
       next()
     }
   } else {

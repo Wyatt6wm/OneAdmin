@@ -58,7 +58,6 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { usernameValidator, passwordValidator, captchaValidator } from './validator'
 import Storage from '@/utils/storage2'
-import { getDynamicRoutes } from '@/utils/routes'
 import { comingSoon } from '@/utils/common'
 
 const store = useStore() // 获取vuex实例store
@@ -138,13 +137,6 @@ const handleLogin = () => {
         loading.value = false
         // 获取用户信息
         store.dispatch('userLogin/getProfile')
-        // 更新路由表
-        const dynamicRoutes = getDynamicRoutes(store.getters.auths)
-        console.log(dynamicRoutes)
-        dynamicRoutes.forEach((route) => {
-          router.addRoute(route)
-        })
-        console.log(router.getRoutes())
 
         router.push('/') // 3、登录后操作：前往主页
       })

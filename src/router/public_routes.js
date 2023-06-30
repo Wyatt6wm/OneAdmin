@@ -24,7 +24,7 @@ export default [
           isMenu: true,
           isBreadcrumb: true,
           title: '个人主页',
-          icon: 'el-icon-user'
+          icon: 'el-icon-house'
         }
       },
       {

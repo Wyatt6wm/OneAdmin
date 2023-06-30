@@ -135,9 +135,6 @@ const handleLogin = () => {
       .dispatch('userLogin/login', loginForm.value) // 通过vuex封装的动作（login模块的login action）来访问后端API并获取token等
       .then(() => {
         loading.value = false
-        // 获取用户信息
-        store.dispatch('userLogin/getProfile')
-
         router.push('/') // 3、登录后操作：前往主页
       })
       .catch((err) => {

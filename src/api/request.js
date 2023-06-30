@@ -49,16 +49,17 @@ service.interceptors.response.use(
   },
   // ----- 2.网络请求失败时（如404） -----
   (error) => {
+    // TODO
     // 用户被动退出的被动处理方案（后端通过状态码通知前端进行处理）
     // 1、其他设备登录，本设备强制下线（这里没实现）
     // 2、token过期
-    if (
-      error.response &&
-      error.response.data &&
-      error.response.data.code === 401 // TODO 这里的状态码要改
-    ) {
-      store.dispatch('userLogin/logout')
-    }
+    // if (
+    //   error.response &&
+    //   error.response.data &&
+    //   error.response.data.code === 401 // TODO 这里的状态码要改
+    // ) {
+    //   store.dispatch('userLogin/logout')
+    // }
     ElMessage.error(error.message)
     return Promise.reject(error)
   }

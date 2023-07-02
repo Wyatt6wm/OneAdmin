@@ -20,6 +20,7 @@ export default {
     hasAuths: false,
     auths: {},
     hasProfile: false,
+    gettingProfile: false,
     profile: {}
   },
 
@@ -45,6 +46,7 @@ export default {
     // 存储个人信息
     setProfile(state, profile) {
       state.hasProfile = true
+      state.gettingProfile = false
       state.profile = profile
     },
     // 退出登录时清除state
@@ -56,6 +58,7 @@ export default {
       state.hasAuths = false
       state.auths = {}
       state.hasProfile = false
+      state.gettingProfile = false
       state.profile = {}
     }
   },
@@ -157,6 +160,7 @@ export default {
      * @param {*} context
      */
     async getProfile(context) {
+      context.state.gettingProfile = true
       return new Promise((resolve, reject) => {
         api.system
           .getProfile()

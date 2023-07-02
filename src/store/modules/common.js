@@ -59,7 +59,7 @@ export default {
      * 将routesPrepared设置成true
      * @param {*} context
      */
-    setRoutesPreparedTrue(context) {
+    async setRoutesPreparedTrue(context) {
       context.commit('setRoutesPrepared', true)
     }
   }

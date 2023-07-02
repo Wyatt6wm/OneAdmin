@@ -199,6 +199,7 @@ $cursor: #fff;
 
     .captcha-box {
       height: 47px;
+      cursor: pointer;
 
       .captcha-img {
         width: 100%;

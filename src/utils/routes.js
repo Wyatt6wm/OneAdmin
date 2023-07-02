@@ -38,9 +38,9 @@ export const getDynamicRoutes = (auths) => {
  */
 export const checkRouteAuth = (auths, routeName) => {
   let result = false
+  // 页面显示权限标识符格式：view:viewName
+  const regexp = /^view:.*$/
   auths.forEach((auth) => {
-    // 页面显示权限标识符格式：view:viewName
-    const regexp = /^view:.*$/
     if (regexp.test(auth)) {
       if (routeName === auth.substring(5)) {
         result = true

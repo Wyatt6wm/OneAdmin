@@ -39,30 +39,30 @@ router.beforeEach(async (to, from, next) => {
         await store.dispatch('userLogin/getAuths')
       }
 
+      // 如果还没有用户信息则查询服务器
+      if (!store.getters.hasProfile && !store.getters.gettingProfile) {
+        store.dispatch('userLogin/getProfile')
+      }
+
       // 如果路由表未准备好则更新路由表
       if (!store.getters.routesPrepared) {
         const dynamicRoutes = getDynamicRoutes(store.getters.auths)
         dynamicRoutes.forEach((route) => {
           router.addRoute(route)
         })
-        store.dispatch('common/setRoutesPreparedTrue')
-      }
-
-      // 如果还没有用户信息则查询服务器
-      if (!store.getters.hasProfile) {
-        store.dispatch('userLogin/getProfile')
+        await store.dispatch('common/setRoutesPreparedTrue')
+        // 添加完动态路由之后，需要再进行一次主动跳转
+        return next(to.path)
       }
 
       // 检查用户是否有权限访问当前的非公共路由
       if (!to.meta.public) {
         if (!checkRouteAuth(store.getters.auths, to.name)) {
-          next('/401')
-        } else {
-          next()
+          return next('/401')
         }
-      } else {
-        next()
       }
+
+      next()
     }
   } else {
     if (store.getters.token && isTokenExpired()) {

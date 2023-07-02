@@ -10,6 +10,7 @@ const getters = {
 
   // ----- 公共 -----
   captchaKey: (state) => state.common.captchaKey,
+  routesPrepared: (state) => state.common.routesPrepared,
 
   // ----- 用户登录相关 -----
   token: (state) => state.userLogin.token,
@@ -18,6 +19,7 @@ const getters = {
   hasAuths: (state) => state.userLogin.hasAuths,
   auths: (state) => state.userLogin.auths,
   hasProfile: (state) => state.userLogin.hasProfile,
+  gettingProfile: (state) => state.userLogin.gettingProfile,
   profile: (state) => state.userLogin.profile,
 
   // ----- 样式 -----

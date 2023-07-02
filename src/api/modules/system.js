@@ -58,3 +58,24 @@ export const logout = () => {
     url: API_PREFIX + '/user/logout'
   })
 }
+
+/**
+ * 获取用户权限详细列表
+ */
+export const getAuthDetails = () => {
+  return request({
+    url: API_PREFIX + '/auth/getAuthDetails'
+  })
+}
+
+/**
+ * 编辑权限
+ * @param {id 必填, identifier, name, description, activated} authForm 提交的表单
+ */
+export const editAuth = (authForm) => {
+  return request({
+    method: 'post',
+    url: API_PREFIX + '/auth/editAuth',
+    data: authForm
+  })
+}

@@ -1,6 +1,9 @@
 <template>
   <div>
     <el-card height="100%">
+      <div class="button-area">
+        <el-button type="primary" @click="handleAdd">新增权限</el-button>
+      </div>
       <el-table border :data="authDetails">
         <el-table-column label="序号" width="60" type="index"></el-table-column>
         <el-table-column label="状态" width="85">
@@ -29,8 +32,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <edit-auth-dialog :visable="editAuthDialogVisable" @closeDialog="closeDialog" @updateAfterEdit="getAuthDetails"
-      :auth="auth"></edit-auth-dialog>
+    <add-auth-dialog :visable="addAuthDialogVisable" @close="closeAddDialog"
+      @updateAfterAdd="getAuthDetails"></add-auth-dialog>
+    <edit-auth-dialog :visable="editAuthDialogVisable" :auth="auth" @close="closeEditDialog"
+      @updateAfterEdit="getAuthDetails"></edit-auth-dialog>
   </div>
 </template>
 
@@ -39,6 +44,7 @@ import { ref } from 'vue'
 import api from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import EditAuthDialog from './components/EditAuthDialog.vue'
+import AddAuthDialog from './components/AddAuthDislog.vue'
 
 // ----- 获取权限详细列表渲染表格 -----
 const authDetails = ref([])
@@ -58,6 +64,15 @@ const getAuthDetails = async () => {
 }
 getAuthDetails()
 
+// ----- 新增权限 -----
+const addAuthDialogVisable = ref(false)
+const handleAdd = () => {
+  addAuthDialogVisable.value = true
+}
+const closeAddDialog = () => {
+  addAuthDialogVisable.value = false
+}
+
 // ----- 编辑权限 -----
 const editAuthDialogVisable = ref(false)
 const auth = ref({})
@@ -65,7 +80,7 @@ const handleEdit = (row) => {
   editAuthDialogVisable.value = true
   auth.value = row
 }
-const closeDialog = () => {
+const closeEditDialog = () => {
   editAuthDialogVisable.value = false
 }
 
@@ -110,3 +125,10 @@ const handleChangeStatus = (authDetail) => {
 // ----- 删除权限 -----
 const handleDelete = (authDetail) => { }
 </script>
+
+<style lang="scss" scoped>
+.button-area {
+  text-align: left;
+  padding-bottom: 10px;
+}
+</style>

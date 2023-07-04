@@ -10,7 +10,7 @@ import Settings from '@/views/finance/settings'
 export default {
   path: '/finance',
   redirect: '/finance/dashboard',
-  name: 'financeManage',
+  name: 'finance',
   component: Layout,
   meta: {
     isMenu: true,

@@ -58,6 +58,7 @@ watch(
   }
 )
 
+// ----- 退出登录 -----
 const logout = () => {
   store.dispatch('userLogin/logout')
 }

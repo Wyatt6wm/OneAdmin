@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visable" :title="title" @close="onClose()">
+  <el-dialog :model-value="props.visable" :title="title" @close="onClose()">
     <el-form :model="authForm">
       <el-form-item>
         <el-switch v-model="editIdentifier" active-text="修改权限标识符" />
@@ -37,7 +37,7 @@ const props = defineProps({
     required: true
   }
 })
-const emits = defineEmits(['closeDialog', 'updateAfterEdit'])
+const emits = defineEmits(['close', 'updateAfterEdit'])
 
 // ----- 初始化 -----
 // 标题
@@ -73,8 +73,8 @@ const onClose = () => {
   editName.value = false
   editDescription.value = false
   authForm.identifier = authForm.name = authForm.description = ''
-  // 调用父组件closeDialog事件
-  emits('closeDialog')
+  // 调用父组件close事件
+  emits('close')
 }
 
 // ----- 点击“确定” -----

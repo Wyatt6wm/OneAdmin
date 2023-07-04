@@ -1,47 +1,44 @@
 <template>
-  <el-card height="100%">
-    <el-table border :data="authDetails">
-      <el-table-column label="序号" width="70" type="index"></el-table-column>
-      <el-table-column label="状态" width="90">
-        <template #default="scope">
-          <el-tag :type="scope.row.activated ? 'success' : 'warning'">
-            {{ scope.row.activated ? '生效' : '未生效' }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="权限标识符" prop="identifier"></el-table-column>
-      <el-table-column label="权限名称" prop="name"></el-table-column>
-      <el-table-column label="权限描述" prop="description"></el-table-column>
-      <el-table-column label="权限操作" width="200">
-        <template #default="scope">
-          <el-button size="small" plain @click="handleEdit(scope.row)">
-            修改
-          </el-button>
-          <el-button
-            size="small"
-            :type="scope.row.activated ? 'warning' : 'success'"
-            plain
-            @click="handleChangeStatus(scope.row)"
-          >
-            {{ scope.row.activated ? '禁用' : '启用' }}
-          </el-button>
-          <el-button
-            size="small"
-            type="danger"
-            @click="handleDelete(scope.row)"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </el-card>
+  <div>
+    <el-card height="100%">
+      <el-table border :data="authDetails">
+        <el-table-column label="序号" width="60" type="index"></el-table-column>
+        <el-table-column label="状态" width="85">
+          <template #default="scope">
+            <el-tag :type="scope.row.activated ? 'success' : 'warning'">
+              {{ scope.row.activated ? '生效' : '未生效' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="权限标识符" prop="identifier"></el-table-column>
+        <el-table-column label="权限名称" prop="name"></el-table-column>
+        <el-table-column label="权限描述" prop="description"></el-table-column>
+        <el-table-column label="权限操作" width="200">
+          <template #default="scope">
+            <el-button size="small" plain @click="handleEdit(scope.row)">
+              修改
+            </el-button>
+            <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain
+              @click="handleChangeStatus(scope.row)">
+              {{ scope.row.activated ? '禁用' : '启用' }}
+            </el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.row)">
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+    <edit-auth-dialog :visable="editAuthDialogVisable" @closeDialog="closeDialog" @updateAfterEdit="getAuthDetails"
+      :auth="auth"></edit-auth-dialog>
+  </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import api from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import EditAuthDialog from './components/EditAuthDialog.vue'
 
 // ----- 获取权限详细列表渲染表格 -----
 const authDetails = ref([])
@@ -61,10 +58,18 @@ const getAuthDetails = async () => {
 }
 getAuthDetails()
 
-// ----- 修改权限 -----
-const handleEdit = (authDetail) => {}
+// ----- 编辑权限 -----
+const editAuthDialogVisable = ref(false)
+const auth = ref({})
+const handleEdit = (row) => {
+  editAuthDialogVisable.value = true
+  auth.value = row
+}
+const closeDialog = () => {
+  editAuthDialogVisable.value = false
+}
 
-// ----- 切换状态 -----
+// ----- 启用/禁用 -----
 const handleChangeStatus = (authDetail) => {
   const message =
     '是否' +
@@ -74,7 +79,7 @@ const handleChangeStatus = (authDetail) => {
     ' ' +
     authDetail.name +
     '】？'
-  ElMessageBox.confirm(message, '确认').then(() => {
+  ElMessageBox.confirm(message, '请确认').then(() => {
     const authForm = { id: authDetail.id, activated: !authDetail.activated }
     api.system
       .editAuth(authForm)
@@ -97,9 +102,11 @@ const handleChangeStatus = (authDetail) => {
       .catch((error) => {
         ElMessage.error(error.message)
       })
+  }).catch((error) => {
+    console.log(error)
   })
 }
 
 // ----- 删除权限 -----
-const handleDelete = (authDetail) => {}
+const handleDelete = (authDetail) => { }
 </script>

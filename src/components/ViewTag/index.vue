@@ -7,7 +7,7 @@
       }" v-for="(tag, index) in $store.getters.viewTagList" :key="tag.fullPath" :to="{ path: tag.fullPath }"
         @contextmenu.prevent="openContextMenu($event, index, tag.fullPath)">
         {{ tag.title }}
-        <svg-icon v-show="!isActive(tag)" icon="close" @click.prevent.stop="onCloseClick(index)"></svg-icon>
+        <svg-icon icon="close" @click.prevent.stop="onCloseClick(tag, index)"></svg-icon>
       </router-link>
     </el-scrollbar>
     <context-menu v-show="visible" :style="menuStyle" :index="selectIndex" :tagPath="selectTagPath"></context-menu>
@@ -17,10 +17,11 @@
 <script setup>
 import { ref, reactive, watch } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import ContextMenu from './ContextMenu.vue'
 
 const store = useStore()
+const router = useRouter()
 const route = useRoute()
 
 // 是否被选中
@@ -29,8 +30,27 @@ const isActive = (tag) => {
 }
 
 // 关闭页面标签
-const onCloseClick = (index) => {
-  store.dispatch('viewSettings/removeViewTags', { mode: 'index', index })
+const onCloseClick = (tag, index) => {
+  // 如果关闭的是激活页面
+  if (isActive(tag)) {
+    // 则将其右边第一个页面作为新的激活页面
+    if (index + 1 < store.getters.viewTagList.length) {
+      store.dispatch('viewSettings/removeViewTags', { mode: 'index', index })
+      router.push(store.getters.viewTagList[index].fullPath) // 注意这里的viewTagList已经是新的
+    } else if (index > 0) {
+      // 如果右边已经没有了标签，则将其左边第一个页面作为新的激活页面
+      store.dispatch('viewSettings/removeViewTags', { mode: 'index', index })
+      router.push(store.getters.viewTagList[index - 1].fullPath) // 注意这里的viewTagList已经是新的
+    } else {
+      // 如果左边也已经没有了标签，则回到主页
+      if (tag.fullPath !== '/profile') {
+        store.dispatch('viewSettings/removeViewTags', { mode: 'index', index })
+        router.push('/')
+      }
+    }
+  } else {
+    store.dispatch('viewSettings/removeViewTags', { mode: 'index', index })
+  }
 }
 // 右键菜单相关
 const selectIndex = ref(0)

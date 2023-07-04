@@ -29,3 +29,20 @@ const viewTagException = ['/login', '/404', '/401']
 export function isViewTag(path) {
   return !viewTagException.includes(path)
 }
+
+/**
+ * 查找路径为path的ViewTag在列表中的下标
+ * @param {*} viewTagList
+ * @param {*} path
+ * @returens 下标
+ */
+export function getViewTagIndexByPath(viewTagList, path) {
+  let viewTagIndex = -1
+  for (let i = 0; i < viewTagList.length; i++) {
+    if (viewTagList[i].fullPath === path) {
+      viewTagIndex = i
+      break
+    }
+  }
+  return viewTagIndex
+}

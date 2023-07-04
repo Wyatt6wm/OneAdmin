@@ -25,6 +25,7 @@
 import { defineProps } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+import { getViewTagIndexByPath } from '@/utils/common'
 
 const router = useRouter()
 const route = useRoute()
@@ -51,16 +52,17 @@ const onCloseAllClick = () => {
 }
 
 const onCloseRightClick = () => {
+  // 如果激活页面标签在当前页面标签的右边，则跳转到该当前页面
+  const activeIndex = getViewTagIndexByPath(store.getters.viewTagList, route.path)
   store.dispatch('viewSettings/removeViewTags', { mode: 'right', index: props.index })
-  // 增加功能：如果在未被选中的页面标签关闭右侧标签，则跳转到该标签的页面
-  if (!(props.tagPath === route.path)) {
+  if (activeIndex > props.index) {
     router.push(props.tagPath)
   }
 }
 
 const onCloseOtherClick = () => {
   store.dispatch('viewSettings/removeViewTags', { mode: 'other', index: props.index })
-  // 增加功能：如果在未被选中的页面标签关闭其他标签，则跳转到该标签的页面
+  // 如果在未激活的页面标签关闭其他标签，则跳转到该标签的页面
   if (!(props.tagPath === route.path)) {
     router.push(props.tagPath)
   }

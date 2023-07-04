@@ -194,6 +194,8 @@ $cursor: #fff;
         color: $light_gray;
         height: 47px;
         caret-color: $cursor;
+        // ---------- 以下处理element-plus从^1.0.2-beta.28升级到^2.0.4后出现的输入框白边问题 ----------
+        box-shadow: none !important;
       }
     }
 

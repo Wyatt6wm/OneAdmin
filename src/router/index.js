@@ -31,12 +31,22 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 如果还没有用户角色则查询服务器
       if (!store.getters.hasRoles) {
-        await store.dispatch('userLogin/getRoles')
+        await store.dispatch('userLogin/getRoles').catch((error) => {
+          if (error.response.status === 500) {
+            ElMessage.error('请重新登录')
+            return store.dispatch('userLogin/logout')
+          }
+        })
       }
 
       // 如果还没有用户权限则查询服务器
       if (!store.getters.hasAuths) {
-        await store.dispatch('userLogin/getAuths')
+        await store.dispatch('userLogin/getAuths').catch((error) => {
+          if (error.response.status === 500) {
+            ElMessage.error('请重新登录')
+            return store.dispatch('userLogin/logout')
+          }
+        })
       }
 
       // 如果还没有用户信息则查询服务器

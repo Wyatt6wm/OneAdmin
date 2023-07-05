@@ -23,8 +23,8 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, reactive } from 'vue'
-// import api from '@/api'
-// import { ElMessage } from 'element-plus'
+import api from '@/api'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   visable: {
@@ -33,7 +33,7 @@ const props = defineProps({
     required: true
   }
 })
-const emits = defineEmits(['close'])
+const emits = defineEmits(['close', 'updateAfterAdd'])
 
 // ----- 初始化 -----
 const identifierPlaceholder = ref('请输入权限标识符，格式如：view:userManage / api:sys:auth:list')
@@ -46,6 +46,7 @@ const authForm = reactive({
   description: '',
   activated: false
 })
+// 校验规则
 const authRules = ref({
   identifier: [
     {
@@ -59,7 +60,7 @@ const authRules = ref({
 // ----- 点击“关闭”或关闭对话框 -----
 const onClose = () => {
   // 还原初始值
-  authForm.identifier = authForm.name = authForm.description = null
+  authForm.identifier = authForm.name = authForm.description = ''
   authForm.activated = false
   // 调用父组件close事件
   emits('close')
@@ -71,28 +72,23 @@ const authFormRef = ref(null) // 绑定上面声明了ref="authFormRef"的<el-fo
 const onConfirm = () => {
   authFormRef.value.validate((pass) => {
     if (!pass) return
-    loading.value = true
-  })
 
-  //     api.system.editAuth(authForm).then((res) => {
-  //       if (res.succ) {
-  //         ElMessage.success('保存成功')
-  //         loading.value = false
-  //         onClose()
-  //         // 调用父组件updateAfterEdit事件
-  //         emits('updateAfterEdit')
-  //       } else {
-  //         ElMessage.error(res.mesg)
-  //         loading.value = false
-  //       }
-  //     }).catch((error) => {
-  //       ElMessage.error(error.message)
-  //       loading.value = false
-  //     })
-  //   } else {
-  //     ElMessage.warning('未进行编辑')
-  //     loading.value = false
-  //     onClose()
-  //   }
+    loading.value = true
+    api.system.addAuth(authForm).then((res) => {
+      if (res.succ) {
+        ElMessage.success('权限新建成功')
+        loading.value = false
+        onClose()
+        // 调用父组件updateAfterAdd事件
+        emits('updateAfterAdd')
+      } else {
+        ElMessage.error(res.mesg)
+        loading.value = false
+      }
+    }).catch((error) => {
+      ElMessage.error(error.message)
+      loading.value = false
+    })
+  })
 }
 </script>

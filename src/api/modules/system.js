@@ -79,3 +79,15 @@ export const editAuth = (authForm) => {
     data: authForm
   })
 }
+
+/**
+ * 新增权限
+ * @param {identifier 必填, name, description, activated} authForm 提交的表单
+ */
+export const addAuth = (authForm) => {
+  return request({
+    method: 'post',
+    url: API_PREFIX + '/auth/addAuth',
+    data: authForm
+  })
+}

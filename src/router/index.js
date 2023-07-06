@@ -31,22 +31,24 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 如果还没有用户角色则查询服务器
       if (!store.getters.hasRoles) {
-        await store.dispatch('userLogin/getRoles').catch((error) => {
+        await store.dispatch('userLogin/getRolesOfUser').catch((error) => {
           if (error.response.status === 500) {
             ElMessage.error('请重新登录')
             return store.dispatch('userLogin/logout')
           }
         })
+        store.dispatch('common/setRoutesPreparedFalse')
       }
 
       // 如果还没有用户权限则查询服务器
       if (!store.getters.hasAuths) {
-        await store.dispatch('userLogin/getAuths').catch((error) => {
+        await store.dispatch('userLogin/getAuthsOfUser').catch((error) => {
           if (error.response.status === 500) {
             ElMessage.error('请重新登录')
             return store.dispatch('userLogin/logout')
           }
         })
+        store.dispatch('common/setRoutesPreparedFalse')
       }
 
       // 如果还没有用户信息则查询服务器
@@ -56,6 +58,7 @@ router.beforeEach(async (to, from, next) => {
 
       // 如果路由表未准备好则更新路由表
       if (!store.getters.routesPrepared) {
+        console.log('Update routes')
         const dynamicRoutes = getDynamicRoutes(store.getters.auths)
         dynamicRoutes.forEach((route) => {
           router.addRoute(route)

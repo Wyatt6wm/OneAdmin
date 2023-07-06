@@ -110,10 +110,10 @@ export default {
      * @param {*} context
      * @returns
      */
-    async getRoles(context) {
+    async getRolesOfUser(context) {
       return new Promise((resolve, reject) => {
         api.system
-          .getRoles()
+          .getRolesOfUser()
           .then((res) => {
             if (res.succ) {
               const { roles } = res.data
@@ -135,10 +135,10 @@ export default {
      * @param {*} context
      * @returns
      */
-    async getAuths(context) {
+    async getAuthsOfUser(context) {
       return new Promise((resolve, reject) => {
         api.system
-          .getAuths()
+          .getAuthsOfUser()
           .then((res) => {
             if (res.succ) {
               const { auths } = res.data

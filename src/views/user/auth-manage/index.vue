@@ -4,7 +4,7 @@
       <div class="button-area">
         <el-button type="primary" @click="handleAdd">新增权限</el-button>
       </div>
-      <el-table border :data="authDetails">
+      <el-table border :data="authList">
         <el-table-column label="序号" width="60" type="index"></el-table-column>
         <el-table-column label="状态" width="85">
           <template #default="scope">
@@ -33,9 +33,9 @@
       </el-table>
     </el-card>
     <add-auth-dialog :visable="addAuthDialogVisable" @close="closeAddDialog"
-      @updateAfterAdd="getAuthDetails"></add-auth-dialog>
+      @updateAfterAdd="getAuthList"></add-auth-dialog>
     <edit-auth-dialog :visable="editAuthDialogVisable" :auth="auth" @close="closeEditDialog"
-      @updateAfterEdit="getAuthDetails"></edit-auth-dialog>
+      @updateAfterEdit="getAuthList"></edit-auth-dialog>
   </div>
 </template>
 
@@ -46,14 +46,14 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import EditAuthDialog from './components/EditAuthDialog.vue'
 import AddAuthDialog from './components/AddAuthDislog.vue'
 
-// ----- 获取权限详细列表渲染表格 -----
-const authDetails = ref([])
-const getAuthDetails = async () => {
-  authDetails.value = await api.system
-    .getAuthDetails()
+// ----- 获取权限列表渲染表格 -----
+const authList = ref([])
+const getAuthList = async () => {
+  authList.value = await api.system
+    .getAuthList()
     .then((res) => {
       if (res.succ) {
-        return res.data.authDetails
+        return res.data.authList
       } else {
         ElMessage.error(res.mesg)
       }
@@ -62,7 +62,7 @@ const getAuthDetails = async () => {
       ElMessage.error(error.message)
     })
 }
-getAuthDetails()
+getAuthList()
 
 // ----- 新增权限 -----
 const addAuthDialogVisable = ref(false)
@@ -86,32 +86,21 @@ const closeEditDialog = () => {
 
 // ----- 启用/禁用 -----
 const handleChangeStatus = (authDetail) => {
-  const message =
-    '是否' +
-    (authDetail.activated ? '禁用' : '启用') +
-    '权限【' +
-    authDetail.identifier +
-    ' ' +
-    authDetail.name +
-    '】？'
+  const { id, identifier, name, activated } = authDetail
+  const message = '是否' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' ' + name : '') + '】？'
   ElMessageBox.confirm(message, '请确认').then(() => {
-    const authForm = { id: authDetail.id, activated: !authDetail.activated }
+    const authForm = { id: id, activated: !activated }
     api.system
       .editAuth(authForm)
       .then((res) => {
         if (res.succ) {
           const succMesg =
-            '成功' +
-            (authDetail.activated ? '禁用' : '启用') +
-            '权限【' +
-            authDetail.identifier +
-            ' ' +
-            authDetail.name +
-            '】'
+            '成功' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' ' + name : '') + '】'
           authDetail.activated = !authDetail.activated
           ElMessage.success(succMesg)
         } else {
           ElMessage.error(res.mesg)
+          getAuthList()
         }
       })
       .catch((error) => {
@@ -123,7 +112,25 @@ const handleChangeStatus = (authDetail) => {
 }
 
 // ----- 删除权限 -----
-const handleDelete = (authDetail) => { }
+const handleDelete = (authDetail) => {
+  const { id, identifier, name } = authDetail
+  const message = '是否删除权限【' + identifier + (name ? ' ' + name : '') + '】？'
+  ElMessageBox.confirm(message, '请确认').then(() => {
+    api.system.removeAuth(id).then((res) => {
+      if (res.succ) {
+        const succMesg = '成功删除权限【' + identifier + (name ? ' ' + name : '') + '】'
+        ElMessage.success(succMesg)
+      } else {
+        ElMessage.error(res.mesg)
+      }
+      getAuthList()
+    }).catch((error) => {
+      ElMessage.error(error.message)
+    })
+  }).catch((error) => {
+    console.log(error)
+  })
+}
 </script>
 
 <style lang="scss" scoped>

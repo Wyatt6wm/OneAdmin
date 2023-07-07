@@ -11,6 +11,8 @@ import './styles/index.scss'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+// 引入自定义指令
+import installDirectives from './directives'
 // 引入Mock挡板
 import installMock from './plugins/mock'
 import { MOCK_ACTIVE } from './constant'
@@ -18,5 +20,6 @@ import { MOCK_ACTIVE } from './constant'
 const app = createApp(App)
 installElementPlus(app)
 installIcons(app)
+installDirectives(app)
 installMock(MOCK_ACTIVE)
 app.use(store).use(router).mount('#app')

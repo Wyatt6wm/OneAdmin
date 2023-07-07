@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card height="100%">
-      <div class="button-area">
+      <div class="button-area" v-role="[Const.role.SUPER_ADMIN]">
         <el-button type="primary" @click="handleAdd">新增权限</el-button>
       </div>
       <el-table border :data="authList">
@@ -16,7 +16,7 @@
         <el-table-column label="权限标识符" prop="identifier"></el-table-column>
         <el-table-column label="权限名称" prop="name"></el-table-column>
         <el-table-column label="权限描述" prop="description"></el-table-column>
-        <el-table-column label="权限操作" width="200">
+        <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="权限操作" width="200">
           <template #default="scope">
             <el-button size="small" plain @click="handleEdit(scope.row)">
               修改
@@ -43,6 +43,7 @@
 import { ref } from 'vue'
 import api from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import Const from '@/constant'
 import EditAuthDialog from './components/EditAuthDialog.vue'
 import AddAuthDialog from './components/AddAuthDislog.vue'
 

@@ -23,3 +23,18 @@
 .el-avatar {
   --el-avatar-bg-color: none !important;
 }
+
+// ----- 解决button点击完后要点空白地方才能失焦恢复原颜色的问题（用默认色覆盖button组件focus状态的颜色） -----
+.el-button:focus {
+  color: var(--el-button-text-color);
+  border-color: var(--el-button-border-color, var(--el-button-hover-color));
+  background-color: var(--el-button-bg-color);
+}
+.el-button:hover {
+  color: var(--el-button-hover-text-color);
+  border-color: var(
+    --el-button-hover-border-color,
+    var(--el-button-hover-bg-color)
+  );
+  background-color: var(--el-button-hover-bg-color);
+}

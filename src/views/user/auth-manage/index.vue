@@ -4,7 +4,7 @@
       <div class="button-area" v-role="[Const.role.SUPER_ADMIN]">
         <el-button type="primary" @click="handleAdd">新增权限</el-button>
       </div>
-      <el-table border :data="authList">
+      <el-table max-height="calc(100vh - 185px)" border :data="authList">
         <el-table-column label="序号" width="60" type="index"></el-table-column>
         <el-table-column label="状态" width="85">
           <template #default="scope">

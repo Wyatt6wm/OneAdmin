@@ -45,11 +45,17 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   // ----- 1.网络请求成功时 -----
   (response) => {
-    return response.data // 由于业务处理有差异，成功/失败都交给对应逻辑单独处理
+    const tokenFailed = /^Token无效.*$/
+    const result = response.data
+    if (!result.succ && tokenFailed.test(result.mesg)) {
+      ElMessage.error('登录已过期，请重新登录')
+      store.dispatch('userLogin/logout')
+    } else {
+      return result // 由于业务处理有差异，成功/失败都交给对应逻辑单独处理
+    }
   },
   // ----- 2.网络请求失败时（如404） -----
   (error) => {
-    // TODO
     // 用户被动退出的被动处理方案（后端通过状态码通知前端进行处理）
     // 1、其他设备登录，本设备强制下线（这里没实现）
     // 2、token过期

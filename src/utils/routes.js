@@ -24,7 +24,8 @@ export const getDynamicRoutes = (auths) => {
   // 最后添加一条：不匹配路由表中的任一路由则跳转到404
   dynamicRoutes.push({
     path: '/:catchAll(.*)',
-    redirect: '/404'
+    redirect: '/404',
+    name: 'notMatch'
   })
 
   return dynamicRoutes
@@ -48,4 +49,21 @@ export const checkRouteAuth = (auths, routeName) => {
     }
   })
   return result
+}
+
+/**
+ * 获取用户权限里定义的页面路由名称列表
+ * @param {*} auths
+ * @returns
+ */
+export const getAuthRouteNames = (auths) => {
+  const names = []
+  // 页面显示权限标识符格式：view:viewName
+  const regexp = /^view:.*$/
+  auths.forEach((auth) => {
+    if (regexp.test(auth)) {
+      names.push(auth.substring(5))
+    }
+  })
+  return names
 }

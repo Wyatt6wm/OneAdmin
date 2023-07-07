@@ -21,6 +21,9 @@
             <a target="__blank" href="https://github.com/Wyatt6wm/WyattAppRealm-Docs">
               <el-dropdown-item>系统文档</el-dropdown-item>
             </a>
+            <el-dropdown-item @click="initRoutes" disabled>
+              测试按钮
+            </el-dropdown-item>
             <el-dropdown-item divided @click="logout">
               退出登录
             </el-dropdown-item>
@@ -36,6 +39,7 @@ import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import Hamburger from '@/components/Hamburger'
 import Breadcrumb from '@/components/Breadcrumb'
+import { initRoutes } from '@/router'
 
 const store = useStore()
 

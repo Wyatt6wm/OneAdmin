@@ -2,7 +2,7 @@
 
 import Storage from '@/utils/storage2'
 import api from '@/api'
-import router from '@/router'
+import router, { initRoutes } from '@/router'
 import { ElMessage } from 'element-plus'
 
 const TOKEN = 'token'
@@ -190,6 +190,8 @@ export default {
           .then((res) => {
             // ----- 退出登录成功 -----
             if (res.succ) {
+              // 清理路由表
+              initRoutes()
               // 清理vuex
               this.commit('viewSettings/clearStateOnLogout')
               this.commit('common/clearStateOnLogout')

@@ -28,6 +28,7 @@ export default {
     // 退出登录时清除state
     clearStateOnLogout(state) {
       state.captchaKey = ''
+      state.routesPrepared = false
     }
   },
 

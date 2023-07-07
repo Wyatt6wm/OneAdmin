@@ -2,6 +2,7 @@
 
 import Layout from '@/layout'
 import AuthManage from '@/views/user/auth-manage'
+import RoleManage from '@/views/user/role-manage'
 
 export default {
   path: '/user',
@@ -29,7 +30,7 @@ export default {
     {
       path: '/user/role-manage',
       name: 'roleManage',
-      // component: ,
+      component: RoleManage,
       meta: {
         isMenu: true,
         isBreadcrumb: true,

@@ -45,7 +45,7 @@ import api from '@/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Const from '@/constant'
 import EditAuthDialog from './components/EditAuthDialog.vue'
-import AddAuthDialog from './components/AddAuthDislog.vue'
+import AddAuthDialog from './components/AddAuthDialog.vue'
 
 // ----- 获取权限列表渲染表格 -----
 const authList = ref([])
@@ -89,7 +89,7 @@ const closeEditDialog = () => {
 const handleChangeStatus = (authDetail) => {
   const { id, identifier, name, activated } = authDetail
   const message = '是否' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' ' + name : '') + '】？'
-  ElMessageBox.confirm(message, '请确认').then(() => {
+  ElMessageBox.confirm(message, '请确认', { type: 'warning' }).then(() => {
     const authForm = { id: id, activated: !activated }
     api.system
       .editAuth(authForm)
@@ -116,7 +116,7 @@ const handleChangeStatus = (authDetail) => {
 const handleDelete = (authDetail) => {
   const { id, identifier, name } = authDetail
   const message = '是否删除权限【' + identifier + (name ? ' ' + name : '') + '】？'
-  ElMessageBox.confirm(message, '请确认').then(() => {
+  ElMessageBox.confirm(message, '请确认', { type: 'warning' }).then(() => {
     api.system.removeAuth(id).then((res) => {
       if (res.succ) {
         const succMesg = '成功删除权限【' + identifier + (name ? ' ' + name : '') + '】'

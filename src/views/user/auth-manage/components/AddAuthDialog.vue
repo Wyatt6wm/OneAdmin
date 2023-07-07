@@ -36,7 +36,7 @@ const props = defineProps({
 const emits = defineEmits(['close', 'updateAfterAdd'])
 
 // ----- 初始化 -----
-const identifierPlaceholder = ref('请输入权限标识符，格式如：view:userManage / api:sys:auth:list')
+const identifierPlaceholder = ref('请输入权限标识符，格式如：view:viewName / api:apiName等')
 const namePlaceholder = ref('请输入权限名称')
 const descriptionPlaceholder = ref('请输入权限描述')
 // 提交的表单

@@ -37,7 +37,33 @@ export const getProfile = () => {
     url: USER + '/getProfile'
   })
 }
+
 // ---------- Role ----------
+const ROLE = '/sys/role'
+export const addRole = (roleForm) => {
+  return request({
+    method: 'post',
+    url: ROLE + '/addRole',
+    data: roleForm
+  })
+}
+export const removeRole = (id) => {
+  return request({
+    url: ROLE + '/removeRole?id=' + id
+  })
+}
+export const editRole = (roleForm) => {
+  return request({
+    method: 'post',
+    url: ROLE + '/editRole',
+    data: roleForm
+  })
+}
+export const getRoleList = () => {
+  return request({
+    url: ROLE + '/getRoleList'
+  })
+}
 
 // ---------- Auth ----------
 const AUTH = '/sys/auth'

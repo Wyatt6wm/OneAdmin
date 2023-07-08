@@ -56,13 +56,10 @@ const authForm = reactive({
 watch(
   () => props.visable,
   () => {
-    title.value = '编辑权限【' + props.auth.identifier + ' ' + props.auth.name + '】'
+    title.value = '编辑权限【' + props.auth.identifier + (props.auth.name ? ' ' + props.auth.name : '') + '】'
     authForm.identifier = props.auth.identifier
     authForm.name = props.auth.name
     authForm.description = props.auth.description
-  },
-  {
-    immediate: true
   }
 )
 

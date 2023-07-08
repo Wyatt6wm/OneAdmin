@@ -74,21 +74,26 @@ const onConfirm = () => {
     if (!pass) return
 
     loading.value = true
-    api.system.addAuth(authForm).then((res) => {
-      if (res.succ) {
-        ElMessage.success('权限新建成功')
+    api.system
+      .addAuth(authForm)
+      .then((res) => {
+        if (res && res.succ != null) {
+          if (res.succ) {
+            ElMessage.success('权限新建成功')
+            loading.value = false
+            onClose()
+            // 调用父组件updateAfterAdd事件
+            emits('updateAfterAdd')
+          } else {
+            ElMessage.error(res.mesg)
+            loading.value = false
+          }
+        }
+      })
+      .catch((error) => {
+        ElMessage.error(error.message)
         loading.value = false
-        onClose()
-        // 调用父组件updateAfterAdd事件
-        emits('updateAfterAdd')
-      } else {
-        ElMessage.error(res.mesg)
-        loading.value = false
-      }
-    }).catch((error) => {
-      ElMessage.error(error.message)
-      loading.value = false
-    })
+      })
   })
 }
 </script>

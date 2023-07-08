@@ -18,24 +18,17 @@
         <el-table-column label="权限描述" prop="description"></el-table-column>
         <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="权限操作" width="200">
           <template #default="scope">
-            <el-button size="small" plain @click="handleEdit(scope.row)">
-              修改
-            </el-button>
-            <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain
-              @click="handleChangeStatus(scope.row)">
+            <el-button size="small" plain @click="handleEdit(scope.row)"> 修改 </el-button>
+            <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain @click="handleChangeStatus(scope.row)">
               {{ scope.row.activated ? '禁用' : '启用' }}
             </el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.row)">
-              删除
-            </el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.row)"> 删除 </el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
-    <add-auth-dialog :visable="addAuthDialogVisable" @close="closeAddDialog"
-      @updateAfterAdd="getAuthList"></add-auth-dialog>
-    <edit-auth-dialog :visable="editAuthDialogVisable" :auth="auth" @close="closeEditDialog"
-      @updateAfterEdit="getAuthList"></edit-auth-dialog>
+    <add-auth-dialog :visable="addAuthDialogVisable" @close="closeAddDialog" @updateAfterAdd="getAuthList"></add-auth-dialog>
+    <edit-auth-dialog :visable="editAuthDialogVisable" :auth="auth" @close="closeEditDialog" @updateAfterEdit="getAuthList"></edit-auth-dialog>
   </div>
 </template>
 
@@ -53,10 +46,12 @@ const getAuthList = async () => {
   authList.value = await api.system
     .getAuthList()
     .then((res) => {
-      if (res.succ) {
-        return res.data.authList
-      } else {
-        ElMessage.error(res.mesg)
+      if (res && res.succ != null) {
+        if (res.succ) {
+          return res.data.authList
+        } else {
+          ElMessage.error(res.mesg)
+        }
       }
     })
     .catch((error) => {
@@ -89,48 +84,58 @@ const closeEditDialog = () => {
 const handleChangeStatus = (authDetail) => {
   const { id, identifier, name, activated } = authDetail
   const message = '是否' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' ' + name : '') + '】？'
-  ElMessageBox.confirm(message, '请确认', { type: 'warning' }).then(() => {
-    const authForm = { id: id, activated: !activated }
-    api.system
-      .editAuth(authForm)
-      .then((res) => {
-        if (res.succ) {
-          const succMesg =
-            '成功' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' ' + name : '') + '】'
-          authDetail.activated = !authDetail.activated
-          ElMessage.success(succMesg)
-        } else {
-          ElMessage.error(res.mesg)
-          getAuthList()
-        }
-      })
-      .catch((error) => {
-        ElMessage.error(error.message)
-      })
-  }).catch((error) => {
-    console.log(error)
-  })
+  ElMessageBox.confirm(message, '请确认', { type: 'warning' })
+    .then(() => {
+      const authForm = { id: id, activated: !activated }
+      api.system
+        .editAuth(authForm)
+        .then((res) => {
+          if (res && res.succ != null) {
+            if (res.succ) {
+              const succMesg = '成功' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' ' + name : '') + '】'
+              authDetail.activated = !authDetail.activated
+              ElMessage.success(succMesg)
+            } else {
+              ElMessage.error(res.mesg)
+              getAuthList()
+            }
+          }
+        })
+        .catch((error) => {
+          ElMessage.error(error.message)
+        })
+    })
+    .catch(() => {
+      // 点击“取消”不做动作
+    })
 }
 
 // ----- 删除权限 -----
 const handleDelete = (authDetail) => {
   const { id, identifier, name } = authDetail
   const message = '是否删除权限【' + identifier + (name ? ' ' + name : '') + '】？'
-  ElMessageBox.confirm(message, '请确认', { type: 'warning' }).then(() => {
-    api.system.removeAuth(id).then((res) => {
-      if (res.succ) {
-        const succMesg = '成功删除权限【' + identifier + (name ? ' ' + name : '') + '】'
-        ElMessage.success(succMesg)
-      } else {
-        ElMessage.error(res.mesg)
-      }
-      getAuthList()
-    }).catch((error) => {
-      ElMessage.error(error.message)
+  ElMessageBox.confirm(message, '请确认', { type: 'warning' })
+    .then(() => {
+      api.system
+        .removeAuth(id)
+        .then((res) => {
+          if (res && res.succ != null) {
+            if (res.succ) {
+              const succMesg = '成功删除权限【' + identifier + (name ? ' ' + name : '') + '】'
+              ElMessage.success(succMesg)
+            } else {
+              ElMessage.error(res.mesg)
+            }
+            getAuthList()
+          }
+        })
+        .catch((error) => {
+          ElMessage.error(error.message)
+        })
     })
-  }).catch((error) => {
-    console.log(error)
-  })
+    .catch(() => {
+      // 点击“取消”不做动作
+    })
 }
 </script>
 

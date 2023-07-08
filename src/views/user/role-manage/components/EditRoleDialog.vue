@@ -88,21 +88,26 @@ const onConfirm = () => {
   if (!editDescription.value) roleForm.description = null
 
   if (editIdentifier.value || editName.value || editDescription.value) {
-    api.system.editRole(roleForm).then((res) => {
-      if (res.succ) {
-        ElMessage.success('保存成功')
+    api.system
+      .editRole(roleForm)
+      .then((res) => {
+        if (res && res.succ != null) {
+          if (res.succ) {
+            ElMessage.success('保存成功')
+            loading.value = false
+            onClose()
+            // 调用父组件updateAfterEdit事件
+            emits('updateAfterEdit')
+          } else {
+            ElMessage.error(res.mesg)
+            loading.value = false
+          }
+        }
+      })
+      .catch((error) => {
+        ElMessage.error(error.message)
         loading.value = false
-        onClose()
-        // 调用父组件updateAfterEdit事件
-        emits('updateAfterEdit')
-      } else {
-        ElMessage.error(res.mesg)
-        loading.value = false
-      }
-    }).catch((error) => {
-      ElMessage.error(error.message)
-      loading.value = false
-    })
+      })
   } else {
     ElMessage.warning('未进行编辑')
     loading.value = false

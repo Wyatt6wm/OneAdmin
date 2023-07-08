@@ -43,17 +43,22 @@ export default {
      */
     getCaptcha(context) {
       return new Promise((resolve, reject) => {
-        api.system.getCaptcha().then((res) => {
-          if (res && res.succ != null) {
-            if (res.succ) {
-              const { captchaKey, captchaImage } = res.data
-              context.commit('setCaptchaKey', captchaKey)
-              resolve(captchaImage)
-            } else {
-              ElMessage.error('获取验证码失败')
+        api.system
+          .getCaptcha()
+          .then((res) => {
+            if (res && res.succ != null) {
+              if (res.succ) {
+                const { captchaKey, captchaImage } = res.data
+                context.commit('setCaptchaKey', captchaKey)
+                resolve(captchaImage)
+              } else {
+                ElMessage.error('获取验证码失败')
+              }
             }
-          }
-        })
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
     },
 

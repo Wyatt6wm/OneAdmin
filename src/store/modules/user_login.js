@@ -98,6 +98,9 @@ export default {
               }
             }
           })
+          .catch((error) => {
+            reject(error)
+          })
       })
     },
 
@@ -106,12 +109,12 @@ export default {
      * @param {*} context
      * @returns
      */
-    async getRolesOfUser(context) {
+    getRolesOfUser(context) {
       return new Promise((resolve, reject) => {
         api.system
           .getRolesOfUser()
           .then((res) => {
-            if (res) {
+            if (res && res.succ != null) {
               if (res.succ) {
                 const { roles } = res.data
                 context.commit('setRoles', roles)
@@ -123,7 +126,6 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error)
             reject(error)
           })
       })
@@ -134,18 +136,20 @@ export default {
      * @param {*} context
      * @returns
      */
-    async getAuthsOfUser(context) {
+    getAuthsOfUser(context) {
       return new Promise((resolve, reject) => {
         api.system
           .getAuthsOfUser()
           .then((res) => {
-            if (res.succ) {
-              const { auths } = res.data
-              context.commit('setAuths', auths)
-              resolve()
-            } else {
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              if (res.succ) {
+                const { auths } = res.data
+                context.commit('setAuths', auths)
+                resolve()
+              } else {
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {
@@ -158,19 +162,21 @@ export default {
      * 获取用户信息
      * @param {*} context
      */
-    async getProfile(context) {
+    getProfile(context) {
       context.state.gettingProfile = true
       return new Promise((resolve, reject) => {
         api.system
           .getProfile()
           .then((res) => {
-            if (res.succ) {
-              const { profile } = res.data
-              context.commit('setProfile', profile)
-              resolve()
-            } else {
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              if (res.succ) {
+                const { profile } = res.data
+                context.commit('setProfile', profile)
+                resolve()
+              } else {
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {
@@ -187,25 +193,27 @@ export default {
         api.system
           .logout()
           .then((res) => {
-            // ----- 退出登录成功 -----
-            if (res.succ) {
-              // 清理路由表
-              initRoutes()
-              // 清理vuex
-              this.commit('viewSettings/clearStateOnLogout')
-              this.commit('common/clearStateOnLogout')
-              this.commit('userLogin/clearStateOnLogout')
-              // 清理LocalStorage
-              const username = Storage.get(USERNAME)
-              Storage.removeAll()
-              Storage.set(USERNAME, username)
-              // 返回登录页
-              router.push('/login')
-              resolve()
-            } else {
-              // ----- 退出登录失败 -----
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              // ----- 退出登录成功 -----
+              if (res.succ) {
+                // 清理路由表
+                initRoutes()
+                // 清理vuex
+                this.commit('viewSettings/clearStateOnLogout')
+                this.commit('common/clearStateOnLogout')
+                this.commit('userLogin/clearStateOnLogout')
+                // 清理LocalStorage
+                const username = Storage.get(USERNAME)
+                Storage.removeAll()
+                Storage.set(USERNAME, username)
+                // 返回登录页
+                router.push('/login')
+                resolve()
+              } else {
+                // ----- 退出登录失败 -----
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {

@@ -47,14 +47,14 @@ router.beforeEach(async (to, from, next) => {
 
       // 如果路由表未准备好则更新路由表
       if (!store.getters.routesPrepared) {
-        console.log('Update routes.')
+        console.log('更新路由表')
         const dynamicRoutes = getDynamicRoutes(store.getters.auths)
         dynamicRoutes.forEach((route) => {
           if (!router.hasRoute(route.name)) {
             router.addRoute(route)
           }
         })
-        store.dispatch('common/setRoutesPreparedTrue')
+        await store.dispatch('common/setRoutesPreparedTrue')
         // 添加完动态路由之后，需要再进行一次主动跳转
         return next(to.path)
       }

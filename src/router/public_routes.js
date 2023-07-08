@@ -3,8 +3,8 @@
 import Login from '@/views/login'
 import Layout from '@/layout'
 import Profile from '@/views/profile'
-import Err404 from '@/views/error-page/404'
-import Err401 from '@/views/error-page/401'
+import Err404 from '@/views/errors/404'
+import Err401 from '@/views/errors/401'
 
 export const publicRouteNames = ['login', 'index', 'profile', 'err404', 'err401']
 

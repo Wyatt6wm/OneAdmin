@@ -1,5 +1,3 @@
-// 用户元数据
-
 import Storage from '@/utils/storage2'
 import api from '@/api'
 import router, { initRoutes } from '@/router'
@@ -81,26 +79,24 @@ export default {
             captchaInput
           })
           .then((res) => {
-            // ----- 认证成功 -----
-            if (res.succ) {
-              const { token, tokenExpiredTime, roles, auths } = res.data
-              context.commit('setToken', token)
-              context.commit('setTokenExpiredTime', tokenExpiredTime)
-              context.commit('setRoles', roles)
-              context.commit('setAuths', auths)
-              Storage.set(TOKEN, token) // 用来下次自动登录
-              Storage.set(TOKEN_EXPIRED_TIME, tokenExpiredTime)
-              Storage.set(USERNAME, username) // 登录页面记住账号
-
-              resolve()
-            } else {
-              // ----- 认证失败 -----
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              // ----- 认证成功 -----
+              if (res.succ) {
+                const { token, tokenExpiredTime, roles, auths } = res.data
+                context.commit('setToken', token)
+                context.commit('setTokenExpiredTime', tokenExpiredTime)
+                context.commit('setRoles', roles)
+                context.commit('setAuths', auths)
+                Storage.set(TOKEN, token) // 用来下次自动登录
+                Storage.set(TOKEN_EXPIRED_TIME, tokenExpiredTime)
+                Storage.set(USERNAME, username) // 登录页面记住账号
+                resolve()
+              } else {
+                // ----- 认证失败 -----
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
-          })
-          .catch((error) => {
-            reject(error)
           })
       })
     },
@@ -115,16 +111,19 @@ export default {
         api.system
           .getRolesOfUser()
           .then((res) => {
-            if (res.succ) {
-              const { roles } = res.data
-              context.commit('setRoles', roles)
-              resolve()
-            } else {
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res) {
+              if (res.succ) {
+                const { roles } = res.data
+                context.commit('setRoles', roles)
+                resolve()
+              } else {
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {
+            console.log(error)
             reject(error)
           })
       })

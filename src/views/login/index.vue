@@ -54,7 +54,6 @@ import { useRouter } from 'vue-router'
 import { usernameValidator, passwordValidator, captchaValidator } from './validator'
 import Storage from '@/utils/storage2'
 import { comingSoon } from '@/utils/common'
-import { ElMessage } from 'element-plus'
 
 const store = useStore() // 获取vuex实例store
 const router = useRouter() // 获取router实例
@@ -111,12 +110,9 @@ const onChangePwdType = () => {
 // ----- 验证码：初始化+刷新 -----
 const captchaImage = ref('')
 const refreshCaptcha = () => {
-  store
-    .dispatch('common/getCaptcha')
-    .then((captchaImageBase64) => {
-      captchaImage.value = captchaImageBase64
-    })
-    .catch((err) => ElMessage.error(err.message))
+  store.dispatch('common/getCaptcha').then((captchaImageBase64) => {
+    captchaImage.value = captchaImageBase64
+  })
 }
 captchaImage.value = refreshCaptcha()
 
@@ -136,8 +132,7 @@ const handleLogin = () => {
         loading.value = false
         router.push('/') // 3、登录后操作：前往主页
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
         loading.value = false
         refreshCaptcha()
       })

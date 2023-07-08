@@ -71,8 +71,8 @@ service.interceptors.response.use(
         break
     }
     responseErr(error, mesg)
-    console.log('向调用方返回错误信息')
-    return new Error(mesg)
+    ElMessage.error(mesg)
+    // 这里返回给调用方的then里，但是res为null
   }
 )
 

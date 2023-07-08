@@ -1,6 +1,7 @@
 // 公共
 
 import api from '@/api'
+import { ElMessage } from 'element-plus'
 
 export default {
   namespaced: true,
@@ -49,10 +50,8 @@ export default {
               context.commit('setCaptchaKey', captchaKey)
               resolve(captchaImage)
             } else {
-              reject(new Error('获取验证码失败'))
+              ElMessage.error('获取验证码失败')
             }
-          } else {
-            reject(new Error(res.message))
           }
         })
       })

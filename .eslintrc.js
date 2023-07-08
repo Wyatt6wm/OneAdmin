@@ -6,13 +6,13 @@ module.exports = {
   // env表示启用ESLint检测的环境
   env: {
     // 在node环境下启动ESLint检测
-    node: true,
+    node: true
   },
   // ESLint中基础配置需要继承的配置
-  extends: ["plugin:vue/vue3-essential", "@vue/standard"],
+  extends: ['plugin:vue/vue3-essential', '@vue/standard'],
   // 解析器
   parserOptions: {
-    parser: "babel-eslint",
+    parser: 'babel-eslint'
   },
   /**
    * 需要修改的启用规则及其各自的错误级别，错误级别分为三种：
@@ -21,9 +21,11 @@ module.exports = {
    * "error" 或 2 - 开启规则，使用错误级别的错误：error (当被触发的时候，程序会退出)
    */
   rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     // 关闭函数名和括号之间插入空格的规则
-    "space-before-function-paren": "off",
-  },
-};
+    'space-before-function-paren': 'off',
+    // 声明变量未使用
+    'no-unused-vars': 'warn'
+  }
+}

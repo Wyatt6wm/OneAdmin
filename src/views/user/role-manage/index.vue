@@ -5,8 +5,8 @@
         <el-button type="primary" @click="handleAdd">新增角色</el-button>
       </div>
       <el-table max-height="calc(100vh - 185px)" border :data="roleList">
-        <el-table-column label="序号" width="60" type="index"></el-table-column>
-        <el-table-column label="状态" width="85">
+        <el-table-column label="序号" align="center" width="60" type="index"></el-table-column>
+        <el-table-column label="状态" align="center" width="85">
           <template #default="scope">
             <el-tag :type="scope.row.activated ? 'success' : 'warning'">
               {{ scope.row.activated ? '生效' : '未生效' }}
@@ -16,8 +16,9 @@
         <el-table-column label="角色标识符" prop="identifier" width="200"></el-table-column>
         <el-table-column label="角色名称" prop="name" width="200"></el-table-column>
         <el-table-column label="角色描述" prop="description"></el-table-column>
-        <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="角色操作" width="200">
+        <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="角色操作" align="center" width="255">
           <template #default="scope">
+            <el-button size="small" type="primary" plain @click="handleGrant(scope.row)"> 授权 </el-button>
             <el-button size="small" plain @click="handleEdit(scope.row)"> 修改 </el-button>
             <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain @click="handleChangeStatus(scope.row)">
               {{ scope.row.activated ? '禁用' : '启用' }}
@@ -29,6 +30,7 @@
     </el-card>
     <add-role-dialog :visable="addRoleDialogVisable" @close="closeAddDialog" @updateAfterAdd="getRoleList"></add-role-dialog>
     <edit-role-dialog :visable="editRoleDialogVisable" :role="role" @close="closeEditDialog" @updateAfterEdit="getRoleList"></edit-role-dialog>
+    <grant-dialog :visable="grantDialogVisable" :role="role" @close="closeGrantDialog"></grant-dialog>
   </div>
 </template>
 
@@ -39,6 +41,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import Const from '@/constant'
 import EditRoleDialog from './components/EditRoleDialog.vue'
 import AddRoleDialog from './components/AddRoleDialog.vue'
+import GrantDialog from './components/GrantDialog.vue'
 
 // ----- 获取角色列表渲染表格 -----
 const roleList = ref([])
@@ -78,6 +81,16 @@ const handleEdit = (row) => {
 }
 const closeEditDialog = () => {
   editRoleDialogVisable.value = false
+}
+
+// ----- 角色授权 -----
+const grantDialogVisable = ref(false)
+const handleGrant = (row) => {
+  grantDialogVisable.value = true
+  role.value = row
+}
+const closeGrantDialog = () => {
+  grantDialogVisable.value = false
 }
 
 // ----- 启用/禁用 -----

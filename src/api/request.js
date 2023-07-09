@@ -62,15 +62,27 @@ service.interceptors.response.use(
     }
   },
   // ----- 2.网络请求失败时（如500） -----
-  (error) => {
-    const status = error.response.status
+  async (error) => {
     let mesg = '未知错误'
-    switch (status) {
-      case 500:
-        mesg = '服务器连接失败'
-        break
+    if (error && error.response && error.response.status) {
+      const status = error.response.status
+      switch (status) {
+        case 401:
+          mesg = '登录已过期，请重新登录'
+          await store.dispatch('userLogin/logout')
+          break
+        case 404:
+          mesg = '无法访问'
+          break
+        case 500:
+          mesg = '服务器连接失败'
+          break
+        case 503:
+          mesg = '服务不可用'
+          break
+      }
+      responseErr(error, mesg)
     }
-    responseErr(error, mesg)
     ElMessage.error(mesg)
     // 这里返回给调用方的then里，但是res为null
   }

@@ -64,6 +64,11 @@ export const getRoleList = () => {
     url: ROLE + '/getRoleList'
   })
 }
+export const getRoleAuths = (id) => {
+  return request({
+    url: ROLE + '/getRoleAuths?id=' + id
+  })
+}
 
 // ---------- Auth ----------
 const AUTH = '/sys/auth'

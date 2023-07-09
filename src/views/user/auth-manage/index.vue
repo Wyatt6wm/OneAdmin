@@ -5,8 +5,8 @@
         <el-button type="primary" @click="handleAdd">新增权限</el-button>
       </div>
       <el-table max-height="calc(100vh - 185px)" border :data="authList">
-        <el-table-column label="序号" width="60" type="index"></el-table-column>
-        <el-table-column label="状态" width="85">
+        <el-table-column label="序号" align="center" width="60" type="index"></el-table-column>
+        <el-table-column label="状态" align="center" width="85">
           <template #default="scope">
             <el-tag :type="scope.row.activated ? 'success' : 'warning'">
               {{ scope.row.activated ? '生效' : '未生效' }}
@@ -16,7 +16,7 @@
         <el-table-column label="权限标识符" prop="identifier"></el-table-column>
         <el-table-column label="权限名称" prop="name"></el-table-column>
         <el-table-column label="权限描述" prop="description"></el-table-column>
-        <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="权限操作" width="200">
+        <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="权限操作" align="center" width="200">
           <template #default="scope">
             <el-button size="small" plain @click="handleEdit(scope.row)"> 修改 </el-button>
             <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain @click="handleChangeStatus(scope.row)">

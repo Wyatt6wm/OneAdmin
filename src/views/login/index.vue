@@ -42,7 +42,6 @@
           <el-col :span="4"><el-link type="primary" @click="comingSoon()">忘记密码</el-link></el-col>
         </el-row>
       </div>
-      <!-- TODO 注册和忘记密码功能 -->
       <el-button type="primary" style="width: 100%; margin-top: 20px; margin-bottom: 30px" :loading="loading"
         @click="handleLogin()"> 登录 </el-button>
       <div class="tips" v-html="tipsContent"></div>

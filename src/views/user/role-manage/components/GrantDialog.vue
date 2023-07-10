@@ -1,14 +1,7 @@
 <template>
-  <el-dialog :model-value="props.visable" :title="title" @close="onClose()">
-    <el-transfer
-      :data="allGrants"
-      v-model="granted"
-      :titles="['未授权', '已授权']"
-      :button-texts="['移除', '选择']"
-      target-order="unshift"
-      filterable
-      @change="handleChange"
-    >
+  <el-dialog width="70%" :model-value="props.visable" :title="title" @close="onClose()">
+    <el-transfer :data="allGrants" v-model="granted" :titles="['未授权', '已授权']" :button-texts="['移除', '选择']"
+      target-order="unshift" filterable @change="handleChange">
       <template #default="{ option }">
         <span :style="getFontColor(option.key)">
           {{ option.label }}
@@ -16,7 +9,7 @@
       </template>
     </el-transfer>
     <template #footer>
-      <el-button type="primary" @click="onConfirm()" :loading="loading">确定</el-button>
+      <el-button type="primary" @click="onConfirm()" :loading="loading">变更授权</el-button>
       <el-button @click="onClose()">取消</el-button>
     </template>
   </el-dialog>
@@ -76,7 +69,7 @@ const initData = async () => {
       const item = allGrantsList[i]
       allGrants.value.push({
         key: item.id,
-        label: (item.name ? item.name + ' ' : '') + item.identifier
+        label: (item.name ? item.name + ' / ' : '') + item.identifier
       })
       // 默认位置在左边
       position.value[item.id] = {
@@ -111,17 +104,18 @@ const initData = async () => {
       }
     }
   }
-
-  console.log(position.value)
 }
 // 监听打开对话框动作
 watch(
   () => props.visable,
   () => {
-    title.value = '为角色【' + props.role.identifier + (props.role.name ? ' ' + props.role.name : '') + '】授权'
-    initData()
+    if (props.visable) {
+      title.value = '角色【' + props.role.identifier + (props.role.name ? ' / ' + props.role.name : '') + '】的权限'
+      initData()
+    }
   }
 )
+console.log(watch)
 
 // ----- 渲染字体颜色 -----
 const getFontColor = (key) => {
@@ -153,46 +147,65 @@ const loading = ref(false)
 const onConfirm = () => {
   loading.value = true
 
-  // 要授权的列表
+  // 要授权的authId列表
   const grantList = []
   for (let i = 0; i < allGrants.value.length; i++) {
     const key = allGrants.value[i].key
     const { origin, now } = position.value[key]
     if (now - origin > 0) {
-      grantList.push({ userId: props.role.id, authId: key })
+      grantList.push(key)
     }
   }
-  // 要解除授权的列表
+  // 要解除授权的authId列表
   const disgrantList = []
   for (let i = 0; i < allGrants.value.length; i++) {
     const key = allGrants.value[i].key
     const { origin, now } = position.value[key]
     if (now - origin < 0) {
-      disgrantList.push({ userId: props.role.id, authId: key })
+      disgrantList.push(key)
     }
   }
 
-  // api.system
-  //   .editRole(roleForm)
-  //   .then((res) => {
-  //     if (res && res.succ != null) {
-  //       if (res.succ) {
-  //         ElMessage.success('保存成功')
-  //         loading.value = false
-  //         onClose()
-  //         // 调用父组件updateAfterEdit事件
-  //         emits('updateAfterEdit')
-  //       } else {
-  //         ElMessage.error(res.mesg)
-  //         loading.value = false
-  //       }
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     ElMessage.error(error.message)
-  //     loading.value = false
-  //   })
+  if (grantList.length + disgrantList.length > 0) {
+    api.system.changeRoleGrants({ roleId: props.role.id, grantList, disgrantList })
+      .then((res) => {
+        if (res && res.succ != null) {
+          if (res.succ) {
+            const failGrantCnt = res.data.failGrant.length
+            const failDisgrantCnt = res.data.failDisgrant.length
+            if (failGrantCnt + failDisgrantCnt > 0) {
+              const grantSum = grantList.length
+              const disgrantSum = disgrantList.length
+              ElMessage.warning('授权' + (grantSum - failGrantCnt) + '/' + grantSum + '解除授权' + (disgrantSum - failDisgrantCnt) + '/' + disgrantSum)
+              loading.value = false
+            } else {
+              ElMessage.success('授权变更成功')
+              loading.value = false
+              onClose()
+            }
+          } else {
+            ElMessage.error(res.mesg)
+            loading.value = false
+          }
+        }
+      })
+      .catch((error) => {
+        ElMessage.error(error.message)
+        loading.value = false
+      })
+  } else {
+    ElMessage.warning('授权未变更')
+    loading.value = false
+  }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.el-dialog .el-dialog__body {
+  text-align: center;
+}
+
+.el-transfer {
+  --el-transfer-panel-width: 35%;
+}
+</style>

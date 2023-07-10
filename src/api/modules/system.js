@@ -47,6 +47,13 @@ export const addRole = (roleForm) => {
     data: roleForm
   })
 }
+export const changeRoleGrants = (grantForm) => {
+  return request({
+    method: 'post',
+    url: ROLE + '/changeRoleGrants',
+    data: grantForm
+  })
+}
 export const removeRole = (id) => {
   return request({
     url: ROLE + '/removeRole?id=' + id

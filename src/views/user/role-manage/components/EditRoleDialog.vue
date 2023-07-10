@@ -56,10 +56,12 @@ const roleForm = reactive({
 watch(
   () => props.visable,
   () => {
-    title.value = '编辑角色【' + props.role.identifier + (props.role.name ? ' ' + props.auth.name : '') + '】'
-    roleForm.identifier = props.role.identifier
-    roleForm.name = props.role.name
-    roleForm.description = props.role.description
+    if (props.visable) {
+      title.value = '编辑角色【' + props.role.identifier + (props.role.name ? ' / ' + props.role.name : '') + '】'
+      roleForm.identifier = props.role.identifier
+      roleForm.name = props.role.name
+      roleForm.description = props.role.description
+    }
   }
 )
 

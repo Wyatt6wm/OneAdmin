@@ -16,11 +16,12 @@
         <el-table-column label="角色标识符" prop="identifier" width="200"></el-table-column>
         <el-table-column label="角色名称" prop="name" width="200"></el-table-column>
         <el-table-column label="角色描述" prop="description"></el-table-column>
-        <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="角色操作" align="center" width="255">
+        <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="角色操作" align="center" width="280">
           <template #default="scope">
-            <el-button size="small" type="primary" plain @click="handleGrant(scope.row)"> 授权 </el-button>
+            <el-button size="small" type="primary" plain @click="handleGrant(scope.row)"> 查看授权 </el-button>
             <el-button size="small" plain @click="handleEdit(scope.row)"> 修改 </el-button>
-            <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain @click="handleChangeStatus(scope.row)">
+            <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain
+              @click="handleChangeStatus(scope.row)">
               {{ scope.row.activated ? '禁用' : '启用' }}
             </el-button>
             <el-button size="small" type="danger" @click="handleDelete(scope.row)"> 删除 </el-button>
@@ -28,8 +29,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <add-role-dialog :visable="addRoleDialogVisable" @close="closeAddDialog" @updateAfterAdd="getRoleList"></add-role-dialog>
-    <edit-role-dialog :visable="editRoleDialogVisable" :role="role" @close="closeEditDialog" @updateAfterEdit="getRoleList"></edit-role-dialog>
+    <add-role-dialog :visable="addRoleDialogVisable" @close="closeAddDialog"
+      @updateAfterAdd="getRoleList"></add-role-dialog>
+    <edit-role-dialog :visable="editRoleDialogVisable" :role="role" @close="closeEditDialog"
+      @updateAfterEdit="getRoleList"></edit-role-dialog>
     <grant-dialog :visable="grantDialogVisable" :role="role" @close="closeGrantDialog"></grant-dialog>
   </div>
 </template>
@@ -96,7 +99,7 @@ const closeGrantDialog = () => {
 // ----- 启用/禁用 -----
 const handleChangeStatus = (roleDetail) => {
   const { id, identifier, name, activated } = roleDetail
-  const message = '是否' + (activated ? '禁用' : '启用') + '角色【' + identifier + (name ? ' ' + name : '') + '】？'
+  const message = '是否' + (activated ? '禁用' : '启用') + '角色【' + identifier + (name ? ' / ' + name : '') + '】？'
   ElMessageBox.confirm(message, '请确认', { type: 'warning' })
     .then(() => {
       const roleForm = { id: id, activated: !activated }
@@ -105,7 +108,7 @@ const handleChangeStatus = (roleDetail) => {
         .then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
-              const succMesg = '成功' + (activated ? '禁用' : '启用') + '角色【' + identifier + (name ? ' ' + name : '') + '】'
+              const succMesg = '成功' + (activated ? '禁用' : '启用') + '角色【' + identifier + (name ? ' / ' + name : '') + '】'
               roleDetail.activated = !roleDetail.activated
               ElMessage.success(succMesg)
             } else {
@@ -126,7 +129,7 @@ const handleChangeStatus = (roleDetail) => {
 // ----- 删除角色 -----
 const handleDelete = (roleDetail) => {
   const { id, identifier, name } = roleDetail
-  const message = '是否删除角色【' + identifier + (name ? ' ' + name : '') + '】？'
+  const message = '是否删除角色【' + identifier + (name ? ' / ' + name : '') + '】？'
   ElMessageBox.confirm(message, '请确认', { type: 'warning' })
     .then(() => {
       api.system
@@ -134,7 +137,7 @@ const handleDelete = (roleDetail) => {
         .then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
-              const succMesg = '成功删除角色【' + identifier + (name ? ' ' + name : '') + '】'
+              const succMesg = '成功删除角色【' + identifier + (name ? ' / ' + name : '') + '】'
               ElMessage.success(succMesg)
             } else {
               ElMessage.error(res.mesg)

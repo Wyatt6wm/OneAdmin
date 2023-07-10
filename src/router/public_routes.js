@@ -3,21 +3,26 @@
 import Login from '@/views/login'
 import Layout from '@/layout'
 import Profile from '@/views/profile'
-import Err404 from '@/views/error-page/404'
-import Err401 from '@/views/error-page/401'
+import Err404 from '@/views/errors/404'
+import Err401 from '@/views/errors/401'
+
+export const publicRouteNames = ['login', 'index', 'profile', 'err404', 'err401']
 
 export default [
   {
     path: '/login',
+    name: 'login',
     component: Login
   },
   {
     path: '/',
     redirect: '/profile', // 路径/重定向到/profile
+    name: 'index',
     component: Layout,
     children: [
       {
         path: '/profile',
+        name: 'profile',
         component: Profile,
         meta: {
           public: true,
@@ -29,6 +34,7 @@ export default [
       },
       {
         path: '/404',
+        name: 'err404',
         component: Err404,
         meta: {
           public: true
@@ -36,6 +42,7 @@ export default [
       },
       {
         path: '/401',
+        name: 'err401',
         component: Err401,
         meta: {
           public: true

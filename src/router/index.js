@@ -1,13 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import publicRoutes from './public_routes'
+import publicRoutes, { publicRouteNames } from './public_routes'
 import store from '@/store'
 import { isTokenExpired } from '@/utils/token'
 import { ElMessage } from 'element-plus'
-import {
-  getDynamicRoutes,
-  checkRouteAuth,
-  getAuthRouteNames
-} from '@/utils/routes'
+import { getDynamicRoutes, checkRouteAuth } from '@/utils/routes'
 
 // ---------- 路由配置 ----------
 
@@ -35,33 +31,13 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 如果还没有用户角色则查询服务器
       if (!store.getters.hasRoles) {
-        await store.dispatch('userLogin/getRolesOfUser').catch((error) => {
-          if (
-            error &&
-            error.response &&
-            error.response.status &&
-            error.response.status === 500
-          ) {
-            ElMessage.error('请重新登录')
-            return store.dispatch('userLogin/logout')
-          }
-        })
+        await store.dispatch('userLogin/getRolesOfUser')
       }
 
       // 如果还没有用户权限则查询服务器
       if (!store.getters.hasAuths) {
-        await store.dispatch('userLogin/getAuthsOfUser').catch((error) => {
-          if (
-            error &&
-            error.response &&
-            error.response.status &&
-            error.response.status === 500
-          ) {
-            ElMessage.error('请重新登录')
-            return store.dispatch('userLogin/logout')
-          }
-        })
-        store.dispatch('common/setRoutesPreparedFalse')
+        await store.dispatch('userLogin/getAuthsOfUser')
+        await store.dispatch('common/setRoutesPreparedFalse')
       }
 
       // 如果还没有用户信息则查询服务器
@@ -71,7 +47,7 @@ router.beforeEach(async (to, from, next) => {
 
       // 如果路由表未准备好则更新路由表
       if (!store.getters.routesPrepared) {
-        console.log('Update routes.')
+        console.log('更新路由表')
         const dynamicRoutes = getDynamicRoutes(store.getters.auths)
         dynamicRoutes.forEach((route) => {
           if (!router.hasRoute(route.name)) {
@@ -110,16 +86,21 @@ router.beforeEach(async (to, from, next) => {
  * 初始化路由表，只加载公共路由，防止切换用户后路由表未更新
  */
 export const initRoutes = () => {
-  console.log('Init routes.')
-  const names = getAuthRouteNames(store.getters.auths)
-  names.forEach((name) => {
-    if (router.hasRoute(name)) {
-      router.removeRoute(name)
-    }
-  })
-  if (router.hasRoute('notMatch')) {
-    router.removeRoute('notMatch')
+  console.log('initRoutes()')
+  const currRoutes = router.getRoutes()
+  if (currRoutes) {
+    currRoutes.forEach((item) => {
+      if (router.hasRoute(item.name) && !publicRouteNames.includes(item.name)) {
+        router.removeRoute(item.name)
+      }
+    })
   }
+  // 最后加上不匹配场景的路由
+  router.addRoute({
+    path: '/:catchAll(.*)',
+    redirect: '/404',
+    name: 'notMatch'
+  })
 }
 
 export default router

@@ -1,17 +1,17 @@
 <template>
   <el-dialog :model-value="props.visable" :title="title" @close="onClose()">
-    <el-form :model="authForm">
+    <el-form :model="roleForm">
       <el-form-item>
-        <el-switch v-model="editIdentifier" active-text="修改权限标识符" />
-        <el-input placeholder="请输入新的权限标识符" v-model="authForm.identifier" :disabled="!editIdentifier" clearable />
+        <el-switch v-model="editIdentifier" active-text="修改角色标识符" />
+        <el-input placeholder="请输入新的角色标识符" v-model="roleForm.identifier" :disabled="!editIdentifier" clearable />
       </el-form-item>
       <el-form-item>
-        <el-switch v-model="editName" active-text="修改权限名称" />
-        <el-input placeholder="请输入新的权限名称" v-model="authForm.name" :disabled="!editName" clearable />
+        <el-switch v-model="editName" active-text="修改角色名称" />
+        <el-input placeholder="请输入新的角色名称" v-model="roleForm.name" :disabled="!editName" clearable />
       </el-form-item>
       <el-form-item>
-        <el-switch v-model="editDescription" active-text="修改权限描述" />
-        <el-input placeholder="请输入新的权限描述" v-model="authForm.description" :disabled="!editDescription" type="textarea" />
+        <el-switch v-model="editDescription" active-text="修改角色描述" />
+        <el-input placeholder="请输入新的角色描述" v-model="roleForm.description" :disabled="!editDescription" type="textarea" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -32,7 +32,7 @@ const props = defineProps({
     default: false,
     required: true
   },
-  auth: {
+  role: {
     type: Object,
     required: true
   }
@@ -47,20 +47,20 @@ const editIdentifier = ref(false)
 const editName = ref(false)
 const editDescription = ref(false)
 // 提交的表单
-const authForm = reactive({
+const roleForm = reactive({
   identifier: '',
   name: '',
   description: ''
 })
 // 监听打开对话框动作
 watch(
-  () => props.visable === true,
+  () => props.visable,
   () => {
     if (props.visable) {
-      title.value = '编辑权限【' + props.auth.identifier + (props.auth.name ? ' / ' + props.auth.name : '') + '】'
-      authForm.identifier = props.auth.identifier
-      authForm.name = props.auth.name
-      authForm.description = props.auth.description
+      title.value = '编辑角色【' + props.role.identifier + (props.role.name ? ' / ' + props.role.name : '') + '】'
+      roleForm.identifier = props.role.identifier
+      roleForm.name = props.role.name
+      roleForm.description = props.role.description
     }
   }
 )
@@ -71,7 +71,7 @@ const onClose = () => {
   editIdentifier.value = false
   editName.value = false
   editDescription.value = false
-  authForm.identifier = authForm.name = authForm.description = ''
+  roleForm.identifier = roleForm.name = roleForm.description = ''
   // 调用父组件close事件
   emits('close')
 }
@@ -81,14 +81,14 @@ const loading = ref(false)
 const onConfirm = () => {
   loading.value = true
 
-  authForm.id = props.auth.id
-  if (!editIdentifier.value) authForm.identifier = null
-  if (!editName.value) authForm.name = null
-  if (!editDescription.value) authForm.description = null
+  roleForm.id = props.role.id
+  if (!editIdentifier.value) roleForm.identifier = null
+  if (!editName.value) roleForm.name = null
+  if (!editDescription.value) roleForm.description = null
 
   if (editIdentifier.value || editName.value || editDescription.value) {
     api.system
-      .editAuth(authForm)
+      .editRole(roleForm)
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {

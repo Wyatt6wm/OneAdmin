@@ -15,8 +15,7 @@
         <span class="svg-container">
           <svg-icon icon="password"></svg-icon>
         </span>
-        <el-input :type="passwordType" placeholder="密码" name="password" maxlength="16"
-          v-model="loginForm.password"></el-input>
+        <el-input :type="passwordType" placeholder="密码" name="password" maxlength="16" v-model="loginForm.password"></el-input>
         <span class="show-pwd" @click="onChangePwdType">
           <svg-icon :icon="passwordType === 'password' ? 'eye' : 'eye-open'"></svg-icon>
         </span>
@@ -26,8 +25,7 @@
           <span class="svg-container">
             <svg-icon icon="article-create"></svg-icon>
           </span>
-          <el-input type="text" placeholder="验证码" name="captchaInput" maxlength="5"
-            v-model="loginForm.captchaInput"></el-input>
+          <el-input type="text" placeholder="验证码" name="captchaInput" maxlength="5" v-model="loginForm.captchaInput"></el-input>
         </el-col>
         <el-col :span="10">
           <div class="captcha-box" @click="refreshCaptcha">
@@ -43,10 +41,7 @@
         </el-row>
       </div>
       <!-- TODO 注册和忘记密码功能 -->
-      <el-button type="primary" style="width:100%;margin-top:20px;margin-bottom:30px" :loading="loading"
-        @click="handleLogin()">
-        登录
-      </el-button>
+      <el-button type="primary" style="width: 100%; margin-top: 20px; margin-bottom: 30px" :loading="loading" @click="handleLogin()"> 登录 </el-button>
       <div class="tips" v-html="tipsContent"></div>
     </el-form>
   </div>
@@ -137,8 +132,7 @@ const handleLogin = () => {
         loading.value = false
         router.push('/') // 3、登录后操作：前往主页
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
         loading.value = false
         refreshCaptcha()
       })

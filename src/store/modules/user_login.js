@@ -1,5 +1,3 @@
-// 用户元数据
-
 import Storage from '@/utils/storage2'
 import api from '@/api'
 import router, { initRoutes } from '@/router'
@@ -81,22 +79,23 @@ export default {
             captchaInput
           })
           .then((res) => {
-            // ----- 认证成功 -----
-            if (res.succ) {
-              const { token, tokenExpiredTime, roles, auths } = res.data
-              context.commit('setToken', token)
-              context.commit('setTokenExpiredTime', tokenExpiredTime)
-              context.commit('setRoles', roles)
-              context.commit('setAuths', auths)
-              Storage.set(TOKEN, token) // 用来下次自动登录
-              Storage.set(TOKEN_EXPIRED_TIME, tokenExpiredTime)
-              Storage.set(USERNAME, username) // 登录页面记住账号
-
-              resolve()
-            } else {
-              // ----- 认证失败 -----
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              // ----- 认证成功 -----
+              if (res.succ) {
+                const { token, tokenExpiredTime, roles, auths } = res.data
+                context.commit('setToken', token)
+                context.commit('setTokenExpiredTime', tokenExpiredTime)
+                context.commit('setRoles', roles)
+                context.commit('setAuths', auths)
+                Storage.set(TOKEN, token) // 用来下次自动登录
+                Storage.set(TOKEN_EXPIRED_TIME, tokenExpiredTime)
+                Storage.set(USERNAME, username) // 登录页面记住账号
+                resolve()
+              } else {
+                // ----- 认证失败 -----
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {
@@ -110,18 +109,20 @@ export default {
      * @param {*} context
      * @returns
      */
-    async getRolesOfUser(context) {
+    getRolesOfUser(context) {
       return new Promise((resolve, reject) => {
         api.system
           .getRolesOfUser()
           .then((res) => {
-            if (res.succ) {
-              const { roles } = res.data
-              context.commit('setRoles', roles)
-              resolve()
-            } else {
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              if (res.succ) {
+                const { roles } = res.data
+                context.commit('setRoles', roles)
+                resolve()
+              } else {
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {
@@ -135,18 +136,20 @@ export default {
      * @param {*} context
      * @returns
      */
-    async getAuthsOfUser(context) {
+    getAuthsOfUser(context) {
       return new Promise((resolve, reject) => {
         api.system
           .getAuthsOfUser()
           .then((res) => {
-            if (res.succ) {
-              const { auths } = res.data
-              context.commit('setAuths', auths)
-              resolve()
-            } else {
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              if (res.succ) {
+                const { auths } = res.data
+                context.commit('setAuths', auths)
+                resolve()
+              } else {
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {
@@ -159,19 +162,21 @@ export default {
      * 获取用户信息
      * @param {*} context
      */
-    async getProfile(context) {
+    getProfile(context) {
       context.state.gettingProfile = true
       return new Promise((resolve, reject) => {
         api.system
           .getProfile()
           .then((res) => {
-            if (res.succ) {
-              const { profile } = res.data
-              context.commit('setProfile', profile)
-              resolve()
-            } else {
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              if (res.succ) {
+                const { profile } = res.data
+                context.commit('setProfile', profile)
+                resolve()
+              } else {
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {
@@ -188,25 +193,27 @@ export default {
         api.system
           .logout()
           .then((res) => {
-            // ----- 退出登录成功 -----
-            if (res.succ) {
-              // 清理路由表
-              initRoutes()
-              // 清理vuex
-              this.commit('viewSettings/clearStateOnLogout')
-              this.commit('common/clearStateOnLogout')
-              this.commit('userLogin/clearStateOnLogout')
-              // 清理LocalStorage
-              const username = Storage.get(USERNAME)
-              Storage.removeAll()
-              Storage.set(USERNAME, username)
-              // 返回登录页
-              router.push('/login')
-              resolve()
-            } else {
-              // ----- 退出登录失败 -----
-              ElMessage.error(res.mesg)
-              reject(new Error(res.mesg))
+            if (res && res.succ != null) {
+              // ----- 退出登录成功 -----
+              if (res.succ) {
+                // 清理路由表
+                initRoutes()
+                // 清理vuex
+                this.commit('viewSettings/clearStateOnLogout')
+                this.commit('common/clearStateOnLogout')
+                this.commit('userLogin/clearStateOnLogout')
+                // 清理LocalStorage
+                const username = Storage.get(USERNAME)
+                Storage.removeAll()
+                Storage.set(USERNAME, username)
+                // 返回登录页
+                router.push('/login')
+                resolve()
+              } else {
+                // ----- 退出登录失败 -----
+                ElMessage.error(res.mesg)
+                reject(new Error(res.mesg))
+              }
             }
           })
           .catch((error) => {

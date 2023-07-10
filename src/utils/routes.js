@@ -5,6 +5,7 @@ import privateRoutes from '@/router/private_routes'
  * @param {*} context
  */
 export const getDynamicRoutes = (auths) => {
+  console.log('getDynamicRoutes()')
   const dynamicRoutes = []
 
   // 根据用户的页面权限添加私有路由
@@ -38,6 +39,7 @@ export const getDynamicRoutes = (auths) => {
  * @returns
  */
 export const checkRouteAuth = (auths, routeName) => {
+  console.log('checkRouteAuth()')
   let result = false
   // 页面显示权限标识符格式：view:viewName
   const regexp = /^view:.*$/
@@ -57,6 +59,7 @@ export const checkRouteAuth = (auths, routeName) => {
  * @returns
  */
 export const getAuthRouteNames = (auths) => {
+  console.log('getAuthRouteNames()')
   const names = []
   // 页面显示权限标识符格式：view:viewName
   const regexp = /^view:.*$/

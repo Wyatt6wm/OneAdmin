@@ -36,7 +36,7 @@ const props = defineProps({
 const emits = defineEmits(['close', 'updateAfterAdd'])
 
 // ----- 初始化 -----
-const identifierPlaceholder = ref('请输入权限标识符，格式如：view:userManage / api:sys:auth:list')
+const identifierPlaceholder = ref('请输入权限标识符，格式如：view:viewName / api:apiName等')
 const namePlaceholder = ref('请输入权限名称')
 const descriptionPlaceholder = ref('请输入权限描述')
 // 提交的表单
@@ -74,21 +74,26 @@ const onConfirm = () => {
     if (!pass) return
 
     loading.value = true
-    api.system.addAuth(authForm).then((res) => {
-      if (res.succ) {
-        ElMessage.success('权限新建成功')
+    api.system
+      .addAuth(authForm)
+      .then((res) => {
+        if (res && res.succ != null) {
+          if (res.succ) {
+            ElMessage.success('权限新建成功')
+            loading.value = false
+            onClose()
+            // 调用父组件updateAfterAdd事件
+            emits('updateAfterAdd')
+          } else {
+            ElMessage.error(res.mesg)
+            loading.value = false
+          }
+        }
+      })
+      .catch((error) => {
+        ElMessage.error(error.message)
         loading.value = false
-        onClose()
-        // 调用父组件updateAfterAdd事件
-        emits('updateAfterAdd')
-      } else {
-        ElMessage.error(res.mesg)
-        loading.value = false
-      }
-    }).catch((error) => {
-      ElMessage.error(error.message)
-      loading.value = false
-    })
+      })
   })
 }
 </script>

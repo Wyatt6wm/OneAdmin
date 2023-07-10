@@ -42,25 +42,32 @@ export default {
      * @returns 验证码Base64格式图像
      */
     getCaptcha(context) {
-      return api.system
-        .getCaptcha()
-        .then((res) => {
-          if (res.succ) {
-            const { captchaKey, captchaImage } = res.data
-            context.commit('setCaptchaKey', captchaKey)
-            return captchaImage
-          }
-        })
-        .catch(() => {
-          ElMessage.error('获取验证码失败')
-        })
+      return new Promise((resolve, reject) => {
+        api.system
+          .getCaptcha()
+          .then((res) => {
+            if (res && res.succ != null) {
+              if (res.succ) {
+                const { captchaKey, captchaImage } = res.data
+                context.commit('setCaptchaKey', captchaKey)
+                resolve(captchaImage)
+              } else {
+                ElMessage.error('获取验证码失败')
+              }
+            }
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
 
     /**
      * 将routesPrepared设置成true
      * @param {*} context
      */
-    async setRoutesPreparedTrue(context) {
+    setRoutesPreparedTrue(context) {
+      console.log('setRoutesPreparedTrue()')
       context.commit('setRoutesPrepared', true)
     },
 
@@ -68,7 +75,8 @@ export default {
      * 将routesPrepared设置成false
      * @param {*} context
      */
-    async setRoutesPreparedFalse(context) {
+    setRoutesPreparedFalse(context) {
+      console.log('setRoutesPreparedFalse()')
       context.commit('setRoutesPrepared', false)
     }
   }

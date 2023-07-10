@@ -54,12 +54,14 @@ const authForm = reactive({
 })
 // 监听打开对话框动作
 watch(
-  () => props.visable,
+  () => props.visable === true,
   () => {
-    title.value = '编辑权限【' + props.auth.identifier + (props.auth.name ? ' ' + props.auth.name : '') + '】'
-    authForm.identifier = props.auth.identifier
-    authForm.name = props.auth.name
-    authForm.description = props.auth.description
+    if (props.visable) {
+      title.value = '编辑权限【' + props.auth.identifier + (props.auth.name ? ' / ' + props.auth.name : '') + '】'
+      authForm.identifier = props.auth.identifier
+      authForm.name = props.auth.name
+      authForm.description = props.auth.description
+    }
   }
 )
 

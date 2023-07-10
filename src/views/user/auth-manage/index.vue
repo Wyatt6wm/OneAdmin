@@ -19,7 +19,8 @@
         <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="权限操作" align="center" width="200">
           <template #default="scope">
             <el-button size="small" plain @click="handleEdit(scope.row)"> 修改 </el-button>
-            <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain @click="handleChangeStatus(scope.row)">
+            <el-button size="small" :type="scope.row.activated ? 'warning' : 'success'" plain
+              @click="handleChangeStatus(scope.row)">
               {{ scope.row.activated ? '禁用' : '启用' }}
             </el-button>
             <el-button size="small" type="danger" @click="handleDelete(scope.row)"> 删除 </el-button>
@@ -27,8 +28,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <add-auth-dialog :visable="addAuthDialogVisable" @close="closeAddDialog" @updateAfterAdd="getAuthList"></add-auth-dialog>
-    <edit-auth-dialog :visable="editAuthDialogVisable" :auth="auth" @close="closeEditDialog" @updateAfterEdit="getAuthList"></edit-auth-dialog>
+    <add-auth-dialog :visable="addAuthDialogVisable" @close="closeAddDialog"
+      @updateAfterAdd="getAuthList"></add-auth-dialog>
+    <edit-auth-dialog :visable="editAuthDialogVisable" :auth="auth" @close="closeEditDialog"
+      @updateAfterEdit="getAuthList"></edit-auth-dialog>
   </div>
 </template>
 
@@ -83,7 +86,7 @@ const closeEditDialog = () => {
 // ----- 启用/禁用 -----
 const handleChangeStatus = (authDetail) => {
   const { id, identifier, name, activated } = authDetail
-  const message = '是否' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' ' + name : '') + '】？'
+  const message = '是否' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' / ' + name : '') + '】？'
   ElMessageBox.confirm(message, '请确认', { type: 'warning' })
     .then(() => {
       const authForm = { id: id, activated: !activated }
@@ -92,7 +95,7 @@ const handleChangeStatus = (authDetail) => {
         .then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
-              const succMesg = '成功' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' ' + name : '') + '】'
+              const succMesg = '成功' + (activated ? '禁用' : '启用') + '权限【' + identifier + (name ? ' / ' + name : '') + '】'
               authDetail.activated = !authDetail.activated
               ElMessage.success(succMesg)
             } else {
@@ -113,7 +116,7 @@ const handleChangeStatus = (authDetail) => {
 // ----- 删除权限 -----
 const handleDelete = (authDetail) => {
   const { id, identifier, name } = authDetail
-  const message = '是否删除权限【' + identifier + (name ? ' ' + name : '') + '】？'
+  const message = '是否删除权限【' + identifier + (name ? ' / ' + name : '') + '】？'
   ElMessageBox.confirm(message, '请确认', { type: 'warning' })
     .then(() => {
       api.system
@@ -121,7 +124,7 @@ const handleDelete = (authDetail) => {
         .then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
-              const succMesg = '成功删除权限【' + identifier + (name ? ' ' + name : '') + '】'
+              const succMesg = '成功删除权限【' + identifier + (name ? ' / ' + name : '') + '】'
               ElMessage.success(succMesg)
             } else {
               ElMessage.error(res.mesg)

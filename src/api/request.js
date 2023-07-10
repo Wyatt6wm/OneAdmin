@@ -19,7 +19,7 @@ const service = axios.create({
   // 返回数据类型
   responseType: 'json',
   // 设置超时时间
-  timeout: 10000 // 单位：ms
+  timeout: 310000 // 单位：ms
 })
 
 // axios实例的请求拦截器

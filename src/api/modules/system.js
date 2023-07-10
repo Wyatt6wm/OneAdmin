@@ -10,6 +10,13 @@ export const getCaptcha = () => {
 
 // ---------- User ----------
 const USER = '/sys/user'
+export const registry = (registryForm) => {
+  return request({
+    method: 'post',
+    url: USER + '/registry',
+    data: registryForm
+  })
+}
 export const login = (loginForm) => {
   return request({
     method: 'post',

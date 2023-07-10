@@ -200,11 +200,7 @@ const onConfirm = () => {
 }
 </script>
 
-<style lang="scss">
-.el-dialog .el-dialog__body {
-  text-align: center;
-}
-
+<style lang="scss" scoped>
 .el-transfer {
   --el-transfer-panel-width: 35%;
 }

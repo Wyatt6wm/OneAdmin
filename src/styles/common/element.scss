@@ -1,7 +1,8 @@
 // 修改element-plus默认样式的样式
 
-.el-avatar {
-  --el-avatar-background-color: none !important;
+// ----- 对话框内容居中 -----
+.el-dialog .el-dialog__body {
+  text-align: center;
 }
 
 // ---------- 以下处理element-plus从^1.0.2-beta.28升级到^2.0.4后出现的样式问题 ----------
@@ -21,6 +22,9 @@
 
 // 处理图片的灰色底
 .el-avatar {
+  --el-avatar-background-color: none !important;
+}
+.el-avatar {
   --el-avatar-bg-color: none !important;
 }
 
@@ -32,9 +36,6 @@
 }
 .el-button:hover {
   color: var(--el-button-hover-text-color);
-  border-color: var(
-    --el-button-hover-border-color,
-    var(--el-button-hover-bg-color)
-  );
+  border-color: var(--el-button-hover-border-color, var(--el-button-hover-bg-color));
   background-color: var(--el-button-hover-bg-color);
 }

@@ -3,18 +3,36 @@
     <template #title>
       <h2>注册成为OneAdmin用户</h2>
     </template>
-    <el-form class=" registry-form" ref="registryRef" :rules="registryRules" :model="registryInput" size="large"
-      label-width="78px">
+    <el-form
+      class="registry-form"
+      ref="registryRef"
+      :rules="registryRules"
+      :model="registryInput"
+      size="large"
+      label-width="78px"
+    >
       <el-form-item label="用户名" prop="username">
         <el-input name="username" placeholder="请输入用户名" v-model="registryInput.username" maxlength="16" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input name="password" placeholder="请输入密码" v-model="registryInput.password" type="password" maxlength="16"
-          show-password />
+        <el-input
+          name="password"
+          placeholder="请输入密码"
+          v-model="registryInput.password"
+          type="password"
+          maxlength="16"
+          show-password
+        />
       </el-form-item>
       <el-form-item label="密码确认" prop="password2">
-        <el-input name="password2" placeholder="请再次输入密码" v-model="registryInput.password2" type="password" maxlength="16"
-          show-password />
+        <el-input
+          name="password2"
+          placeholder="请再次输入密码"
+          v-model="registryInput.password2"
+          type="password"
+          maxlength="16"
+          show-password
+        />
       </el-form-item>
       <el-form-item label="验证码" prop="captchaInput">
         <el-col :span="14">
@@ -26,7 +44,7 @@
           </div>
         </el-col>
       </el-form-item>
-      <div style="text-align: left;">
+      <div style="text-align: left">
         <div class="tips" v-html="tipsContent"></div>
       </div>
     </el-form>
@@ -40,7 +58,7 @@
 <script setup>
 import { defineProps, defineEmits, ref, reactive, watch } from 'vue'
 import { useStore } from 'vuex'
-import { usernameValidator, passwordValidator, captchaValidator } from '../validator';
+import { usernameValidator, passwordValidator, captchaValidator } from '../validator'
 import api from '@/api'
 import { ElMessage } from 'element-plus'
 
@@ -148,7 +166,8 @@ const onConfirm = () => {
     registryForm.captchaKey = store.getters.captchaKey
     registryForm.captchaInput = registryInput.captchaInput
 
-    api.system.registry(registryForm)
+    api.system
+      .registry(registryForm)
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {
@@ -158,12 +177,14 @@ const onConfirm = () => {
           } else {
             ElMessage.error(res.mesg)
             loading.value = false
+            refreshCaptcha()
           }
         }
       })
       .catch((error) => {
         ElMessage.error(error.message)
         loading.value = false
+        refreshCaptcha()
       })
   })
 }
@@ -197,7 +218,7 @@ const tipsContent = `
     font-size: 10px;
     line-height: 20px;
     color: #909399;
-    margin-left: 50px;
+    margin-left: 40px;
 
     span {
       &:first-of-type {

@@ -3,36 +3,18 @@
     <template #title>
       <h2>注册成为OneAdmin用户</h2>
     </template>
-    <el-form
-      class="registry-form"
-      ref="registryRef"
-      :rules="registryRules"
-      :model="registryInput"
-      size="large"
-      label-width="78px"
-    >
+    <el-form class="registry-form" ref="registryRef" :rules="registryRules" :model="registryInput" size="large"
+      label-width="78px">
       <el-form-item label="用户名" prop="username">
         <el-input name="username" placeholder="请输入用户名" v-model="registryInput.username" maxlength="16" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input
-          name="password"
-          placeholder="请输入密码"
-          v-model="registryInput.password"
-          type="password"
-          maxlength="16"
-          show-password
-        />
+        <el-input name="password" placeholder="请输入密码" v-model="registryInput.password" type="password" maxlength="16"
+          show-password />
       </el-form-item>
       <el-form-item label="密码确认" prop="password2">
-        <el-input
-          name="password2"
-          placeholder="请再次输入密码"
-          v-model="registryInput.password2"
-          type="password"
-          maxlength="16"
-          show-password
-        />
+        <el-input name="password2" placeholder="请再次输入密码" v-model="registryInput.password2" type="password" maxlength="16"
+          show-password />
       </el-form-item>
       <el-form-item label="验证码" prop="captchaInput">
         <el-col :span="14">
@@ -50,7 +32,7 @@
     </el-form>
     <template #footer>
       <el-button class="registry-btn" size="large" type="primary" @click="onConfirm" :loading="loading">确定</el-button>
-      <el-button class="registry-btn" size="large" @click="onClose">取 消</el-button>
+      <el-button class="registry-btn" size="large" @click="onClose">取消</el-button>
     </template>
   </el-dialog>
 </template>

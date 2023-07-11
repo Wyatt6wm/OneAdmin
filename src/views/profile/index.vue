@@ -15,12 +15,12 @@
                   <el-avatar shape="circle" :size="80" :src="avatarSrc"></el-avatar>
                 </div>
                 <div class="edit-button">
-                  <el-button plain>修改个人信息</el-button>
+                  <el-button @click="profileDialogVisable = true" plain>修改个人信息</el-button>
                 </div>
               </el-col>
               <el-col :span="16">
                 <div class="nickname">
-                  <h1>{{ hasNickname() ? store.getters.profile.nickname : '昵称' }}</h1>
+                  <h1>{{ hasNickname() ? store.getters.profile.nickname : '还没有昵称' }}</h1>
                 </div>
                 <div class="motto">
                   <span>{{ hasMotto() ? store.getters.profile.motto : '' }}</span>
@@ -53,12 +53,14 @@
         </el-card>
       </el-col>
     </el-row>
+    <profile-dialog :visable="profileDialogVisable" @close="profileDialogVisable = false"></profile-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
+import ProfileDialog from './components/ProfileDialog.vue'
 
 const store = useStore()
 
@@ -80,6 +82,9 @@ watch(
     immediate: true
   }
 )
+
+// ----- 修改个人信息 -----
+const profileDialogVisable = ref(false)
 
 // ----- 昵称、格言 -----
 const hasNickname = () => {

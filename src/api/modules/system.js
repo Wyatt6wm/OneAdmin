@@ -44,6 +44,13 @@ export const getProfile = () => {
     url: USER + '/getProfile'
   })
 }
+export const editProfile = (profileForm) => {
+  return request({
+    method: 'post',
+    url: USER + '/editProfile',
+    data: profileForm
+  })
+}
 
 // ---------- Role ----------
 const ROLE = '/sys/role'

@@ -118,6 +118,7 @@ watch(
     if (props.visable) {
       title.value = '角色【' + props.role.identifier + (props.role.name ? ' / ' + props.role.name : '') + '】的权限'
       initData()
+      loading.value = false
     }
   }
 )

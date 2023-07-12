@@ -61,6 +61,7 @@ watch(
       authForm.identifier = props.auth.identifier
       authForm.name = props.auth.name
       authForm.description = props.auth.description
+      loading.value = false
     }
   }
 )

@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, reactive } from 'vue'
+import { defineProps, defineEmits, ref, reactive, watch } from 'vue'
 import api from '@/api'
 import { ElMessage } from 'element-plus'
 
@@ -56,6 +56,15 @@ const authRules = ref({
     }
   ]
 })
+// 监听打开对话框动作
+watch(
+  () => props.visable === true,
+  () => {
+    if (props.visable) {
+      loading.value = false
+    }
+  }
+)
 
 // ----- 点击“关闭”或关闭对话框 -----
 const onClose = () => {

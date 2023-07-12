@@ -61,6 +61,7 @@ watch(
       roleForm.identifier = props.role.identifier
       roleForm.name = props.role.name
       roleForm.description = props.role.description
+      loading.value = false
     }
   }
 )

@@ -26,6 +26,7 @@ module.exports = {
     // 关闭函数名和括号之间插入空格的规则
     'space-before-function-paren': 'off',
     // 声明变量未使用
-    'no-unused-vars': 'warn'
+    'no-unused-vars': 'warn',
+    'no-multi-spaces': 'off'
   }
 }

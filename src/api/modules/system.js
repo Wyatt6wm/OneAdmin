@@ -90,9 +90,9 @@ export const getRoleManageList = () => {
     url: ROLE + '/getRoleManageList'
   })
 }
-export const getAuthsOfUser = (id) => {
+export const getAuthsOfRole = (id) => {
   return request({
-    url: ROLE + '/getAuthsOfUser?id=' + id
+    url: ROLE + '/getAuthsOfRole?id=' + id
   })
 }
 

@@ -85,8 +85,8 @@ const initData = async () => {
     }
   }
 
-  const authsOfUser = await api.system
-    .getAuthsOfUser(props.role.id)
+  const authsOfRole = await api.system
+    .getAuthsOfRole(props.role.id)
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
@@ -99,9 +99,9 @@ const initData = async () => {
     .catch((error) => {
       ElMessage.error(error.message)
     })
-  if (authsOfUser && authsOfUser instanceof Array) {
-    for (let i = 0; i < authsOfUser.length; i++) {
-      const item = authsOfUser[i]
+  if (authsOfRole && authsOfRole instanceof Array) {
+    for (let i = 0; i < authsOfRole.length; i++) {
+      const item = authsOfRole[i]
       rightKeys.value.push(item.id)
       // 默认位置在右边
       position.value[item.id] = {

@@ -90,8 +90,6 @@ const onClose = () => {
 // ----- 注册表单验证规则 -----
 const password2Validator = () => {
   return (rule, value, callback) => {
-    console.log(value)
-    console.log(registryInput.password)
     const regexp = /^[A-Za-z0-9.~!@#$%^&*_?]{6,16}$/
     if (!value.length) {
       callback(new Error('请再次输入密码'))

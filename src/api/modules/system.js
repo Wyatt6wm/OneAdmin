@@ -56,6 +56,18 @@ export const getUserManageList = () => {
     url: USER + '/getUserManageList'
   })
 }
+export const getRolesOfUser = (id) => {
+  return request({
+    url: USER + '/getRolesOfUser?id=' + id
+  })
+}
+export const changeBinds = (bindForm) => {
+  return request({
+    method: 'post',
+    url: USER + '/changeBinds',
+    data: bindForm
+  })
+}
 
 // ---------- Role ----------
 const ROLE = '/sys/role'

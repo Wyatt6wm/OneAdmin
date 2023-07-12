@@ -1,6 +1,6 @@
 <template>
   <el-dialog width="70%" :model-value="props.visable" :title="title" @close="onClose()">
-    <el-transfer :data="baseList" v-model="rightKeys" :titles="['未授权', '已授权']" :button-texts="['移除', '选择']"
+    <el-transfer :data="baseList" v-model="rightKeys" :titles="['未绑定', '已绑定']" :button-texts="['移除', '选择']"
       target-order="unshift" filterable @change="handleChange">
       <template #default="{ option }">
         <span :style="getFontColor(option.key, option.activated)">
@@ -14,7 +14,7 @@
       </template>
     </el-transfer>
     <template #footer>
-      <el-button type="primary" @click="onConfirm()" :loading="loading">变更授权</el-button>
+      <el-button type="primary" @click="onConfirm()" :loading="loading">变更绑定</el-button>
       <el-button @click="onClose()">取消</el-button>
     </template>
   </el-dialog>
@@ -31,7 +31,7 @@ const props = defineProps({
     default: false,
     required: true
   },
-  role: {
+  user: {
     type: Object,
     required: true
   }
@@ -55,12 +55,12 @@ const initData = async () => {
   rightKeys.value.length = 0
   position.value = {}
 
-  const auths = await api.system
-    .getAuthManageList()  // 借用/getAuthManageList接口
+  const roles = await api.system
+    .getRoleManageList()  // 借用/getRoleManageList接口
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
-          return res.data.authManageList
+          return res.data.roleManageList
         } else {
           ElMessage.error(res.mesg)
         }
@@ -69,9 +69,9 @@ const initData = async () => {
     .catch((error) => {
       ElMessage.error(error.message)
     })
-  if (auths && auths instanceof Array) {
-    for (let i = 0; i < auths.length; i++) {
-      const item = auths[i]
+  if (roles && roles instanceof Array) {
+    for (let i = 0; i < roles.length; i++) {
+      const item = roles[i]
       baseList.value.push({
         key: item.id,
         label: (item.name ? item.name + ' / ' : '') + item.identifier,
@@ -85,12 +85,12 @@ const initData = async () => {
     }
   }
 
-  const authsOfRole = await api.system
-    .getAuthsOfRole(props.role.id)
+  const rolesOfUser = await api.system
+    .getRolesOfUser(props.user.id)
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
-          return res.data.auths
+          return res.data.roles
         } else {
           ElMessage.error(res.mesg)
         }
@@ -99,9 +99,9 @@ const initData = async () => {
     .catch((error) => {
       ElMessage.error(error.message)
     })
-  if (authsOfRole && authsOfRole instanceof Array) {
-    for (let i = 0; i < authsOfRole.length; i++) {
-      const item = authsOfRole[i]
+  if (rolesOfUser && rolesOfUser instanceof Array) {
+    for (let i = 0; i < rolesOfUser.length; i++) {
+      const item = rolesOfUser[i]
       rightKeys.value.push(item.id)
       // 默认位置在右边
       position.value[item.id] = {
@@ -116,7 +116,7 @@ watch(
   () => props.visable,
   () => {
     if (props.visable) {
-      title.value = '角色【' + props.role.identifier + (props.role.name ? ' / ' + props.role.name : '') + '】的权限'
+      title.value = '用户【' + props.user.username + (props.user.nickname ? ' / ' + props.user.nickname : '') + '】的角色'
       initData()
       loading.value = false
     }
@@ -155,39 +155,39 @@ const loading = ref(false)
 const onConfirm = () => {
   loading.value = true
 
-  // 要授权的authId列表
-  const grantList = []
+  // 要绑定的roleId列表
+  const bindList = []
   for (let i = 0; i < baseList.value.length; i++) {
     const key = baseList.value[i].key
     const { origin, now } = position.value[key]
     if (now - origin > 0) {
-      grantList.push(key)
+      bindList.push(key)
     }
   }
-  // 要解除授权的authId列表
-  const ungrantList = []
+  // 要解除绑定的roleId列表
+  const unbindList = []
   for (let i = 0; i < baseList.value.length; i++) {
     const key = baseList.value[i].key
     const { origin, now } = position.value[key]
     if (now - origin < 0) {
-      ungrantList.push(key)
+      unbindList.push(key)
     }
   }
 
-  if (grantList.length + ungrantList.length > 0) {
-    api.system.changeGrants({ roleId: props.role.id, grantList, ungrantList })
+  if (bindList.length + unbindList.length > 0) {
+    api.system.changeBinds({ userId: props.user.id, bindList, unbindList })
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {
-            const failGrantCnt = res.data.failGrant.length
-            const failUngrantCnt = res.data.failUngrant.length
-            if (failGrantCnt + failUngrantCnt > 0) {
-              const grantSum = grantList.length
-              const ungrantSum = ungrantList.length
-              ElMessage.warning('授权' + (grantSum - failGrantCnt) + '/' + grantSum + '解除授权' + (ungrantSum - failUngrantCnt) + '/' + ungrantSum)
+            const failBindCnt = res.data.failBind.length
+            const failUnbindCnt = res.data.failUnbind.length
+            if (failBindCnt + failUnbindCnt > 0) {
+              const bindSum = bindList.length
+              const unbindSum = unbindList.length
+              ElMessage.warning('绑定' + (bindSum - failBindCnt) + '/' + bindSum + '解除绑定' + (unbindSum - failUnbindCnt) + '/' + unbindSum)
               loading.value = false
             } else {
-              ElMessage.success('授权变更成功')
+              ElMessage.success('绑定变更成功')
               loading.value = false
               onClose()
             }
@@ -202,7 +202,7 @@ const onConfirm = () => {
         loading.value = false
       })
   } else {
-    ElMessage.warning('授权未变更')
+    ElMessage.warning('绑定未变更')
     loading.value = false
   }
 }

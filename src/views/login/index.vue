@@ -9,25 +9,14 @@
         <span class="svg-container">
           <svg-icon icon="user"></svg-icon>
         </span>
-        <el-input
-          type="text"
-          placeholder="用户名"
-          name="username"
-          maxlength="16"
-          v-model="loginForm.username"
-        ></el-input>
+        <el-input type="text" placeholder="用户名" name="username" maxlength="16" v-model="loginForm.username"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon="password"></svg-icon>
         </span>
-        <el-input
-          :type="passwordType"
-          placeholder="密码"
-          name="password"
-          maxlength="16"
-          v-model="loginForm.password"
-        ></el-input>
+        <el-input :type="passwordType" placeholder="密码" name="password" maxlength="16"
+          v-model="loginForm.password"></el-input>
         <span class="show-pwd" @click="onChangePwdType">
           <svg-icon :icon="passwordType === 'password' ? 'eye' : 'eye-open'"></svg-icon>
         </span>
@@ -37,13 +26,8 @@
           <span class="svg-container">
             <svg-icon icon="article-create"></svg-icon>
           </span>
-          <el-input
-            type="text"
-            placeholder="验证码"
-            name="captchaInput"
-            maxlength="5"
-            v-model="loginForm.captchaInput"
-          ></el-input>
+          <el-input type="text" placeholder="验证码" name="captchaInput" maxlength="5"
+            v-model="loginForm.captchaInput"></el-input>
         </el-col>
         <el-col :span="10">
           <div class="captcha-box" @click="refreshCaptcha">
@@ -54,45 +38,42 @@
       <div>
         <el-row :gutter="10">
           <el-col :span="17"></el-col>
-          <el-col :span="3"><el-link type="primary" @click="handleRegistry">注册用户</el-link></el-col>
+          <el-col :span="3"><el-link type="primary" @click="registryDialogVisable = true">注册用户</el-link></el-col>
           <el-col :span="4"><el-link type="primary" @click="comingSoon()">忘记密码</el-link></el-col>
         </el-row>
       </div>
-      <el-button
-        type="primary"
-        style="width: 100%; margin-top: 20px; margin-bottom: 30px"
-        :loading="loading"
-        @click="handleLogin()"
-      >
+      <el-button type="primary" style="width: 100%; margin-top: 20px; margin-bottom: 30px" :loading="loading"
+        @click="handleLogin()">
         登录
       </el-button>
       <div class="tips" v-html="tipsContent"></div>
     </el-form>
-    <registry :visable="registryVisable" @close="closeRegistry"></registry>
+    <registry-dialog :visable="registryDialogVisable" @close="registryDialogVisable = false"></registry-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { usernameValidator, passwordValidator, captchaValidator } from './validator'
 import Storage from '@/utils/storage2'
 import { comingSoon } from '@/utils/common'
-import Registry from './components/registry.vue'
+import RegistryDialog from './components/RegistryDialog.vue'
 
 const store = useStore() // 获取vuex实例store
 const router = useRouter() // 获取router实例
 
-// ----- 注册用户 -----
-const registryVisable = ref(false)
-const handleRegistry = () => {
-  registryVisable.value = true
-}
-const closeRegistry = () => {
-  registryVisable.value = false
-  refreshCaptcha()
-}
+// ----- 注册用户对话框 -----
+const registryDialogVisable = ref(false)
+watch(
+  () => registryDialogVisable.value,
+  (visable) => {
+    if (visable === false) {
+      captchaImage.value = refreshCaptcha()
+    }
+  }
+)
 
 // 底部提示内容
 const tipsContent = `

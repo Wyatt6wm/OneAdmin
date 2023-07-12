@@ -2,9 +2,9 @@
   <div>
     <el-card height="100%">
       <div class="button-area" v-role="[Const.role.SUPER_ADMIN]">
-        <el-button type="primary" @click="handleAdd">新增权限</el-button>
+        <el-button type="primary" @click="addAuthDialogVisable = true">新增权限</el-button>
       </div>
-      <el-table max-height="calc(100vh - 185px)" border :data="authList">
+      <el-table max-height="calc(100vh - 185px)" border :data="authManageList">
         <el-table-column label="序号" align="center" width="60" type="index"></el-table-column>
         <el-table-column label="状态" align="center" width="85">
           <template #default="scope">
@@ -28,10 +28,10 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <add-auth-dialog :visable="addAuthDialogVisable" @close="closeAddDialog"
-      @updateAfterAdd="getAuthList"></add-auth-dialog>
-    <edit-auth-dialog :visable="editAuthDialogVisable" :auth="auth" @close="closeEditDialog"
-      @updateAfterEdit="getAuthList"></edit-auth-dialog>
+    <add-auth-dialog :visable="addAuthDialogVisable" @close="addAuthDialogVisable = false"
+      @updateAfterAdd="getAuthManageList"></add-auth-dialog>
+    <edit-auth-dialog :visable="editAuthDialogVisable" :auth="auth" @close="editAuthDialogVisable = false"
+      @updateAfterEdit="getAuthManageList"></edit-auth-dialog>
   </div>
 </template>
 
@@ -44,14 +44,14 @@ import EditAuthDialog from './components/EditAuthDialog.vue'
 import AddAuthDialog from './components/AddAuthDialog.vue'
 
 // ----- 获取权限列表渲染表格 -----
-const authList = ref([])
-const getAuthList = async () => {
-  authList.value = await api.system
-    .getAuthList()
+const authManageList = ref([])
+const getAuthManageList = async () => {
+  authManageList.value = await api.system
+    .getAuthManageList()
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
-          return res.data.authList
+          return res.data.authManageList
         } else {
           ElMessage.error(res.mesg)
         }
@@ -61,16 +61,10 @@ const getAuthList = async () => {
       ElMessage.error(error.message)
     })
 }
-getAuthList()
+getAuthManageList()
 
 // ----- 新增权限 -----
 const addAuthDialogVisable = ref(false)
-const handleAdd = () => {
-  addAuthDialogVisable.value = true
-}
-const closeAddDialog = () => {
-  addAuthDialogVisable.value = false
-}
 
 // ----- 编辑权限 -----
 const editAuthDialogVisable = ref(false)
@@ -78,9 +72,6 @@ const auth = ref({})
 const handleEdit = (row) => {
   editAuthDialogVisable.value = true
   auth.value = row
-}
-const closeEditDialog = () => {
-  editAuthDialogVisable.value = false
 }
 
 // ----- 启用/禁用 -----
@@ -100,7 +91,7 @@ const handleChangeStatus = (authDetail) => {
               ElMessage.success(succMesg)
             } else {
               ElMessage.error(res.mesg)
-              getAuthList()
+              getAuthManageList()
             }
           }
         })
@@ -129,7 +120,7 @@ const handleDelete = (authDetail) => {
             } else {
               ElMessage.error(res.mesg)
             }
-            getAuthList()
+            getAuthManageList()
           }
         })
         .catch((error) => {

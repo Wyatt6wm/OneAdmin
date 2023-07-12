@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card height="100%">
-      <el-table max-height="calc(100vh - 185px)" border :data="userList">
+      <el-table max-height="calc(100vh - 185px)" border :data="userManageList">
         <el-table-column label="序号" align="center" width="60" type="index"></el-table-column>
         <el-table-column label="头像" align="center" width="100">
           <template v-slot="{ row }">
@@ -11,8 +11,11 @@
         <el-table-column label="用户名" prop="user.username" width="200"></el-table-column>
         <el-table-column label="角色" width="200">
           <template v-slot="{ row }">
-            <div v-if="row.roleNames && row.roleNames.length > 0">
-              <el-tag v-for="roleName in row.roleNames" size="small">{{ roleName }}</el-tag>
+            <div v-if="row.roles && row.roles.length > 0">
+              <el-space wrap>
+                <el-tag v-for="item in row.roles" :key="item.id" size="small"
+                  :type="item.activated ? 'success' : 'warning'">{{ item.name }}</el-tag>
+              </el-space>
             </div>
           </template>
         </el-table-column>
@@ -20,12 +23,13 @@
         <el-table-column label="座右铭" prop="user.motto"></el-table-column>
         <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="操作" align="center" width="100">
           <template #default="scope">
-            <el-button size="small" type="primary" plain @click="handleBind(scope.row)"> 绑定角色 </el-button>
+            <el-button size="small" type="primary" @click="handleBind(scope.row)">绑定角色</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
-    <!-- <bind-role :visable="bindRoleVisable" @close="bindRoleDialog"></bind-role> -->
+    <bind-role-dialog :visable="bindRoleDialogVisable" :user="user"
+      @close="bindRoleDialogVisable = false"></bind-role-dialog>
   </div>
 </template>
 
@@ -34,17 +38,17 @@ import { ref } from 'vue'
 import api from '@/api'
 import { ElMessage } from 'element-plus'
 import Const from '@/constant'
-// import BindRole from './components/BindRole.vue'
+import BindRoleDialog from './components/BindRoleDialog.vue'
 
 // ----- 获取用户列表渲染表格 -----
-const userList = ref([])
-const getUserList = async () => {
-  userList.value = await api.system
-    .getUserList()
+const userManageList = ref([])
+const getUserManageList = async () => {
+  userManageList.value = await api.system
+    .getUserManageList()
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
-          return res.data.userList
+          return res.data.userManageList
         } else {
           ElMessage.error(res.mesg)
         }
@@ -54,16 +58,14 @@ const getUserList = async () => {
       ElMessage.error(error.message)
     })
 }
-getUserList()
+getUserManageList()
 
-// ----- 角色授权 -----
-const grantDialogVisable = ref(false)
+// ----- 绑定角色 -----
+const bindRoleDialogVisable = ref(false)
+const user = ref({})
 const handleBind = (row) => {
-  grantDialogVisable.value = true
-  user.value = row
-}
-const closeGrantDialog = () => {
-  grantDialogVisable.value = false
+  bindRoleDialogVisable.value = true
+  user.value = row.user
 }
 </script>
 

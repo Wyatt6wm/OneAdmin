@@ -2,9 +2,9 @@
   <div>
     <el-card height="100%">
       <div class="button-area" v-role="[Const.role.SUPER_ADMIN]">
-        <el-button type="primary" @click="handleAdd">新增角色</el-button>
+        <el-button type="primary" @click="addRoleDialogVisable = true">新增角色</el-button>
       </div>
-      <el-table max-height="calc(100vh - 185px)" border :data="roleList">
+      <el-table max-height="calc(100vh - 185px)" border :data="roleManageList">
         <el-table-column label="序号" align="center" width="60" type="index"></el-table-column>
         <el-table-column label="状态" align="center" width="85">
           <template #default="scope">
@@ -29,11 +29,11 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <add-role-dialog :visable="addRoleDialogVisable" @close="closeAddDialog"
-      @updateAfterAdd="getRoleList"></add-role-dialog>
-    <edit-role-dialog :visable="editRoleDialogVisable" :role="role" @close="closeEditDialog"
-      @updateAfterEdit="getRoleList"></edit-role-dialog>
-    <grant-dialog :visable="grantDialogVisable" :role="role" @close="closeGrantDialog"></grant-dialog>
+    <add-role-dialog :visable="addRoleDialogVisable" @close="addRoleDialogVisable = false"
+      @updateAfterAdd="getRoleManageList"></add-role-dialog>
+    <edit-role-dialog :visable="editRoleDialogVisable" :role="role" @close="editRoleDialogVisable = false"
+      @updateAfterEdit="getRoleManageList"></edit-role-dialog>
+    <grant-dialog :visable="grantDialogVisable" :role="role" @close="grantDialogVisable = false"></grant-dialog>
   </div>
 </template>
 
@@ -47,14 +47,14 @@ import AddRoleDialog from './components/AddRoleDialog.vue'
 import GrantDialog from './components/GrantDialog.vue'
 
 // ----- 获取角色列表渲染表格 -----
-const roleList = ref([])
-const getRoleList = async () => {
-  roleList.value = await api.system
-    .getRoleList()
+const roleManageList = ref([])
+const getRoleManageList = async () => {
+  roleManageList.value = await api.system
+    .getRoleManageList()
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
-          return res.data.roleList
+          return res.data.roleManageList
         } else {
           ElMessage.error(res.mesg)
         }
@@ -64,16 +64,10 @@ const getRoleList = async () => {
       ElMessage.error(error.message)
     })
 }
-getRoleList()
+getRoleManageList()
 
 // ----- 新增角色 -----
 const addRoleDialogVisable = ref(false)
-const handleAdd = () => {
-  addRoleDialogVisable.value = true
-}
-const closeAddDialog = () => {
-  addRoleDialogVisable.value = false
-}
 
 // ----- 编辑角色 -----
 const editRoleDialogVisable = ref(false)
@@ -82,18 +76,12 @@ const handleEdit = (row) => {
   editRoleDialogVisable.value = true
   role.value = row
 }
-const closeEditDialog = () => {
-  editRoleDialogVisable.value = false
-}
 
 // ----- 角色授权 -----
 const grantDialogVisable = ref(false)
 const handleGrant = (row) => {
   grantDialogVisable.value = true
   role.value = row
-}
-const closeGrantDialog = () => {
-  grantDialogVisable.value = false
 }
 
 // ----- 启用/禁用 -----
@@ -113,7 +101,7 @@ const handleChangeStatus = (roleDetail) => {
               ElMessage.success(succMesg)
             } else {
               ElMessage.error(res.mesg)
-              getRoleList()
+              getRoleManageList()
             }
           }
         })
@@ -142,7 +130,7 @@ const handleDelete = (roleDetail) => {
             } else {
               ElMessage.error(res.mesg)
             }
-            getRoleList()
+            getRoleManageList()
           }
         })
         .catch((error) => {

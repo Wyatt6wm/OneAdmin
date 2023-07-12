@@ -109,10 +109,10 @@ export default {
      * @param {*} context
      * @returns
      */
-    getRolesOfUser(context) {
+    getRoleIdentifiers(context) {
       return new Promise((resolve, reject) => {
         api.system
-          .getRolesOfUser()
+          .getRoleIdentifiers()
           .then((res) => {
             if (res && res.succ != null) {
               if (res.succ) {
@@ -136,10 +136,10 @@ export default {
      * @param {*} context
      * @returns
      */
-    getAuthsOfUser(context) {
+    getAuthIdentifiers(context) {
       return new Promise((resolve, reject) => {
         api.system
-          .getAuthsOfUser()
+          .getAuthIdentifiers()
           .then((res) => {
             if (res && res.succ != null) {
               if (res.succ) {

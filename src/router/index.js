@@ -31,12 +31,12 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 如果还没有用户角色则查询服务器
       if (!store.getters.hasRoles) {
-        await store.dispatch('userLogin/getRolesOfUser')
+        await store.dispatch('userLogin/getRoleIdentifiers')
       }
 
       // 如果还没有用户权限则查询服务器
       if (!store.getters.hasAuths) {
-        await store.dispatch('userLogin/getAuthsOfUser')
+        await store.dispatch('userLogin/getAuthIdentifiers')
         await store.dispatch('common/setRoutesPreparedFalse')
       }
 

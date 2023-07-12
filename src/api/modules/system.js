@@ -29,14 +29,14 @@ export const logout = () => {
     url: USER + '/logout'
   })
 }
-export const getRolesOfUser = () => {
+export const getRoleIdentifiers = () => {
   return request({
-    url: USER + '/getRolesOfUser'
+    url: USER + '/getRoleIdentifiers'
   })
 }
-export const getAuthsOfUser = () => {
+export const getAuthIdentifiers = () => {
   return request({
-    url: USER + '/getAuthsOfUser'
+    url: USER + '/getAuthIdentifiers'
   })
 }
 export const getProfile = () => {
@@ -51,9 +51,9 @@ export const editProfile = (profileForm) => {
     data: profileForm
   })
 }
-export const getUserList = () => {
+export const getUserManageList = () => {
   return request({
-    url: USER + '/getUserList'
+    url: USER + '/getUserManageList'
   })
 }
 
@@ -66,10 +66,10 @@ export const addRole = (roleForm) => {
     data: roleForm
   })
 }
-export const changeRoleGrants = (grantForm) => {
+export const changeGrants = (grantForm) => {
   return request({
     method: 'post',
-    url: ROLE + '/changeRoleGrants',
+    url: ROLE + '/changeGrants',
     data: grantForm
   })
 }
@@ -85,14 +85,14 @@ export const editRole = (roleForm) => {
     data: roleForm
   })
 }
-export const getRoleList = () => {
+export const getRoleManageList = () => {
   return request({
-    url: ROLE + '/getRoleList'
+    url: ROLE + '/getRoleManageList'
   })
 }
-export const getRoleAuths = (id) => {
+export const getAuthsOfUser = (id) => {
   return request({
-    url: ROLE + '/getRoleAuths?id=' + id
+    url: ROLE + '/getAuthsOfUser?id=' + id
   })
 }
 
@@ -117,8 +117,8 @@ export const editAuth = (authForm) => {
     data: authForm
   })
 }
-export const getAuthList = () => {
+export const getAuthManageList = () => {
   return request({
-    url: AUTH + '/getAuthList'
+    url: AUTH + '/getAuthManageList'
   })
 }

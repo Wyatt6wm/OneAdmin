@@ -20,7 +20,7 @@
               </el-col>
               <el-col :span="16">
                 <div class="nickname">
-                  <h1>{{ hasNickname() ? store.getters.profile.nickname : '你的昵称' }}</h1>
+                  <h1>{{ hasNickname() ? store.getters.profile.nickname : '我的昵称' }}</h1>
                 </div>
                 <div class="motto">
                   <span>{{ hasMotto() ? store.getters.profile.motto : '还没有座右铭，快来写下你的座右铭吧~' }}</span>
@@ -53,14 +53,15 @@
         </el-card>
       </el-col>
     </el-row>
-    <edit-profile :visable="editProfileVisable" @close="editProfileVisable = false"></edit-profile>
+    <edit-profile-dialog :visable="editProfileDialogVisable"
+      @close="editProfileDialogVisable = false"></edit-profile-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import EditProfile from './components/EditProfile.vue'
+import EditProfileDialog from './components/EditProfileDialog.vue'
 
 const store = useStore()
 
@@ -84,7 +85,7 @@ watch(
 )
 
 // ----- 修改个人信息 -----
-const editProfileVisable = ref(false)
+const editProfileDialogVisable = ref(false)
 
 // ----- 昵称、格言 -----
 const hasNickname = () => {

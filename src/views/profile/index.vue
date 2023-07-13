@@ -15,7 +15,7 @@
                   <el-avatar shape="circle" :size="80" :src="avatarSrc"></el-avatar>
                 </div>
                 <div class="edit-button">
-                  <el-button @click="editProfileVisable = true" plain>修改个人信息</el-button>
+                  <el-button @click="editProfileDialogVisable = true" plain>修改个人信息</el-button>
                 </div>
               </el-col>
               <el-col :span="16">
@@ -37,8 +37,7 @@
               </div>
             </template>
             <el-row>
-              <el-col :span="24">
-              </el-col>
+              <el-col :span="24"> </el-col>
             </el-row>
           </el-card>
         </el-row>
@@ -53,8 +52,10 @@
         </el-card>
       </el-col>
     </el-row>
-    <edit-profile-dialog :visable="editProfileDialogVisable"
-      @close="editProfileDialogVisable = false"></edit-profile-dialog>
+    <edit-profile-dialog
+      :visable="editProfileDialogVisable"
+      @close="editProfileDialogVisable = false"
+    ></edit-profile-dialog>
   </div>
 </template>
 
@@ -144,7 +145,7 @@ const hasMotto = () => {
   }
 
   .data-static {
-    width: 100%
+    width: 100%;
   }
 }
 </style>

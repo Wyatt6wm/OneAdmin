@@ -28,8 +28,8 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <bind-role-dialog :visable="bindRoleDialogVisable" :user="user"
-      @close="bindRoleDialogVisable = false"></bind-role-dialog>
+    <bind-role-dialog :visable="bindRoleDialogVisable" :user="user" @close="bindRoleDialogVisable = false"
+      @updateAfterBind="getUserManageList"></bind-role-dialog>
   </div>
 </template>
 

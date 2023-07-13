@@ -37,7 +37,7 @@ export default {
       meta: {
         isMenu: true,
         isBreadcrumb: true,
-        title: '收支流水',
+        title: '收支记账',
         icon: 'el-icon-circle-check'
       }
     },

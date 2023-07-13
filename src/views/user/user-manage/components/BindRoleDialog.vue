@@ -36,7 +36,7 @@ const props = defineProps({
     required: true
   }
 })
-const emits = defineEmits(['close'])
+const emits = defineEmits(['close', 'updateAfterBind'])
 
 // ----- 初始化 -----
 // 标题
@@ -186,11 +186,13 @@ const onConfirm = () => {
               const unbindSum = unbindList.length
               ElMessage.warning('绑定' + (bindSum - failBindCnt) + '/' + bindSum + '解除绑定' + (unbindSum - failUnbindCnt) + '/' + unbindSum)
               loading.value = false
+              initData()  // 部分成功时更新穿梭狂内数据
             } else {
               ElMessage.success('绑定变更成功')
               loading.value = false
               onClose()
             }
+            emits('updateAfterBind')
           } else {
             ElMessage.error(res.mesg)
             loading.value = false

@@ -1,7 +1,7 @@
 <template>
   <el-card height="100%">
     <div class="button-area">
-      <el-button type="primary" @click="router.push('/todo/todo-detail/1')">新建待办</el-button>
+      <el-button type="primary" @click="router.push('/todo/todo-detail/new')">新建待办</el-button>
     </div>
     <el-table max-height="calc(100vh - 185px)" border>
       <el-table-column label="待办事项" align="center" width="350"></el-table-column>

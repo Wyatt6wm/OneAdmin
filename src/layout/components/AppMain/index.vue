@@ -49,11 +49,12 @@ watch(
 <style lang="scss" scoped>
 .app-main {
   // 浏览器可视高度=100vh
-  min-height: calc(100vh - 50px - 43px);
+  min-height: calc(100vh - 50px - 34px);
   width: 100%;
+  margin-top: 84px;
   position: relative;
   overflow: hidden;
-  padding: 92px 10px 8px 10px;
+  padding: 8px 10px 8px 10px;
   box-sizing: border-box;
 }
 </style>

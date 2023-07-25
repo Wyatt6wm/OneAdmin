@@ -9,8 +9,7 @@ export default {
   namespaced: true,
 
   state: {
-    sidebarOpened:
-      Storage.get(SIDEBAR_OPENED) == null ? true : Storage.get(SIDEBAR_OPENED),
+    sidebarOpened: Storage.get(SIDEBAR_OPENED) == null ? true : Storage.get(SIDEBAR_OPENED),
     viewTagList: Storage.get(VIEW_TAG_LIST) || []
   },
 
@@ -46,23 +45,14 @@ export default {
         if (viewTagIndex === -1) {
           state.viewTagList = []
         } else {
-          state.viewTagList.splice(
-            viewTagIndex + 1,
-            state.viewTagList.length - viewTagIndex + 1
-          )
+          state.viewTagList.splice(viewTagIndex + 1, state.viewTagList.length - viewTagIndex + 1)
           state.viewTagList.splice(0, viewTagIndex)
         }
       } else if (mode === 'other') {
-        state.viewTagList.splice(
-          index + 1,
-          state.viewTagList.length - index + 1
-        )
+        state.viewTagList.splice(index + 1, state.viewTagList.length - index + 1)
         state.viewTagList.splice(0, index)
       } else if (mode === 'right') {
-        state.viewTagList.splice(
-          index + 1,
-          state.viewTagList.length - index + 1
-        )
+        state.viewTagList.splice(index + 1, state.viewTagList.length - index + 1)
       }
     },
     // 退出登录时清除state
@@ -98,6 +88,21 @@ export default {
      */
     removeViewTags(context, payload) {
       context.commit('removeViewTags', payload)
+      Storage.set(VIEW_TAG_LIST, context.state.viewTagList)
+    },
+
+    /**
+     * 根据路由路径删除页面标签
+     * @param {*} context
+     * @param {*} fullPath
+     */
+    async removeViewTagByFullPath(context, fullPath) {
+      for (let i = 0; i < context.state.viewTagList.length; i++) {
+        if (fullPath === context.state.viewTagList[i].fullPath) {
+          context.commit('removeViewTags', { mode: 'index', index: i })
+          break
+        }
+      }
       Storage.set(VIEW_TAG_LIST, context.state.viewTagList)
     }
   }

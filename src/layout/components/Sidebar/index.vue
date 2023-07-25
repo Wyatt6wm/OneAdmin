@@ -52,7 +52,7 @@ const activeMenuPath = computed(() => {
 <style lang="scss" scoped>
 .logo-container {
   height: v-bind(logoHeight) + 'px';
-  padding: 20px 0 22px 0;
+  padding: 20px 0 20px 0;
   display: flex;
   align-items: center;
   justify-content: center;

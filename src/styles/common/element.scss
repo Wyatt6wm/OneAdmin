@@ -5,6 +5,70 @@
   text-align: center;
 }
 
+// ----- el-input禁用状态样式也设置成和普通一样 -----
+// 文本框
+.el-input.is-disabled .el-input__inner,
+.el-textarea.is-disabled .el-textarea__inner {
+  color: var(--el-input-text-color, var(--el-text-color-regular));
+  background-color: var(--el-input-bg-color, var(--el-color-white));
+  border-color: var(--el-input-border-color);
+  cursor: default;
+}
+.el-textarea__inner:hover {
+  box-shadow: 0 0 0 1px var(--el-input-border-color) inset;
+}
+// 单选框
+// 调整单选框正常/disabled状体下的指针
+.el-radio {
+  cursor: default;
+}
+.el-radio__input {
+  cursor: default;
+}
+.el-radio__label {
+  cursor: pointer;
+}
+// 带边框时候的边框颜色
+.el-radio.is-bordered.is-checked {
+  border-color: var(--el-color-primary);
+}
+.el-radio.is-bordered.is-disabled {
+  cursor: default;
+  border-color: var(--el-radio-input-border-color);
+}
+.el-radio.is-bordered.is-disabled.is-checked {
+  cursor: default;
+  border-color: var(--el-color-primary);
+}
+// disabled的未选中圆圈
+.el-radio__input.is-disabled .el-radio__inner {
+  background-color: var(--el-radio-input-bg-color);
+  border-color: var(--el-radio-input-border-color);
+  cursor: default;
+}
+.el-radio__input.is-disabled .el-radio__inner::after {
+  cursor: default;
+  background-color: var(--el-color-white);
+}
+// disabled的选中圆圈
+.el-radio__input.is-disabled.is-checked .el-radio__inner {
+  background-color: var(--el-color-primary);
+  border-color: var(--el-color-primary);
+}
+.el-radio__input.is-disabled.is-checked .el-radio__inner::after {
+  background-color: var(--el-color-white);
+}
+// disabled的未选中文字
+.el-radio__input.is-disabled + span.el-radio__label {
+  color: var(--el-radio-text-color);
+  cursor: default;
+}
+// disabled的选中文字
+.el-radio__input.is-disabled.is-checked + span.el-radio__label {
+  color: var(--el-color-primary);
+  cursor: default;
+}
+
 // ---------- 以下处理element-plus从^1.0.2-beta.28升级到^2.0.4后出现的样式问题 ----------
 // PS: 以下的样式会全局生效，导致全局的输入框都没有边框
 // 处理input框的白/蓝边

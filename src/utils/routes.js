@@ -8,19 +8,17 @@ export const getDynamicRoutes = (auths) => {
   console.log('getDynamicRoutes()')
   const dynamicRoutes = []
 
-  // 根据用户的页面权限添加私有路由
-  auths.forEach((auth) => {
-    // 页面显示权限标识符格式：view:viewName
-    const regexp = /^view:.*$/
-    if (regexp.test(auth)) {
-      // 通过一级私有路由配置的name属性筛选，因此需要保证name的唯一性和一致性
-      dynamicRoutes.push(
-        ...privateRoutes.filter((route) => {
-          return route.name === auth.substring(5)
-        })
-      )
-    }
-  })
+  // 页面显示权限标识符格式：view:viewName
+  const regexp = /^view:.*$/
+  for (let i = 0; i < privateRoutes.length; i++) {
+    const route = privateRoutes[i]
+    auths.forEach((auth) => {
+      // 根据用户的页面权限添加私有路由，通过一级私有路由配置的name属性判断，因此需要保证name的唯一性和一致性
+      if (regexp.test(auth) && route.name === auth.substring(5)) {
+        dynamicRoutes.push(route)
+      }
+    })
+  }
 
   // 最后添加一条：不匹配路由表中的任一路由则跳转到404
   dynamicRoutes.push({

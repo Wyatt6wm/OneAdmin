@@ -239,22 +239,27 @@ const handleSave = () => {
     todoFormRef.value.validate(async (valid) => {
       if (!valid) return
       todoForm.value.category = route.params.category
-      todoForm.value = await api.todo.saveDraft(todoForm.value).then((res) => {
-        if (res && res.succ != null) {
-          if (res.succ) {
-            ElMessage.success(nowStatus === STATUS.EDIT ? '已保存变更' : '已保存草稿')
-            return res.data.todo
-          } else {
-            ElMessage.error(res.mesg)
+      // 修复bug：网络错误时返回空白的值会覆盖输入的数据变成空白
+      const todo = await api.todo.saveDraft(todoForm.value)
+        .then((res) => {
+          if (res && res.succ != null) {
+            if (res.succ) {
+              ElMessage.success(nowStatus === STATUS.EDIT ? '已保存变更' : '已保存草稿')
+              return res.data.todo
+            } else {
+              ElMessage.error(res.mesg)
+            }
           }
+        }).catch((error) => {
+          ElMessage.error(error.message)
+        })
+      if (todo) {
+        todoForm.value = todo
+        // 如果是新建则切换到该待办的路由
+        if (nowStatus === STATUS.NEW && todoForm.value.id != null) {
+          store.dispatch('viewSettings/removeViewTagByFullPath', route.fullPath)
+          router.push('/todo/detail/' + route.params.category + '/' + todoForm.value.id)
         }
-      }).catch((error) => {
-        ElMessage.error(error.message)
-      })
-      // 如果是新建则切换到该待办的路由
-      if (nowStatus === STATUS.NEW && todoForm.value.id != null) {
-        store.dispatch('viewSettings/removeViewTagByFullPath', route.fullPath)
-        router.push('/todo/detail/' + route.params.category + '/' + todoForm.value.id)
       }
     })
   } else {

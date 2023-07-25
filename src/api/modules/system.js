@@ -56,9 +56,9 @@ export const getUserManageList = () => {
     url: USER + '/getUserManageList'
   })
 }
-export const getRolesOfUser = (id) => {
+export const getRolesOfUser = (userId) => {
   return request({
-    url: USER + '/getRolesOfUser?id=' + id
+    url: USER + '/getRolesOfUser?userId=' + userId
   })
 }
 export const changeBinds = (bindForm) => {
@@ -85,9 +85,9 @@ export const changeGrants = (grantForm) => {
     data: grantForm
   })
 }
-export const removeRole = (id) => {
+export const removeRole = (roleId) => {
   return request({
-    url: ROLE + '/removeRole?id=' + id
+    url: ROLE + '/removeRole?roleId=' + roleId
   })
 }
 export const editRole = (roleForm) => {
@@ -102,9 +102,9 @@ export const getRoleManageList = () => {
     url: ROLE + '/getRoleManageList'
   })
 }
-export const getAuthsOfRole = (id) => {
+export const getAuthsOfRole = (roleId) => {
   return request({
-    url: ROLE + '/getAuthsOfRole?id=' + id
+    url: ROLE + '/getAuthsOfRole?roleId=' + roleId
   })
 }
 
@@ -117,9 +117,9 @@ export const addAuth = (authForm) => {
     data: authForm
   })
 }
-export const removeAuth = (id) => {
+export const removeAuth = (authId) => {
   return request({
-    url: AUTH + '/removeAuth?id=' + id
+    url: AUTH + '/removeAuth?authId=' + authId
   })
 }
 export const editAuth = (authForm) => {

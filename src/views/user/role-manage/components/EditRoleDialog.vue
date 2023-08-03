@@ -88,8 +88,7 @@ const onConfirm = () => {
   if (!editDescription.value) roleForm.description = null
 
   if (editIdentifier.value || editName.value || editDescription.value) {
-    api.system
-      .editRole(roleForm)
+    api.role.editRole(roleForm)
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {

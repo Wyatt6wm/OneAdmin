@@ -27,6 +27,7 @@ module.exports = {
     'space-before-function-paren': 'off',
     // 声明变量未使用
     'no-unused-vars': 'warn',
+    // 代码和注释之间多个空格
     'no-multi-spaces': 'off'
   }
 }

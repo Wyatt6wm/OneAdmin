@@ -49,8 +49,7 @@ import GrantDialog from './components/GrantDialog.vue'
 // ----- 获取角色列表渲染表格 -----
 const roleManageList = ref([])
 const getRoleManageList = async () => {
-  roleManageList.value = await api.system
-    .getRoleManageList()
+  roleManageList.value = await api.role.getRoleManageList()
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
@@ -91,8 +90,7 @@ const handleChangeStatus = (roleDetail) => {
   ElMessageBox.confirm(message, '请确认', { type: 'warning' })
     .then(() => {
       const roleForm = { id: id, activated: !activated }
-      api.system
-        .editRole(roleForm)
+      api.role.editRole(roleForm)
         .then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
@@ -120,8 +118,7 @@ const handleDelete = (roleDetail) => {
   const message = '是否删除角色【' + identifier + (name ? ' / ' + name : '') + '】？'
   ElMessageBox.confirm(message, '请确认', { type: 'warning' })
     .then(() => {
-      api.system
-        .removeRole(id)
+      api.role.removeRole(id)
         .then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {

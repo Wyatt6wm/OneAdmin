@@ -55,8 +55,7 @@ const initData = async () => {
   rightKeys.value.length = 0
   position.value = {}
 
-  const auths = await api.system
-    .getAuthManageList()  // 借用/getAuthManageList接口
+  const auths = await api.auth.getAuthManageList()  // 借用/getAuthManageList接口
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
@@ -85,8 +84,7 @@ const initData = async () => {
     }
   }
 
-  const authsOfRole = await api.system
-    .getAuthsOfRole(props.role.id)
+  const authsOfRole = await api.role.getAuthsOfRole(props.role.id)
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
@@ -175,7 +173,7 @@ const onConfirm = () => {
   }
 
   if (grantList.length + ungrantList.length > 0) {
-    api.system.changeGrants({ roleId: props.role.id, grantList, ungrantList })
+    api.role.changeGrants({ roleId: props.role.id, grantList, ungrantList })
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {

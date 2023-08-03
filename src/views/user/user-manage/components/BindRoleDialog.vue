@@ -55,8 +55,7 @@ const initData = async () => {
   rightKeys.value.length = 0
   position.value = {}
 
-  const roles = await api.system
-    .getRoleManageList()  // 借用/getRoleManageList接口
+  const roles = await api.role.getRoleManageList()  // 借用/getRoleManageList接口
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
@@ -85,8 +84,7 @@ const initData = async () => {
     }
   }
 
-  const rolesOfUser = await api.system
-    .getRolesOfUser(props.user.id)
+  const rolesOfUser = await api.user.getRolesOfUser(props.user.id)
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
@@ -175,7 +173,7 @@ const onConfirm = () => {
   }
 
   if (bindList.length + unbindList.length > 0) {
-    api.system.changeBinds({ userId: props.user.id, bindList, unbindList })
+    api.user.changeBinds({ userId: props.user.id, bindList, unbindList })
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {

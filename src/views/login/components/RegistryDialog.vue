@@ -146,7 +146,7 @@ const onConfirm = () => {
     registryForm.captchaKey = store.getters.captchaKey
     registryForm.captchaInput = registryInput.captchaInput
 
-    api.system
+    api.user
       .registry(registryForm)
       .then((res) => {
         if (res && res.succ != null) {

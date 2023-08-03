@@ -83,8 +83,7 @@ const onConfirm = () => {
     if (!pass) return
 
     loading.value = true
-    api.system
-      .addRole(roleForm)
+    api.role.addRole(roleForm)
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {

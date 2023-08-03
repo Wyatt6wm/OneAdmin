@@ -43,7 +43,7 @@ import BindRoleDialog from './components/BindRoleDialog.vue'
 // ----- 获取用户列表渲染表格 -----
 const userManageList = ref([])
 const getUserManageList = async () => {
-  userManageList.value = await api.system
+  userManageList.value = await api.user
     .getUserManageList()
     .then((res) => {
       if (res && res.succ != null) {

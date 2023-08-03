@@ -57,7 +57,7 @@ import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { usernameValidator, passwordValidator, captchaValidator } from './validator'
-import Storage from '@/utils/storage2'
+import Storage from '@/utils/storage'
 import { comingSoon } from '@/utils/common'
 import RegistryDialog from './components/RegistryDialog.vue'
 

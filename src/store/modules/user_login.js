@@ -1,4 +1,4 @@
-import Storage from '@/utils/storage2'
+import Storage from '@/utils/storage'
 import api from '@/api'
 import router, { initRoutes } from '@/router'
 import { ElMessage } from 'element-plus'
@@ -71,7 +71,7 @@ export default {
     login(context, loginForm) {
       const { username, password, captchaKey, captchaInput } = loginForm
       return new Promise((resolve, reject) => {
-        api.system
+        api.user
           .login({
             username,
             password,
@@ -111,7 +111,7 @@ export default {
      */
     getRoleIdentifiers(context) {
       return new Promise((resolve, reject) => {
-        api.system
+        api.user
           .getRoleIdentifiers()
           .then((res) => {
             if (res && res.succ != null) {
@@ -138,7 +138,7 @@ export default {
      */
     getAuthIdentifiers(context) {
       return new Promise((resolve, reject) => {
-        api.system
+        api.user
           .getAuthIdentifiers()
           .then((res) => {
             if (res && res.succ != null) {
@@ -165,7 +165,7 @@ export default {
     getProfile(context) {
       context.state.gettingProfile = true
       return new Promise((resolve, reject) => {
-        api.system
+        api.user
           .getProfile()
           .then((res) => {
             if (res && res.succ != null) {
@@ -190,7 +190,7 @@ export default {
      */
     logout() {
       return new Promise((resolve, reject) => {
-        api.system
+        api.user
           .logout()
           .then((res) => {
             if (res && res.succ != null) {

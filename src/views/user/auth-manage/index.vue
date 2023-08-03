@@ -46,8 +46,7 @@ import AddAuthDialog from './components/AddAuthDialog.vue'
 // ----- 获取权限列表渲染表格 -----
 const authManageList = ref([])
 const getAuthManageList = async () => {
-  authManageList.value = await api.system
-    .getAuthManageList()
+  authManageList.value = await api.auth.getAuthManageList()
     .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
@@ -81,8 +80,7 @@ const handleChangeStatus = (authDetail) => {
   ElMessageBox.confirm(message, '请确认', { type: 'warning' })
     .then(() => {
       const authForm = { id: id, activated: !activated }
-      api.system
-        .editAuth(authForm)
+      api.auth.editAuth(authForm)
         .then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
@@ -110,8 +108,7 @@ const handleDelete = (authDetail) => {
   const message = '是否删除权限【' + identifier + (name ? ' / ' + name : '') + '】？'
   ElMessageBox.confirm(message, '请确认', { type: 'warning' })
     .then(() => {
-      api.system
-        .removeAuth(id)
+      api.auth.removeAuth(id)
         .then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {

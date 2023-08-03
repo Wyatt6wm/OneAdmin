@@ -16,7 +16,7 @@ module.exports = {
         // 本地连接云服务器后端
         // target: 'http://admin.wyatt.run:8000',
         // 本地连接本地后端 / 生产运行
-        target: 'http://oneplatform-gateway:8000/',
+        target: 'http://oneplatform-app:8000/',
         changeOrigin: true // 允许跨域
       }
     }

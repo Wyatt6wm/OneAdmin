@@ -1,5 +1,4 @@
 // 公共
-
 import api from '@/api'
 import { ElMessage } from 'element-plus'
 
@@ -43,7 +42,7 @@ export default {
      */
     getCaptcha(context) {
       return new Promise((resolve, reject) => {
-        api.system
+        api.common
           .getCaptcha()
           .then((res) => {
             if (res && res.succ != null) {

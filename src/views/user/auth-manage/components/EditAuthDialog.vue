@@ -88,8 +88,7 @@ const onConfirm = () => {
   if (!editDescription.value) authForm.description = null
 
   if (editIdentifier.value || editName.value || editDescription.value) {
-    api.system
-      .editAuth(authForm)
+    api.auth.editAuth(authForm)
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {

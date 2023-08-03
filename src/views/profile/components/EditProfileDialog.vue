@@ -60,7 +60,7 @@ const onConfirm = async () => {
   if ((profileForm.nickname && profileForm.nickname.length > 0) || (profileForm.motto && profileForm.motto.length > 0)) {
     loading.value = true
     profileForm.id = store.getters.profile.id
-    await api.system.editProfile(profileForm)
+    await api.user.editProfile(profileForm)
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {

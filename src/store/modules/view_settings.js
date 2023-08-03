@@ -1,6 +1,6 @@
 // 页面界面显示设置
 
-import Storage from '@/utils/storage2'
+import Storage from '@/utils/storage'
 
 const SIDEBAR_OPENED = 'sidebarOpened'
 const VIEW_TAG_LIST = 'viewTagList'

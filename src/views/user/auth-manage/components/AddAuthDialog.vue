@@ -83,8 +83,7 @@ const onConfirm = () => {
     if (!pass) return
 
     loading.value = true
-    api.system
-      .addAuth(authForm)
+    api.auth.addAuth(authForm)
       .then((res) => {
         if (res && res.succ != null) {
           if (res.succ) {

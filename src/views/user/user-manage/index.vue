@@ -21,7 +21,7 @@
         </el-table-column>
         <el-table-column label="昵称" prop="user.nickname" width="200"></el-table-column>
         <el-table-column label="座右铭" prop="user.motto"></el-table-column>
-        <el-table-column v-role="[Const.role.SUPER_ADMIN]" label="操作" align="center" width="100">
+        <el-table-column v-role="[Const.role.SUPER_ADMIN, Const.role.ADMIN]" label="操作" align="center" width="100">
           <template #default="scope">
             <el-button size="small" type="primary" @click="handleBind(scope.row)">绑定角色</el-button>
           </template>

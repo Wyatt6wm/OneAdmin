@@ -3,6 +3,7 @@ import * as user from './modules/user'
 import * as role from './modules/role'
 import * as auth from './modules/auth'
 import * as todo from './modules/todo'
+import * as todoLog from './modules/todo_log'
 
 // index.js作为api的出口，输出所有模块，包含了所有接口
 export default {
@@ -10,5 +11,6 @@ export default {
   user,
   role,
   auth,
-  todo
+  todo,
+  todoLog
 }

@@ -117,16 +117,16 @@
         </el-scrollbar>
       </el-card>
     </el-col>
-    <ConclusionDialog :visable="conclusionDialogVisable" :type="conclusionDialogType" :todoId="conclusionDialogTodoId"
+    <ConclusionDialog :visable="conclusionDialogVisable" :type="conclusionDialogType" :todoUuid="conclusionDialogTodoUuid"
       @close="conclusionDialogVisable = false" @render="renderAfterConclusion" />
-    <TodoLogDialog :visable="todoLogDialogVisable" :todoId="todoLogDialogTodoId" @close="todoLogDialogVisable = false"
+    <TodoLogDialog :visable="todoLogDialogVisable" :todoUuid="todoLogDialogTodoUuid" @close="todoLogDialogVisable = false"
       @render="renderAfterAddLog" />
   </el-row>
 </template>
 
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onActivated, onDeactivated, ref } from 'vue'
+import { onActivated, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import api from '@/api'
@@ -141,7 +141,7 @@ const store = useStore()
 // ----- 左侧待办表单 -----
 const todoFormRef = ref(null)
 const todoForm = ref({
-  id: null,
+  uuid: null,
   name: '',
   emergency: false,
   importance: false,
@@ -167,10 +167,10 @@ const logList = ref([])
 // ----- 结论对话框 -----
 const conclusionDialogVisable = ref(false)
 const conclusionDialogType = ref(STATUS.FINISH)
-const conclusionDialogTodoId = ref(0)
+const conclusionDialogTodoUuid = ref(0)
 // ----- 进度对话框 -----
 const todoLogDialogVisable = ref(false)
-const todoLogDialogTodoId = ref(0)
+const todoLogDialogTodoUuid = ref(0)
 
 // ========== 公共函数 ==========
 // 按钮提示
@@ -181,24 +181,15 @@ const errClickAlert = () => {
 // ========== 生命周期函数 ==========
 // 初始化
 onActivated(async () => {
-  // 1、新建待办时
-  if (route.params.todoId === 'new') {
-    // 左侧表单初始化
-    if (todoFormRef.value) {
-      todoFormRef.value.resetFields() // 重置表单
-    }
-    todoForm.value.id = null // 修复bug: 第二次新建时用的是前一次的id
-    todoForm.value.status = STATUS.NEW
-    // 右侧日志初始化
-    logList.value.length = 0
-  } else {
-    if (todoFormRef.value) {
-      todoFormRef.value.resetFields() // 重置表单
-    }
-    todoForm.value.status = STATUS.UNKNOWN
-    // 2、操作具体待办时
-    // 左侧表单初始化
-    todoForm.value = await api.todo.getTodo(route.params.todoId).then((res) => {
+  // ----- 清空重置 -----
+  if (todoFormRef.value) todoFormRef.value.resetFields()
+  todoForm.value.uuid = null // 修复bug: 第二次新建时用的是前一次的uuid
+  todoForm.value.status = STATUS.NEW
+  logList.value.length = 0
+
+  // ----- 根据UUID查询待办数据 -----
+  const todo = await api.todo.getTodo(route.params.uuid)
+    .then((res) => {
       if (res && res.succ != null) {
         if (res.succ) {
           return res.data.todo
@@ -209,25 +200,24 @@ onActivated(async () => {
     }).catch((error) => {
       ElMessage.error(error.message)
     })
-    // 右侧日志初始化
-    logList.value = await api.todo.getTodoLogList(route.params.todoId)
-      .then((res) => {
-        if (res && res.succ != null) {
-          if (res.succ) {
-            return res.data.todoLogList
-          } else {
-            ElMessage.error(res.mesg)
-          }
+  if (todo) todoForm.value = todo
+
+  // ----- 根据待办UUID查询待办进度日志数据 -----
+  logList.value = await api.todoLog.getTodoLogList(route.params.uuid)
+    .then((res) => {
+      if (res && res.succ != null) {
+        if (res.succ) {
+          return res.data.todoLogList
+        } else {
+          ElMessage.error(res.mesg)
         }
-      }).catch((error) => {
-        ElMessage.error(error.message)
-      })
-  }
+      }
+    }).catch((error) => {
+      ElMessage.error(error.message)
+    })
+
   const nowStatus = todoForm.value.status
   inputDisabled.value = !(nowStatus === STATUS.NEW || nowStatus === STATUS.DRAFT || nowStatus === STATUS.EDIT)
-})
-// ----- 离开页面提示 -----
-onDeactivated(() => {
 })
 
 // ========== 按钮操作 ==========
@@ -238,6 +228,7 @@ const handleSave = () => {
   if (nowStatus === STATUS.NEW || nowStatus === STATUS.DRAFT || nowStatus === STATUS.EDIT) {
     todoFormRef.value.validate(async (valid) => {
       if (!valid) return
+      todoForm.value.uuid = route.params.uuid
       todoForm.value.category = route.params.category
       // 修复bug：网络错误时返回空白的值会覆盖输入的数据变成空白
       const todo = await api.todo.saveDraft(todoForm.value)
@@ -253,14 +244,7 @@ const handleSave = () => {
         }).catch((error) => {
           ElMessage.error(error.message)
         })
-      if (todo) {
-        todoForm.value = todo
-        // 如果是新建则切换到该待办的路由
-        if (nowStatus === STATUS.NEW && todoForm.value.id != null) {
-          store.dispatch('viewSettings/removeViewTagByFullPath', route.fullPath)
-          router.push('/todo/detail/' + route.params.category + '/' + todoForm.value.id)
-        }
-      }
+      if (todo) todoForm.value = todo
     })
   } else {
     errClickAlert()
@@ -274,28 +258,25 @@ const handleSubmit = () => {
   if (nowStatus === STATUS.NEW || nowStatus === STATUS.DRAFT || nowStatus === STATUS.EDIT) {
     todoFormRef.value.validate(async (valid) => {
       if (!valid) return
+      todoForm.value.uuid = route.params.uuid
       todoForm.value.category = route.params.category
-      const { todo, todoLogList } = await api.todo.submitTodo(todoForm.value).then((res) => {
-        if (res && res.succ != null) {
-          if (res.succ) {
-            ElMessage.success(nowStatus === STATUS.EDIT ? '变更成功' : '待办已提交')
-            inputDisabled.value = true
-            return res.data
-          } else {
-            ElMessage.error(res.mesg)
+      const { todo, todoLogList } = await api.todo.submitTodo(todoForm.value)
+        .then((res) => {
+          if (res && res.succ != null) {
+            if (res.succ) {
+              ElMessage.success(nowStatus === STATUS.EDIT ? '变更成功' : '待办已提交')
+              inputDisabled.value = true
+              return res.data
+            } else {
+              ElMessage.error(res.mesg)
+            }
           }
-        }
-      }).catch((error) => {
-        ElMessage.error(error.message)
-      })
+        }).catch((error) => {
+          ElMessage.error(error.message)
+        })
       // 渲染页面数据
-      todoForm.value = todo
-      logList.value = todoLogList
-      // 如果是新建则切换到该待办的路由
-      if (nowStatus === STATUS.NEW && todoForm.value.id != null) {
-        store.dispatch('viewSettings/removeViewTagByFullPath', route.fullPath)
-        router.push('/todo/detail/' + route.params.category + '/' + todoForm.value.id)
-      }
+      if (todo) todoForm.value = todo
+      if (todoLogList) logList.value = todoLogList
     })
   } else {
     errClickAlert()
@@ -308,7 +289,7 @@ const handleRemoveDraft = () => {
   if (todoForm.value.status === STATUS.DRAFT) {
     ElMessageBox.confirm('是否删除草稿？删除后数据不可恢复！', '请确认', { type: 'warning' })
       .then(() => {
-        api.todo.removeDraft(todoForm.value.id).then((res) => {
+        api.todo.removeDraft(todoForm.value.uuid).then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
               ElMessage.success('成功删除草稿')
@@ -336,7 +317,7 @@ const handleBegin = () => {
   if (todoForm.value.status === STATUS.SUBMIT) {
     ElMessageBox.confirm('是否开始处理待办？', '请确认')
       .then(async () => {
-        const { todo, todoLogList } = await api.todo.toProgress(todoForm.value.id).then((res) => {
+        const { todo, todoLogList } = await api.todo.toProgress(todoForm.value.uuid).then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
               ElMessage.success('待办已开始')
@@ -367,7 +348,7 @@ const handleEdit = () => {
   if (todoForm.value.status === STATUS.PROGRESS) {
     ElMessageBox.confirm('是否暂停待办进程，进行变更？', '请确认')
       .then(async () => {
-        const { todo, todoLogList } = await api.todo.toEdit(todoForm.value.id).then((res) => {
+        const { todo, todoLogList } = await api.todo.toEdit(todoForm.value.uuid).then((res) => {
           if (res && res.succ != null) {
             if (res.succ) {
               ElMessage.success('待办已处于变更状态')
@@ -398,7 +379,7 @@ const handleFinish = () => {
   if (todoForm.value.status === STATUS.PROGRESS) {
     conclusionDialogVisable.value = true
     conclusionDialogType.value = STATUS.FINISH
-    conclusionDialogTodoId.value = todoForm.value.id
+    conclusionDialogTodoUuid.value = todoForm.value.uuid
   } else {
     errClickAlert()
   }
@@ -410,7 +391,7 @@ const handleCancel = () => {
   if (todoForm.value.status === STATUS.SUBMIT || todoForm.value.status === STATUS.PROGRESS || todoForm.value.status === STATUS.EDIT) {
     conclusionDialogVisable.value = true
     conclusionDialogType.value = STATUS.CANCEL
-    conclusionDialogTodoId.value = todoForm.value.id
+    conclusionDialogTodoUuid.value = todoForm.value.uuid
   } else {
     errClickAlert()
   }
@@ -429,7 +410,7 @@ const handleAddLog = () => {
   loading.value = true
   if (todoForm.value.status === STATUS.SUBMIT || todoForm.value.status === STATUS.PROGRESS || todoForm.value.status === STATUS.EDIT) {
     todoLogDialogVisable.value = true
-    todoLogDialogTodoId.value = todoForm.value.id
+    todoLogDialogTodoUuid.value = todoForm.value.uuid
   } else {
     errClickAlert()
   }

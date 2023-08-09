@@ -9,7 +9,7 @@
       </el-table-column>
       <el-table-column label="查看" align="center" width="80">
         <template #default="{ row }">
-          <el-button size="small" type="primary" round plain @click="handleView(row.id)">
+          <el-button size="small" type="primary" round plain @click="handleView(row.uuid)">
             <el-icon>
               <Search />
             </el-icon>
@@ -63,6 +63,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import api from '@/api'
 import { statusTags } from '../utils/status'
+import UUID from '@/utils/uuid'
 
 const router = useRouter()
 const route = useRoute()
@@ -88,7 +89,7 @@ const init = async () => {
   list.value.length = 0
   for (let i = 0; i < todoList.length; i++) {
     for (let j = 0; j < lastLogList.length; j++) {
-      if (todoList[i].lastLogId === lastLogList[j].id) {
+      if (todoList[i].lastLogUuid === lastLogList[j].uuid) {
         todoList[i].lastLogTitle = lastLogList[j].title
         todoList[i].lastLogContent = lastLogList[j].log
         todoList[i].lastLogSubmitTime = lastLogList[j].submitTime
@@ -104,11 +105,8 @@ onActivated(() => {
 
 // ----- 点击“新建待办” -----
 const handleAdd = () => {
-  if (route.name === 'todoWorkList') {
-    router.push('/todo/detail/work/new')
-  } else if (route.name === 'todoDailyList') {
-    router.push('/todo/detail/daily/new')
-  }
+  const category = route.name === 'todoWorkList' ? 'work' : 'daily'
+  router.push('/todo/detail/' + category + '/' + UUID.simpleUuid())
 }
 
 // ----- 点击“刷新列表” -----
@@ -121,11 +119,11 @@ const refreshList = () => {
 }
 
 // ----- 点击查看 -----
-const handleView = (todoId) => {
+const handleView = (uuid) => {
   if (route.name === 'todoWorkList') {
-    router.push('/todo/detail/work/' + todoId)
+    router.push('/todo/detail/work/' + uuid)
   } else if (route.name === 'todoDailyList') {
-    router.push('/todo/detail/daily/' + todoId)
+    router.push('/todo/detail/daily/' + uuid)
   }
 }
 </script>

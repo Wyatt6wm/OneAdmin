@@ -17,9 +17,8 @@
 
 <script setup>
 import { defineProps, defineEmits, ref, reactive, watch } from 'vue'
-import { STATUS } from '../../utils/status'
 import api from '@/api'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   visable: {
@@ -27,9 +26,9 @@ const props = defineProps({
     default: false,
     required: true
   },
-  todoId: {
-    type: Number,
-    default: 0,
+  todoUuid: {
+    type: String,
+    default: '',
     required: true
   }
 })
@@ -38,7 +37,7 @@ const emits = defineEmits(['close', 'render'])
 // 提交的表单
 const formRef = ref(null)
 const form = reactive({
-  todoId: 0,
+  uuid: 0,
   title: '',
   log: ''
 })
@@ -76,7 +75,7 @@ const onConfirm = () => {
   formRef.value.validate((pass) => {
     if (!pass) return
     loading.value = true
-    form.todoId = props.todoId
+    form.uuid = props.todoUuid
     api.todo.addTodoLog(form)
       .then((res) => {
         if (res && res.succ != null) {

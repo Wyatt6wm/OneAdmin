@@ -24,9 +24,9 @@ const props = defineProps({
     default: false,
     required: true
   },
-  todoId: {
-    type: Number,
-    default: 0,
+  todoUuid: {
+    type: String,
+    default: '',
     required: true
   },
   type: {
@@ -42,7 +42,7 @@ const label = ref('完成结论')
 // 提交的表单
 const formRef = ref(null)
 const form = reactive({
-  id: 0,
+  uuid: 0,
   conclusion: '未填写完成结论'
 })
 // 校验规则
@@ -91,7 +91,7 @@ const onConfirm = () => {
   formRef.value.validate((pass) => {
     if (!pass) return
     loading.value = true
-    form.id = props.todoId
+    form.uuid = props.todoUuid
     if (props.type === STATUS.FINISH) {
       ElMessageBox.confirm('是否完成待办？完成后待办将冻结。', '请确认')
         .then(async () => {

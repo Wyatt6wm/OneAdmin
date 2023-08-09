@@ -51,7 +51,7 @@ export default {
       }
     },
     {
-      path: '/todo/detail/:category/:todoId',
+      path: '/todo/detail/:category/:uuid',
       name: 'todoDetail',
       component: TodoDetail,
       meta: {

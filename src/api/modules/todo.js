@@ -1,70 +1,56 @@
 import request from '../request'
 
-// ----- Todo -----
+const TODO = '/todo'
 export const saveDraft = (todoForm) => {
   return request({
     method: 'post',
-    url: '/todo/saveDraft',
+    url: TODO + '/saveDraft',
     data: todoForm
   })
 }
 export const submitTodo = (todoForm) => {
   return request({
     method: 'post',
-    url: '/todo/submitTodo',
+    url: TODO + '/submitTodo',
     data: todoForm
   })
 }
-export const removeDraft = (todoId) => {
+export const removeDraft = (uuid) => {
   return request({
-    url: '/todo/removeDraft?todoId=' + todoId
+    url: TODO + '/removeDraft/' + uuid
   })
 }
-export const toProgress = (todoId) => {
+export const toProgress = (uuid) => {
   return request({
-    url: '/todo/toProgress?todoId=' + todoId
+    url: TODO + '/toProgress/' + uuid
   })
 }
-export const toEdit = (todoId) => {
+export const toEdit = (uuid) => {
   return request({
-    url: '/todo/toEdit?todoId=' + todoId
+    url: TODO + '/toEdit/' + uuid
   })
 }
 export const finishTodo = (todoForm) => {
   return request({
     method: 'post',
-    url: '/todo/finishTodo',
+    url: TODO + '/finishTodo',
     data: todoForm
   })
 }
 export const cancelTodo = (todoForm) => {
   return request({
     method: 'post',
-    url: '/todo/cancelTodo',
+    url: TODO + '/cancelTodo',
     data: todoForm
   })
 }
 export const getTodoList = (category) => {
   return request({
-    url: '/todo/getTodoList?category=' + category
+    url: TODO + '/getTodoList/' + category
   })
 }
-export const getTodo = (todoId) => {
+export const getTodo = (uuid) => {
   return request({
-    url: '/todo/getTodo?todoId=' + todoId
-  })
-}
-
-// ----- TodoLog -----
-export const getTodoLogList = (todoId) => {
-  return request({
-    url: '/todo/log/getTodoLogList?todoId=' + todoId
-  })
-}
-export const addTodoLog = (todoLogForm) => {
-  return request({
-    method: 'post',
-    url: '/todo/log/addTodoLog',
-    data: todoLogForm
+    url: TODO + '/getTodo/' + uuid
   })
 }
